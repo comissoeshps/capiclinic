@@ -732,12 +732,50 @@ button.export{background:var(--teal);color:white}
         <div class="field" style="margin-top:10px"><label>Evolução / Notas adicionais</label><textarea id="f-evol" placeholder="Observações para o próximo atendimento…" style="min-height:64px"></textarea></div>
       </div>
       <div class="panel">
-        <div class="panel-head"><h2>✍️ Assinatura</h2></div>
+        <div class="panel-head"><h2>✍️ Assinatura Digital</h2></div>
         <div class="meta-2">
           <div class="field"><label>CRM</label><input id="f-crm" type="text" placeholder="Ex.: 239138 / SP"></div>
           <div class="field"><label>RQE</label><input id="f-rqe" type="text" placeholder="Ex.: 45678"></div>
         </div>
-        <div class="sign-area">✍️ Assinatura digital · O prontuário será salvo com data, hora e identificação do profissional.</div>
+
+        <!-- Área de assinatura digital -->
+        <div id="sign-wrap" style="margin-top:14px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden">
+          <!-- Estado: aguardando -->
+          <div id="sign-pending" style="padding:18px 20px">
+            <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:4px">🔐 Assinatura Digital</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Insira o código de assinatura digital fornecido pela clínica para validar e assinar este prontuário. A assinatura confirma a autoria e integridade do documento.</div>
+            <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px">
+                <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">Código de assinatura</label>
+                <input id="sign-code" type="password" placeholder="Cole ou digite o código aqui…"
+                  style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;font-family:'DM Mono',monospace;outline:none;transition:.15s;background:white"
+                  onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--line)'"
+                  onkeydown="if(event.key==='Enter')assinarProntuario()">
+              </div>
+              <button onclick="assinarProntuario()" style="background:linear-gradient(135deg,#6B46C1,#4C2A9E);color:white;border:0;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
+                ✍️ Assinar e validar
+              </button>
+            </div>
+            <div id="sign-err" style="display:none;margin-top:8px;background:#FDEEEE;color:var(--red);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700">
+              ❌ Código de assinatura inválido. Verifique e tente novamente.
+            </div>
+            <div style="margin-top:10px;font-size:11px;color:var(--muted)">💡 A assinatura digital será implementada com certificado ICP-Brasil. Por enquanto, utilize o código provisório fornecido.</div>
+          </div>
+
+          <!-- Estado: assinado -->
+          <div id="sign-done" style="display:none;background:#E8F7EF;padding:18px 20px;border-top:2px solid #A9E0BE">
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <div style="width:44px;height:44px;border-radius:50%;background:#178A4A;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✅</div>
+              <div>
+                <div style="font-size:13px;font-weight:900;color:#0a3320">Prontuário assinado digitalmente</div>
+                <div id="sign-info" style="font-size:11.5px;color:#2a6645;margin-top:3px"></div>
+              </div>
+              <button onclick="removerAssinatura()" style="margin-left:auto;background:none;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:6px 12px;font-size:11.5px;font-weight:700;color:#2a6645;cursor:pointer;font-family:'DM Sans',sans-serif">
+                Remover assinatura
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="save-status"><span class="dot" id="s-dot"></span><span id="s-text">Não salvo</span></div>
       <div class="actions">
@@ -1019,6 +1057,159 @@ let cidCount = 0, rxCount = 0;
 let growthChart = null, growthChartPac = null;
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let selectedDay = null;
+let draftTimer = null; // timer de autossalvamento
+
+// ─── Chaves de armazenamento ───
+const KEY_MED_SESSION = 'capikids_med_session';
+const KEY_DRAFT       = 'capikids_rascunho';
+
+// ═══════════════════════════ SESSÃO PERSISTENTE ═══════════════════════════
+function saveSession(crm) {
+  sessionStorage.setItem(KEY_MED_SESSION, crm);
+  // Também persiste em localStorage para resistir ao fechamento da aba
+  localStorage.setItem(KEY_MED_SESSION, crm);
+}
+function clearSession() {
+  sessionStorage.removeItem(KEY_MED_SESSION);
+  localStorage.removeItem(KEY_MED_SESSION);
+}
+function getSavedSession() {
+  return sessionStorage.getItem(KEY_MED_SESSION) || localStorage.getItem(KEY_MED_SESSION);
+}
+
+// ═══════════════════════════ RASCUNHO (autossalvamento) ═══════════════════
+const DRAFT_FIELDS = [
+  'f-nome','f-dnasc','f-sexo','f-resp','f-par','f-dtcons','f-med','f-conv',
+  'f-qp','f-hma','f-peri','f-dnpm','f-dprev','f-alerg','f-meds','f-vacobs',
+  'f-aleit','f-alim','f-afam','f-mor','f-san','f-anim','f-esc',
+  'f-peso','f-alt','f-pc','f-temp','f-spo2','f-fc','f-fr','f-pa','f-gli',
+  'f-eg','f-hidr','f-cor','f-eg-obs',
+  'ex-resp','ex-cv','ex-abd','ex-neuro','ex-orl','ex-pele',
+  'f-rac','f-exres','f-exsol','f-grav','f-tcons',
+  'f-nfar','f-orient','f-ret','f-retcond','f-encam','f-arquivo','f-evol',
+  'f-crm','f-rqe'
+];
+
+function saveDraft() {
+  if (!loggedMed) return;
+  const draft = { _step: currentStep, _ts: new Date().toISOString() };
+  DRAFT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) draft[id] = el.value;
+  });
+  // vacina
+  const vac = document.querySelector('input[name="vac"]:checked');
+  if (vac) draft['_vac'] = vac.value;
+  // alarmes
+  draft['_alarmes'] = [...document.querySelectorAll('.alarm:checked')].map(c => c.value);
+  // CID rows
+  const cids = [];
+  document.querySelectorAll('.cid-row').forEach(row => {
+    const n = row.id;
+    cids.push({
+      cod:  (document.getElementById(n+'-cod') ||{}).value||'',
+      desc: (document.getElementById(n+'-desc')||{}).value||'',
+      tipo: (document.getElementById(n+'-tipo')||{}).value||'',
+    });
+  });
+  draft['_cids'] = cids;
+  // RX rows
+  const rxs = [];
+  document.querySelectorAll('.rx-item').forEach(row => {
+    const n = row.id;
+    rxs.push({
+      nome: (document.getElementById(n+'-nome')||{}).value||'',
+      dose: (document.getElementById(n+'-dose')||{}).value||'',
+      via:  (document.getElementById(n+'-via') ||{}).value||'',
+      freq: (document.getElementById(n+'-freq')||{}).value||'',
+      dur:  (document.getElementById(n+'-dur') ||{}).value||'',
+    });
+  });
+  draft['_rxs'] = rxs;
+  localStorage.setItem(KEY_DRAFT + '_' + medCRM, JSON.stringify(draft));
+  // Atualizar indicador de status
+  setStatus('saving', 'Rascunho salvo às ' + new Date().toLocaleTimeString('pt-BR'));
+}
+
+function restoreDraft() {
+  const raw = localStorage.getItem(KEY_DRAFT + '_' + medCRM);
+  if (!raw) return;
+  let draft;
+  try { draft = JSON.parse(raw); } catch { return; }
+  if (!draft) return;
+
+  // Restaurar campos simples
+  DRAFT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && draft[id] !== undefined) el.value = draft[id];
+  });
+  // Vacina
+  if (draft['_vac']) {
+    const radio = document.querySelector(`input[name="vac"][value="${draft['_vac']}"]`);
+    if (radio) radio.checked = true;
+  }
+  // Alarmes
+  if (draft['_alarmes']) {
+    draft['_alarmes'].forEach(v => {
+      const cb = document.querySelector(`.alarm[value="${v}"]`);
+      if (cb) cb.checked = true;
+    });
+  }
+  // CIDs
+  document.getElementById('cid-list').innerHTML = ''; cidCount = 0;
+  (draft['_cids'] || []).forEach(c => {
+    addCID();
+    const n = 'cid' + cidCount;
+    const cod  = document.getElementById(n+'-cod');
+    const desc = document.getElementById(n+'-desc');
+    const tipo = document.getElementById(n+'-tipo');
+    if (cod)  cod.value  = c.cod;
+    if (desc) desc.value = c.desc;
+    if (tipo) tipo.value = c.tipo;
+  });
+  if (cidCount === 0) addCID();
+  // RXs
+  document.getElementById('rx-list').innerHTML = ''; rxCount = 0;
+  (draft['_rxs'] || []).forEach(r => {
+    addRx();
+    const n = 'rx' + rxCount;
+    const nome = document.getElementById(n+'-nome');
+    const dose = document.getElementById(n+'-dose');
+    const via  = document.getElementById(n+'-via');
+    const freq = document.getElementById(n+'-freq');
+    const dur  = document.getElementById(n+'-dur');
+    if (nome) nome.value = r.nome;
+    if (dose) dose.value = r.dose;
+    if (via)  via.value  = r.via;
+    if (freq) freq.value = r.freq;
+    if (dur)  dur.value  = r.dur;
+  });
+  // Restaurar etapa
+  if (draft['_step'] !== undefined) goStep(draft['_step']);
+  // Atualizar UI
+  calcIdade(); updatePatCard(); updateVitals(); calcIMC(); updateGrav();
+  const ts = draft['_ts'] ? new Date(draft['_ts']).toLocaleTimeString('pt-BR') : '';
+  setStatus('saving', 'Rascunho restaurado — ' + ts);
+  toast('📝 Rascunho restaurado do último acesso.', 'info');
+}
+
+function clearDraft() {
+  localStorage.removeItem(KEY_DRAFT + '_' + medCRM);
+}
+
+function scheduleDraft() {
+  // Salva rascunho 2 segundos após a última alteração (debounce)
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(saveDraft, 2000);
+}
+
+// Attachar autossalvamento a todos os campos do formulário
+function attachDraftListeners() {
+  document.querySelectorAll('#medicos input, #medicos textarea, #medicos select').forEach(el => {
+    el.addEventListener('input',  scheduleDraft);
+    el.addEventListener('change', scheduleDraft);
+  });
+}
 
 // ═══════════════════════════ NAVEGAÇÃO ═══════════════════════════
 function showPage(id, btn) {
@@ -1042,15 +1233,34 @@ function doLoginMed() {
   const p = document.getElementById('lmPass').value;
   const err = document.getElementById('loginMedErr');
   if (MED_USERS[u] && MED_USERS[u] === p) {
-    loggedMed = true; medCRM = u; err.style.display = 'none';
-    document.getElementById('med-logged-name').textContent = MED_NAMES[u];
-    document.getElementById('f-crm').value = u;
-    document.getElementById('f-dtcons').value = new Date().toISOString().slice(0, 10);
-    document.getElementById('growth-sexo').value = 'M';
-    showPage('medicos', document.getElementById('tab-med'));
-    renderHistorico(); renderMedCal(); updateGrowthChart(); renderMedProfile(u);
+    _activateMedSession(u);
     toast('Bem-vindo, ' + MED_NAMES[u].split(' ').slice(0, 2).join(' ') + '!', 'ok');
   } else { err.style.display = 'block'; }
+}
+
+function _activateMedSession(u) {
+  loggedMed = true; medCRM = u;
+  saveSession(u);
+  document.getElementById('med-logged-name').textContent = MED_NAMES[u];
+  document.getElementById('f-crm').value = u;
+  if (!document.getElementById('f-dtcons').value)
+    document.getElementById('f-dtcons').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('growth-sexo').value = 'M';
+  showPage('medicos', document.getElementById('tab-med'));
+  renderHistorico(); renderMedCal(); updateGrowthChart(); renderMedProfile(u);
+  attachDraftListeners();
+  // Verificar se há rascunho salvo
+  const raw = localStorage.getItem(KEY_DRAFT + '_' + u);
+  if (raw) {
+    setTimeout(() => {
+      if (confirm('📝 Há um rascunho de consulta não finalizado. Deseja restaurá-lo?')) {
+        restoreDraft();
+      } else {
+        clearDraft();
+        setStatus('', 'Não salvo');
+      }
+    }, 400);
+  }
 }
 
 function doLoginPac() {
@@ -1071,8 +1281,21 @@ function doLoginPac() {
 }
 
 function logout(role) {
-  if (role === 'med') { loggedMed = false; medCRM = ''; showPage('home', document.querySelectorAll('.tab')[0]); document.querySelectorAll('.tab')[0].classList.add('active'); }
-  else { loggedPac = false; pacName = ''; showPage('home', document.querySelectorAll('.tab')[0]); document.querySelectorAll('.tab')[0].classList.add('active'); }
+  if (role === 'med') {
+    const temRascunho = !!localStorage.getItem(KEY_DRAFT + '_' + medCRM);
+    if (temRascunho) {
+      if (!confirm('Há um rascunho de consulta não salvo. Sair mesmo assim? O rascunho será descartado.')) return;
+      clearDraft();
+    }
+    clearSession();
+    loggedMed = false; medCRM = '';
+    showPage('home', document.querySelectorAll('.tab')[0]);
+    document.querySelectorAll('.tab')[0].classList.add('active');
+  } else {
+    loggedPac = false; pacName = '';
+    showPage('home', document.querySelectorAll('.tab')[0]);
+    document.querySelectorAll('.tab')[0].classList.add('active');
+  }
 }
 
 // ═══════════════════════════ SUB-ABAS ═══════════════════════════
@@ -1728,11 +1951,13 @@ async function salvarProntuario(){
     document.getElementById('s-dot').className='dot saved';
     document.getElementById('s-text').textContent='Salvo em '+new Date().toLocaleTimeString('pt-BR');
     toast('Consulta de '+dados.nome+' salva com sucesso! ✅','ok');
+    clearDraft(); // rascunho descartado após salvar com sucesso
   },500);
 }
 
 function novaConsulta(){
   if(!confirm('Iniciar nova consulta? Dados não salvos serão perdidos.'))return;
+  clearDraft();
   document.querySelectorAll('#medicos input:not([readonly]),#medicos textarea,#medicos select').forEach(el=>el.value='');
   document.querySelectorAll('.alarm').forEach(c=>c.checked=false);
   document.querySelectorAll('input[name="vac"]').forEach(r=>r.checked=false);
@@ -2031,6 +2256,41 @@ function confirmarAgend(data,hora,med){
   loadPacCal();loadPacData();showPacSub(0);
 }
 
+// ═══════════════════════════ ASSINATURA DIGITAL ═══════════════════════════
+// Códigos provisórios por CRM (serão substituídos por certificado ICP-Brasil)
+const SIGN_CODES = {
+  '239138': 'SIGN239138',
+  '239598': 'SIGN239598',
+};
+
+let prontuarioAssinado = false;
+
+function assinarProntuario() {
+  const code = (document.getElementById('sign-code')||{}).value||'';
+  const err  = document.getElementById('sign-err');
+  const esperado = SIGN_CODES[medCRM] || '';
+  if (!code || code !== esperado) {
+    if (err) err.style.display = 'block';
+    return;
+  }
+  if (err) err.style.display = 'none';
+  prontuarioAssinado = true;
+  const ts = new Date().toLocaleString('pt-BR');
+  const medNome = (MED_NAMES[medCRM]||'').split('(')[0].trim();
+  document.getElementById('sign-pending').style.display = 'none';
+  document.getElementById('sign-done').style.display = 'block';
+  document.getElementById('sign-info').textContent =
+    `${medNome} · CRM ${medCRM} · ${ts}`;
+  toast('✍️ Prontuário assinado com sucesso!', 'ok');
+}
+
+function removerAssinatura() {
+  prontuarioAssinado = false;
+  document.getElementById('sign-pending').style.display = 'block';
+  document.getElementById('sign-done').style.display = 'none';
+  document.getElementById('sign-code').value = '';
+}
+
 // ═══════════════════════════ UTILS ═══════════════════════════
 function fmtDate(s){if(!s)return'—';const d=new Date(s);return isNaN(d)?s:d.toLocaleDateString('pt-BR');}
 function tryParse(s,def){try{return JSON.parse(s)||def;}catch{return def;}}
@@ -2040,6 +2300,14 @@ function toast(msg,type='info'){const t=document.getElementById('toast');t.textC
 document.getElementById('f-dtcons')&&(document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10));
 const nowMonth=new Date().getMonth();
 document.getElementById('pac-mes-sel')&&(document.getElementById('pac-mes-sel').value=nowMonth);
+
+// Verificar sessão médica salva (reconecta sem precisar logar de novo)
+(function checkSavedSession() {
+  const crm = getSavedSession();
+  if (crm && MED_USERS[crm]) {
+    _activateMedSession(crm);
+  }
+})();
 </script>
 </body>
 </html>
