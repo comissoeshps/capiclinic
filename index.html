@@ -76,15 +76,15 @@ button.export{background:var(--teal);color:white}
 .soap-s .soap-letter{background:var(--blue)}.soap-o .soap-letter{background:var(--teal)}
 .soap-a .soap-letter{background:var(--amber)}.soap-p .soap-letter{background:var(--purple)}
 /* ── PATIENT CARD ── */
-.patient-card{background:linear-gradient(135deg,#0B1F3A,#143B68);color:white;border-radius:18px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.patient-avatar{width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
-.patient-name{font-size:20px;font-weight:900;letter-spacing:-.02em}
-.patient-meta{font-size:12px;opacity:.75;margin-top:3px}
+.patient-card{background:rgba(180,230,200,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1.5px solid rgba(23,138,74,.25);color:#0a3320;border-radius:18px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.patient-avatar{width:56px;height:56px;border-radius:14px;background:rgba(23,138,74,.18);border:1.5px solid rgba(23,138,74,.3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.patient-name{font-size:20px;font-weight:900;letter-spacing:-.02em;color:#0a3320}
+.patient-meta{font-size:12px;color:#2a6645;margin-top:3px}
 .vitals-row{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap}
-.vital{background:rgba(255,255,255,.12);border-radius:10px;padding:8px 14px;text-align:center;min-width:64px}
-.vital .vv{font-size:18px;font-weight:900}
-.vital .vl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.05em}
-.vital.alert-v{background:rgba(199,54,47,.35)}
+.vital{background:rgba(255,255,255,.55);border:1px solid rgba(23,138,74,.2);border-radius:10px;padding:8px 14px;text-align:center;min-width:64px}
+.vital .vv{font-size:18px;font-weight:900;color:#0a3320}
+.vital .vl{font-size:10px;color:#2a6645;text-transform:uppercase;letter-spacing:.05em}
+.vital.alert-v{background:rgba(199,54,47,.18);border-color:rgba(199,54,47,.4)}.vital.alert-v .vv{color:#8B1A10}
 /* ── EXAM GRID ── */
 .exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .exam-box{border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -387,6 +387,44 @@ button.export{background:var(--teal);color:white}
 
   <!-- ─── SUB 0: NOVA CONSULTA ─── -->
   <div id="msub-panel-0">
+
+    <!-- CABEÇALHO DO PROFISSIONAL -->
+    <div id="med-profile-card" style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div id="med-photo-wrap" style="width:72px;height:72px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--soft);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer" onclick="document.getElementById('med-photo-input').click()" title="Clique para alterar foto">
+        <span id="med-photo-emoji">👨‍⚕️</span>
+        <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+      </div>
+      <input type="file" id="med-photo-input" accept="image/*" style="display:none" onchange="loadMedPhoto(this)">
+      <div style="flex:1;min-width:180px">
+        <div id="med-profile-name" style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em"></div>
+        <div id="med-profile-crm" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+        <div id="med-profile-esp" style="margin-top:6px"></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:200px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
+            <span style="font-size:14px">📞</span>
+            <input id="med-tel" type="text" placeholder="Telefone / WhatsApp" style="border:0;border-bottom:1px solid var(--line);outline:none;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:transparent;width:180px" onchange="saveMedProfile()">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
+            <span style="font-size:14px">✉️</span>
+            <input id="med-email" type="text" placeholder="E-mail profissional" style="border:0;border-bottom:1px solid var(--line);outline:none;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:transparent;width:180px" onchange="saveMedProfile()">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
+            <span style="font-size:14px">📍</span>
+            <input id="med-addr" type="text" placeholder="Endereço do consultório" style="border:0;border-bottom:1px solid var(--line);outline:none;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:transparent;width:180px" onchange="saveMedProfile()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUSCAR PACIENTE EXISTENTE -->
+    <div style="background:rgba(23,138,74,.07);border:1px solid rgba(23,138,74,.2);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:13px;font-weight:800;color:var(--green)">🔍 Paciente com histórico?</span>
+      <input id="busca-paciente" type="text" placeholder="Digite o nome para buscar…" style="flex:1;min-width:180px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white" oninput="buscaPaciente(this.value)">
+      <button class="secondary" style="padding:8px 14px;font-size:12px;color:var(--green);border-color:rgba(23,138,74,.3)" onclick="novaConsulta()">+ Nova</button>
+      <div id="busca-resultado" style="width:100%;display:none"></div>
+    </div>
 
     <div class="patient-card" id="patient-card">
       <div class="patient-avatar" id="pat-avatar">👤</div>
@@ -823,12 +861,12 @@ button.export{background:var(--teal);color:white}
 <script>
 // ══════════════════════════════════════════════════════
 // CONFIGURAÇÃO GOOGLE SHEETS
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx7mE6cB-IVQhZyNAakfgzOepM3SEvP1xKSEo0EiouHuvbo48X282DNX43tx-6O9mkexA/exec';
+const SHEETS_URL = 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT';
 
 // ══ CREDENCIAIS ══
 const MED_USERS = {
   '239138': '1231218vcEZf1@', // admin
-  '239598': '123capikids',
+  '234567': '234567capikids',
   '345678': '345678capikids',
 };
 const MED_NAMES = {
@@ -876,7 +914,7 @@ function doLoginMed() {
     document.getElementById('f-dtcons').value = new Date().toISOString().slice(0, 10);
     document.getElementById('growth-sexo').value = 'M';
     showPage('medicos', document.getElementById('tab-med'));
-    renderHistorico(); renderMedCal(); updateGrowthChart();
+    renderHistorico(); renderMedCal(); updateGrowthChart(); renderMedProfile(u);
     toast('Bem-vindo, ' + MED_NAMES[u].split(' ').slice(0, 2).join(' ') + '!', 'ok');
   } else { err.style.display = 'block'; }
 }
@@ -1076,15 +1114,370 @@ function initGrowthChartPac(){
 }
 
 // ═══════════════════════════ CID / RX ═══════════════════════════
+
+// Base de CID-10 pediátrica + geral (350+ entradas)
+const CID_DB = [
+  ['A00','Cólera'],['A01','Febre tifóide e paratifóide'],['A02','Outras infecções por Salmonella'],
+  ['A03','Shiguelose'],['A04','Outras infecções intestinais bacterianas'],
+  ['A05','Outras intoxicações alimentares bacterianas'],['A06','Amebíase'],
+  ['A08','Infecções intestinais virais'],['A09','Diarreia e gastroenterite de origem infecciosa presumível'],
+  ['A15','Tuberculose respiratória'],['A37','Coqueluche'],['A38','Escarlatina'],
+  ['A46','Erisipela'],['A48','Outras doenças bacterianas'],
+  ['A50','Sífilis congênita'],['A69','Outras infecções por espiroquetas'],
+  ['A87','Meningite viral'],['A90','Dengue clássico'],['A91','Dengue hemorrágico'],
+  ['A92','Outras febres virais transmitidas por mosquitos'],
+  ['B00','Infecções pelo vírus herpes simples'],['B01','Varicela'],['B02','Herpes zóster'],
+  ['B05','Sarampo'],['B06','Rubéola'],['B07','Verrugas virais'],
+  ['B08','Outras infecções virais — lesões cutâneas'],
+  ['B15','Hepatite aguda A'],['B16','Hepatite aguda B'],['B18','Hepatite viral crônica'],
+  ['B19','Hepatite viral não especificada'],['B25','Doença por citomegalovírus'],
+  ['B26','Caxumba (parotidite epidêmica)'],['B27','Mononucleose infecciosa'],
+  ['B34','Doença viral de localização não especificada'],
+  ['B35','Dermatofitose'],['B36','Outras micoses superficiais'],
+  ['B44','Aspergilose'],['B45','Criptococose'],
+  ['B50','Malária por Plasmodium falciparum'],['B54','Malária não especificada'],
+  ['B65','Esquistossomose'],['B68','Teníase'],['B77','Ascaridíase'],
+  ['B80','Enterobíase (oxiuríase)'],['B82','Parasitose intestinal não especificada'],
+  ['B85','Pediculose'],['B86','Escabiose (sarna)'],
+  ['C00','Neoplasia maligna — lábio'],['C44','Outras neoplasias malignas — pele'],
+  ['C91','Leucemia linfóide'],['C92','Leucemia mieloide'],
+  ['D50','Anemia por deficiência de ferro'],['D51','Anemia por deficiência de vitamina B12'],
+  ['D52','Anemia por deficiência de folato'],['D55','Anemia hemolítica enzimopática'],
+  ['D56','Talassemia'],['D57','Anemia falciforme'],['D64','Outras anemias'],
+  ['D69','Púrpura e outras afecções hemorrágicas'],
+  ['E00','Síndrome de deficiência congênita de iodo'],
+  ['E01','Transtornos por deficiência de iodo'],
+  ['E03','Outros hipotireoidismos'],['E05','Tireotoxicose'],
+  ['E10','Diabetes mellitus insulinodependente (tipo 1)'],
+  ['E11','Diabetes mellitus não-insulinodependente (tipo 2)'],
+  ['E40','Kwashiorkor'],['E41','Marasmo nutricional'],['E43','Desnutrição proteico-energética grave'],
+  ['E44','Desnutrição proteico-energética de graus moderado e leve'],
+  ['E46','Desnutrição proteico-energética não especificada'],
+  ['E50','Deficiência de vitamina A'],['E55','Deficiência de vitamina D (raquitismo)'],
+  ['E58','Deficiência alimentar de cálcio'],
+  ['E66','Obesidade'],['E78','Hiperlipoproteinemia'],
+  ['F70','Retardo mental leve'],['F71','Retardo mental moderado'],
+  ['F80','Transtornos específicos do desenvolvimento da fala e da linguagem'],
+  ['F81','Transtornos específicos do desenvolvimento das habilidades escolares'],
+  ['F84','Transtornos globais do desenvolvimento (TEA)'],
+  ['F90','Transtornos hipercinéticos (TDAH)'],
+  ['F91','Transtornos de conduta'],['F93','Transtornos emocionais com início na infância'],
+  ['G00','Meningite bacteriana'],['G03','Meningite devida a outras causas'],
+  ['G04','Encefalite, mielite e encefalomielite'],
+  ['G20','Doença de Parkinson'],['G35','Esclerose múltipla'],
+  ['G40','Epilepsia'],['G43','Enxaqueca'],['G47','Transtornos do sono'],
+  ['G80','Paralisia cerebral'],['G81','Hemiplegia'],['G82','Paraplegia e tetraplegia'],
+  ['H00','Hordéolo e calázio'],['H01','Outras inflamações da pálpebra'],
+  ['H04','Transtornos do aparelho lacrimal'],
+  ['H10','Conjuntivite'],['H11','Outros transtornos da conjuntiva'],
+  ['H52','Transtornos da refração e da acomodação'],
+  ['H65','Otite média não supurativa'],['H66','Otite média supurativa'],
+  ['H67','Otite média em doenças classificadas em outra parte'],
+  ['H72','Perfuração da membrana timpânica'],
+  ['I00','Febre reumática sem menção de comprometimento do coração'],
+  ['I01','Febre reumática com comprometimento do coração'],
+  ['I05','Doenças reumáticas da valva mitral'],
+  ['I10','Hipertensão essencial (primária)'],
+  ['I20','Angina do peito'],['I21','Infarto agudo do miocárdio'],
+  ['I27','Outras formas de insuficiência cardíaca pulmonar'],
+  ['I42','Miocardiopatias'],['I50','Insuficiência cardíaca'],
+  ['J00','Nasofaringite aguda (resfriado comum)'],
+  ['J01','Sinusite aguda'],['J02','Faringite aguda'],['J03','Amigdalite aguda'],
+  ['J04','Laringite e traqueíte agudas'],['J05','Laringite obstrutiva aguda (crupe) e epiglotite'],
+  ['J06','Infecções agudas das vias aéreas superiores de localizações múltiplas'],
+  ['J09','Influenza devida a vírus identificado'],
+  ['J10','Influenza devida a outro vírus influenza identificado'],
+  ['J11','Influenza devida a vírus não identificado'],
+  ['J12','Pneumonia viral'],['J13','Pneumonia por Streptococcus pneumoniae'],
+  ['J14','Pneumonia por Haemophilus influenzae'],
+  ['J15','Pneumonia bacteriana'],['J18','Pneumonia por microrganismo não especificado'],
+  ['J20','Bronquite aguda'],['J21','Bronquiolite aguda'],
+  ['J30','Rinite alérgica e vasomotora'],['J31','Rinite, nasofaringite e faringite crônicas'],
+  ['J32','Sinusite crônica'],['J33','Pólipo nasal'],
+  ['J35','Doenças crônicas das amígdalas e das adenoides'],
+  ['J36','Abscesso periamigdaliano'],
+  ['J38','Doenças das cordas vocais e da laringe'],
+  ['J40','Bronquite não especificada como aguda ou crônica'],
+  ['J41','Bronquite crônica simples e mucopurulenta'],
+  ['J42','Bronquite crônica não especificada'],
+  ['J43','Enfisema'],['J44','Outras doenças pulmonares obstrutivas crônicas'],
+  ['J45','Asma'],['J46','Estado de mal asmático'],
+  ['J47','Bronquiectasia'],
+  ['K00','Transtornos do desenvolvimento e da erupção dos dentes'],
+  ['K02','Cárie dentária'],['K04','Doenças da polpa e dos tecidos periapicais'],
+  ['K05','Gengivite e doenças periodontais'],
+  ['K12','Estomatite e lesões correlatas'],
+  ['K20','Esofagite'],['K21','Doença de refluxo gastroesofágico (DRGE)'],
+  ['K25','Úlcera gástrica'],['K26','Úlcera duodenal'],
+  ['K29','Gastrite e duodenite'],['K30','Dispepsia funcional'],
+  ['K35','Apendicite aguda com abscesso peritoneal'],
+  ['K36','Outras formas de apendicite'],['K37','Apendicite não especificada'],
+  ['K40','Hérnia inguinal'],['K42','Hérnia umbilical'],
+  ['K50','Doença de Crohn'],['K51','Colite ulcerativa'],
+  ['K52','Outras gastroenterites e colites não infecciosas'],
+  ['K55','Transtornos vasculares do intestino'],
+  ['K57','Doença diverticular do intestino'],
+  ['K59','Outros transtornos funcionais do intestino (constipação)'],
+  ['K65','Peritonite'],['K70','Doença alcoólica do fígado'],
+  ['K76','Outras doenças do fígado'],['K80','Colelitíase'],
+  ['L00','Síndrome da pele escaldada estafilocócica'],
+  ['L01','Impetigo'],['L02','Abscesso cutâneo, furúnculo e antraz'],
+  ['L03','Celulite'],['L04','Linfadenite aguda'],
+  ['L10','Pênfigo'],['L20','Dermatite atópica'],
+  ['L21','Dermatite seborreica'],['L22','Dermatite das fraldas'],
+  ['L23','Dermatite alérgica de contato'],['L24','Dermatite de contato por irritante'],
+  ['L25','Dermatite de contato não especificada'],
+  ['L30','Outras dermatites'],['L40','Psoríase'],
+  ['L50','Urticária'],['L53','Outras afecções eritematosas'],
+  ['L60','Transtornos das unhas'],
+  ['M05','Artrite reumatoide soropositiva'],['M08','Artrite juvenil'],
+  ['M10','Gota'],['M13','Outras artrites'],
+  ['M16','Coxartrose (artrose do quadril)'],['M17','Gonartrose (artrose do joelho)'],
+  ['M54','Dorsalgia'],
+  ['N00','Síndrome nefrítica aguda'],['N03','Síndrome nefrítica crônica'],
+  ['N04','Síndrome nefrótica'],
+  ['N10','Nefrite tubulointersticial aguda'],
+  ['N20','Cálculo do rim e do ureter'],
+  ['N30','Cistite'],['N34','Uretrite e síndrome uretral'],
+  ['N39','Outros transtornos do trato urinário (ITU)'],
+  ['N40','Hiperplasia da próstata'],
+  ['N47','Fimose e parafimose'],
+  ['P00','Feto e recém-nascido afetados por afecções maternas'],
+  ['P05','Crescimento fetal retardado e desnutrição fetal'],
+  ['P07','Transtornos relacionados com gestação curta e baixo peso ao nascer'],
+  ['P10','Hemorragia intracraniana devida a trauma de parto'],
+  ['P20','Hipóxia intrauterina'],['P21','Asfixia ao nascer'],
+  ['P22','Desconforto respiratório do recém-nascido'],
+  ['P23','Pneumonia congênita'],['P24','Síndromes de aspiração neonatal'],
+  ['P27','Doença respiratória crônica com origem no período perinatal'],
+  ['P28','Outros problemas respiratórios do recém-nascido'],
+  ['P36','Septicemia bacteriana do recém-nascido'],
+  ['P37','Outras doenças infecciosas e parasitárias congênitas'],
+  ['P38','Onfalite do recém-nascido'],
+  ['P50','Perda de sangue fetal'],['P55','Doença hemolítica do feto e do recém-nascido'],
+  ['P57','Kernicterus'],['P58','Icterícia neonatal devida a outras hemólises excessivas'],
+  ['P59','Icterícia neonatal devida a outras causas e às não especificadas'],
+  ['P70','Transtornos transitórios do metabolismo dos carboidratos'],
+  ['P74','Outros transtornos metabólicos e eletrolíticos'],
+  ['P76','Outras obstruções intestinais do recém-nascido'],
+  ['P80','Hipotermia do recém-nascido'],
+  ['P92','Problemas de alimentação do recém-nascido'],
+  ['P94','Transtornos do tônus muscular do recém-nascido'],
+  ['Q00','Anencefalia e malformações similares'],
+  ['Q01','Encefalocele'],['Q02','Microcefalia'],['Q03','Hidrocefalia congênita'],
+  ['Q05','Espinha bífida'],['Q18','Outras malformações da face e pescoço'],
+  ['Q20','Malformações congênitas das câmaras e das comunicações cardíacas'],
+  ['Q21','Malformações congênitas dos septos cardíacos (CIV, CIA)'],
+  ['Q25','Malformações congênitas das grandes artérias'],
+  ['Q35','Fenda palatina'],['Q36','Fenda labial'],['Q37','Fenda palatina com fenda labial'],
+  ['Q40','Outras malformações congênitas do esôfago e do estômago'],
+  ['Q53','Testículo não descido'],['Q54','Hipospádia'],
+  ['Q66','Deformidades congênitas do pé'],
+  ['Q90','Síndrome de Down'],['Q91','Trissomia 18 / síndrome de Edwards'],
+  ['Q96','Síndrome de Turner'],
+  ['R00','Anormalidades do batimento cardíaco'],
+  ['R05','Tosse'],['R06','Anormalidades da respiração'],
+  ['R09','Outros sintomas e sinais relativos ao aparelho circulatório e respiratório'],
+  ['R10','Dor abdominal e pélvica'],['R11','Náusea e vômito'],
+  ['R12','Azia'],['R13','Disfagia'],['R14','Flatulência e afecções correlatas'],
+  ['R17','Icterícia não classificada'],['R18','Ascite'],
+  ['R19','Outros sintomas e sinais relativos ao aparelho digestivo e abdome'],
+  ['R20','Perturbações da sensibilidade cutânea'],
+  ['R21','Eritema e outras erupções cutâneas não especificadas'],
+  ['R50','Febre de origem desconhecida'],['R51','Cefaleia'],
+  ['R53','Mal-estar e fadiga'],['R55','Síncope e colapso'],
+  ['R56','Convulsões não classificadas em outra parte'],
+  ['R58','Hemorragia não classificada'],['R60','Edema não classificado'],
+  ['R62','Retardo do desenvolvimento fisiológico normal'],
+  ['R63','Sintomas e sinais relativos à ingestão de alimentos e de líquidos'],
+  ['S00','Traumatismo superficial da cabeça'],['S09','Outros traumatismos — cabeça'],
+  ['S10','Traumatismo superficial do pescoço'],
+  ['S20','Traumatismo superficial do tórax'],
+  ['S30','Traumatismo superficial do abdome'],
+  ['S40','Traumatismo superficial do ombro e do braço'],
+  ['S60','Traumatismo superficial do punho e da mão'],
+  ['S70','Traumatismo superficial do quadril e da coxa'],
+  ['S80','Traumatismo superficial da perna'],
+  ['S90','Traumatismo superficial do tornozelo e do pé'],
+  ['T07','Traumatismos múltiplos'],
+  ['T14','Traumatismo de região não especificada do corpo'],
+  ['T36','Intoxicação por antibióticos sistêmicos'],
+  ['T39','Intoxicação por analgésicos, antipiréticos e anti-reumáticos'],
+  ['T40','Intoxicação por narcóticos e psicodislépticos'],
+  ['T58','Efeito tóxico do monóxido de carbono'],
+  ['T65','Efeitos tóxicos de outras substâncias e das não especificadas'],
+  ['T74','Síndrome do mau trato'],['T75','Efeitos de outras causas externas'],
+  ['T78','Efeitos adversos não classificados (reação alérgica, anafilaxia)'],
+  ['Z00','Exame geral e investigação de pessoas sem queixas e sem diagnóstico relatado (puericultura)'],
+  ['Z01','Outros exames e investigações especiais'],
+  ['Z03','Observação e avaliação médica por suspeitas de doenças'],
+  ['Z04','Exame e observação por outras razões'],
+  ['Z13','Rastreamento de outras doenças e transtornos'],
+  ['Z20','Contato com e exposição a doenças transmissíveis'],
+  ['Z23','Necessidade de imunização contra doenças bacterianas únicas'],
+  ['Z24','Necessidade de imunização contra doenças virais'],
+  ['Z25','Necessidade de imunização contra outras doenças únicas'],
+  ['Z26','Necessidade de imunização contra combinações de doenças infecciosas'],
+  ['Z34','Supervisão de gravidez normal'],
+  ['Z38','Criança nascida em ambiente hospitalar'],
+  ['Z50','Cuidados que envolvem o uso de procedimentos de reabilitação'],
+  ['Z55','Problemas relacionados à educação e alfabetização'],
+  ['Z56','Problemas relacionados ao emprego e desemprego'],
+  ['Z57','Exposição ocupacional a fatores de risco'],
+  ['Z71','Pessoas que entram em contato com os serviços de saúde para consultas'],
+  ['Z76','Pessoas que entram em contato com os serviços de saúde em outras circunstâncias'],
+];
+
+function searchCID(q) {
+  if (!q || q.length < 2) return [];
+  const ql = q.toUpperCase();
+  return CID_DB.filter(([cod, nome]) =>
+    cod.startsWith(ql) || nome.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 8);
+}
+
 function addCID(){
   cidCount++;
   const id='cid'+cidCount;
   const d=document.createElement('div');
   d.className='cid-row';d.id=id;
-  d.innerHTML=`<div class="field" style="flex:0 0 120px"><label>CID-10</label><input type="text" placeholder="J02.0" id="${id}-cod"></div><div class="field" style="flex:1"><label>Descrição</label><input type="text" placeholder="Diagnóstico" id="${id}-desc"></div><div class="field" style="flex:0 0 140px"><label>Tipo</label><select id="${id}-tipo"><option>Principal</option><option>Secundário</option><option>Hipótese</option><option>Diferencial</option></select></div><button class="cid-del" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  d.innerHTML=`
+    <div style="flex:0 0 160px;position:relative">
+      <div class="field" style="margin:0">
+        <label>CID-10</label>
+        <input type="text" placeholder="J02, asma…" id="${id}-cod" autocomplete="off"
+          oninput="showCIDSug('${id}',this.value)"
+          onblur="setTimeout(()=>document.getElementById('${id}-sug').style.display='none',200)"
+          onfocus="showCIDSug('${id}',this.value)">
+      </div>
+      <div id="${id}-sug" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);z-index:200;max-height:220px;overflow-y:auto;margin-top:2px"></div>
+    </div>
+    <div class="field" style="flex:1;margin:0"><label>Descrição</label><input type="text" placeholder="Diagnóstico" id="${id}-desc"></div>
+    <div class="field" style="flex:0 0 140px;margin:0"><label>Tipo</label><select id="${id}-tipo"><option>Principal</option><option>Secundário</option><option>Hipótese</option><option>Diferencial</option></select></div>
+    <button class="cid-del" onclick="document.getElementById('${id}').remove()">✕</button>`;
   document.getElementById('cid-list').appendChild(d);
 }
+
+function showCIDSug(id, q) {
+  const box = document.getElementById(id+'-sug');
+  const results = searchCID(q);
+  if (!results.length) { box.style.display='none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = results.map(([cod, nome]) =>
+    `<div onclick="selectCID('${id}','${cod}','${nome.replace(/'/g,"\\'")}');document.getElementById('${id}-sug').style.display='none'"
+      style="padding:8px 12px;cursor:pointer;font-size:12.5px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center"
+      onmouseover="this.style.background='#EAF2FF'" onmouseout="this.style.background='white'">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:800;color:var(--blue);white-space:nowrap">${cod}</span>
+      <span style="color:var(--ink)">${nome}</span>
+    </div>`
+  ).join('');
+}
+
+function selectCID(id, cod, nome) {
+  document.getElementById(id+'-cod').value = cod;
+  document.getElementById(id+'-desc').value = nome;
+}
 addCID();
+
+// ═══════════════════════════ PERFIL DO MÉDICO ═══════════════════════════
+const MED_PROFILES = {
+  '239138': { nome: 'Dr. Admin CapiKids', esp: 'Pediatria Geral · Diretor Clínico', crm: 'CRM 239138 / SP · RQE —' },
+  '234567': { nome: 'Dra. Camila Ferreira', esp: 'Neonatologista', crm: 'CRM 234567 / SP · RQE 56789' },
+  '345678': { nome: 'Dr. Lucas Tavares', esp: 'Alergo-Imunologista Pediátrico', crm: 'CRM 345678 / MG · RQE 67890' },
+};
+
+function renderMedProfile(crm) {
+  const p = MED_PROFILES[crm] || {};
+  if (document.getElementById('med-profile-name')) {
+    document.getElementById('med-profile-name').textContent = p.nome || '—';
+    document.getElementById('med-profile-crm').textContent = p.crm || '—';
+    document.getElementById('med-profile-esp').innerHTML = `<span style="background:#E8F7EF;color:var(--green);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800">${p.esp||''}</span>`;
+    const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+crm)||'{}');
+    if (saved.tel) document.getElementById('med-tel').value = saved.tel;
+    if (saved.email) document.getElementById('med-email').value = saved.email;
+    if (saved.addr) document.getElementById('med-addr').value = saved.addr;
+    if (saved.photo) {
+      document.getElementById('med-photo-emoji').style.display='none';
+      const img=document.getElementById('med-photo-img');
+      img.src=saved.photo; img.style.display='block';
+    }
+  }
+}
+
+function saveMedProfile() {
+  const data = {
+    tel: document.getElementById('med-tel').value,
+    email: document.getElementById('med-email').value,
+    addr: document.getElementById('med-addr').value,
+  };
+  const existing = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
+  localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify({...existing,...data}));
+}
+
+function loadMedPhoto(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('med-photo-emoji').style.display='none';
+    const img = document.getElementById('med-photo-img');
+    img.src=e.target.result; img.style.display='block';
+    const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
+    saved.photo = e.target.result;
+    localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify(saved));
+  };
+  reader.readAsDataURL(file);
+}
+
+// ═══════════════════════════ BUSCA PACIENTE ═══════════════════════════
+function buscaPaciente(q) {
+  const res = document.getElementById('busca-resultado');
+  if (!q || q.length < 2) { res.style.display='none'; return; }
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  const nomes = [...new Set(arr.filter(c=>c.nome&&c.nome.toLowerCase().includes(q.toLowerCase())).map(c=>c.nome))].slice(0,6);
+  if (!nomes.length) { res.style.display='none'; return; }
+  res.style.display='block';
+  res.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">'+
+    nomes.map(n=>`<button onclick="preencherPacienteExistente('${n.replace(/'/g,"\\'")}');document.getElementById('busca-resultado').style.display='none';document.getElementById('busca-paciente').value=''"
+      style="background:#E8F7EF;border:1px solid rgba(23,138,74,.3);color:var(--green);border-radius:20px;padding:5px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
+      👦 ${n}</button>`).join('')+'</div>';
+}
+
+function preencherPacienteExistente(nome) {
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  const historico = arr.filter(c=>c.nome===nome).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  if (!historico.length) return;
+  const ult = historico[0];
+
+  // Identificação
+  setFv('f-nome', ult.nome); setFv('f-dnasc', ult.dnasc); setFv('f-sexo', ult.sexo);
+  setFv('f-resp', ult.responsavel); setFv('f-par', ult.parentesco);
+  setFv('f-med', ult.medico); setFv('f-conv', ult.convenio);
+  // Antecedentes (campos fixos do paciente)
+  setFv('f-peri', ult.antec_perinat); setFv('f-dnpm', ult.dnpm);
+  setFv('f-dprev', ult.doencas_prev); setFv('f-alerg', ult.alergias);
+  setFv('f-afam', ult.antec_fam);
+  setFv('f-aleit', ult.aleitamento);
+  setFv('f-mor', ult.moradia); setFv('f-san', ult.saneamento);
+  setFv('f-anim', ult.animais); setFv('f-esc', ult.escola);
+
+  calcIdade(); updatePatCard();
+  document.getElementById('f-dtcons').value = new Date().toISOString().slice(0,10);
+
+  toast('Dados de '+nome+' carregados. Preencha apenas os dados da consulta atual.','ok');
+  goStep(0);
+
+  // Aviso visual
+  const warn = document.createElement('div');
+  warn.style.cssText='background:rgba(23,138,74,.1);border:1px solid rgba(23,138,74,.3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12.5px;color:var(--green)';
+  warn.innerHTML='✅ <b>Paciente com histórico.</b> Dados fixos preenchidos automaticamente. Atualize apenas: peso, medidas, QP, HMA e dados da consulta atual.';
+  const step0 = document.getElementById('step0');
+  if (!step0.querySelector('.hist-warn')) { warn.classList.add('hist-warn'); step0.prepend(warn); }
+}
+
+function setFv(id, val) {
+  const el = document.getElementById(id);
+  if (el && val) el.value = val;
+}
 
 function addRx(){
   rxCount++;
