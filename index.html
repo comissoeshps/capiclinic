@@ -256,6 +256,7 @@ button.export{background:var(--teal);color:white}
     <button class="tab active" onclick="showPage('home',this)">🏠 Página Inicial</button>
     <button class="tab" id="tab-med" onclick="goMedico(this)">🩺 Área do Médico</button>
     <button class="tab" id="tab-pac" onclick="goPaciente(this)">👨‍👩‍👧 Área do Paciente</button>
+    <button class="tab" onclick="showPage('contato',this)">✉️ Fale Conosco</button>
   </nav>
 </div>
 </header>
@@ -264,23 +265,6 @@ button.export{background:var(--teal);color:white}
 
 <!-- ════════════════════ HOME ════════════════════ -->
 <section id="home" class="page active">
-
-  <div class="home-hero">
-    <svg class="home-capy" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="40" cy="58" rx="22" ry="20" fill="white"/>
-      <ellipse cx="40" cy="38" rx="17" ry="14" fill="white"/>
-      <ellipse cx="40" cy="22" rx="14" ry="11" fill="white"/>
-      <ellipse cx="40" cy="27" rx="8" ry="5" fill="#eee"/>
-      <circle cx="34.5" cy="20" r="2.5" fill="#bbb"/>
-      <circle cx="45.5" cy="20" r="2.5" fill="#bbb"/>
-    </svg>
-    <h2>Crescer com saúde, crescer com cuidado. 🌱</h2>
-    <p>A CapiKids oferece consultas pediátricas com prontuário eletrônico integrado, curvas de crescimento em tempo real e acompanhamento familiar completo.</p>
-    <div class="cta-row">
-      <button class="cta cta-primary" onclick="goMedico(document.getElementById('tab-med'))">Área do Médico</button>
-      <button class="cta cta-secondary" onclick="goPaciente(document.getElementById('tab-pac'))">Portal da Família</button>
-    </div>
-  </div>
 
   <div class="panel">
     <div class="panel-head">
@@ -297,24 +281,23 @@ button.export{background:var(--teal);color:white}
     </ul>
   </div>
 
-  <div style="margin-bottom:8px"><span style="font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Nossa equipe médica</span></div>
-  <div class="doc-grid">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+    <span style="font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Nossa equipe médica</span>
+    <a href="#" onclick="showPage('equipe',null);document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));return false;"
+      style="font-size:12.5px;font-weight:700;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:4px">
+      Ver todos os profissionais →
+    </a>
+  </div>
+  <div class="doc-grid" style="grid-template-columns:repeat(1,1fr);max-width:340px">
     <div class="doc-card">
       <div class="doc-avatar">👨‍⚕️</div>
       <div class="doc-name">Dr. Gabriel Cruvinel Macor</div>
       <div class="doc-crm">CRM-SP 239138 · Administrador</div>
       <span class="doc-esp">Pediatria Geral · Administração</span>
     </div>
-    <div class="doc-card">
-      <div class="doc-avatar">👩‍⚕️</div>
-      <div class="doc-name">Dr. Juliano César Alves Reis</div>
-      <div class="doc-crm">CRM-SP 239598</div>
-      <span class="doc-esp">Pediatria Geral</span>
-    </div>
-
   </div>
 
-  <div class="panel">
+  <div class="panel" style="margin-top:16px">
     <div class="panel-head"><h2>Proposta de valor</h2></div>
     <div class="meta-3">
       <div class="field"><label>🩺 Para o Médico</label><div style="font-size:13px">Prontuário digital ágil com curvas de crescimento OMS, agenda integrada e histórico completo dos pacientes.</div></div>
@@ -325,7 +308,122 @@ button.export{background:var(--teal);color:white}
 
 </section>
 
-<!-- ════════════════════ LOGIN MÉDICO ════════════════════ -->
+<!-- ════════════════════ EQUIPE ════════════════════ -->
+<section id="equipe" class="page">
+
+  <div style="margin-bottom:16px;display:flex;align-items:center;gap:12px">
+    <button onclick="showPage('home',document.querySelectorAll('.tab')[0]);document.querySelectorAll('.tab')[0].classList.add('active')"
+      style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--blue);font-weight:700;font-family:'DM Sans',sans-serif;padding:0;display:flex;align-items:center;gap:4px">
+      ← Voltar para o início
+    </button>
+  </div>
+
+  <div class="panel" style="margin-bottom:20px">
+    <div class="panel-head">
+      <div><h2>👨‍⚕️ Nossa Equipe Médica</h2></div>
+      <span class="chip chip-green">CapiKids · Clínica Pediátrica</span>
+    </div>
+    <p class="lead">Conheça os profissionais dedicados ao cuidado da saúde das crianças na CapiKids. Nossa equipe é formada por pediatras experientes, comprometidos com o atendimento humanizado e a medicina baseada em evidências.</p>
+  </div>
+
+  <!-- Card Dr. Gabriel -->
+  <div style="background:white;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px">
+    <div style="background:linear-gradient(135deg,#0B1F3A,#1F6FEB);height:6px"></div>
+    <div style="padding:28px 32px">
+      <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+        <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#EAF2FF,#B5D4F4);border:4px solid white;box-shadow:0 4px 16px rgba(31,111,235,.2);display:flex;align-items:center;justify-content:center;font-size:48px;flex-shrink:0">👨‍⚕️</div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:22px;font-weight:900;color:var(--navy);letter-spacing:-.02em">Dr. Gabriel Cruvinel Macor</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">CRM-SP 239138 · Administrador da CapiKids</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+            <span style="background:#EAF2FF;color:var(--blue);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:800">Pediatria Geral</span>
+            <span style="background:#E8F7EF;color:var(--green);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:800">Puericultura</span>
+            <span style="background:#F3EEFF;color:var(--purple);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:800">Fundador</span>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--line);margin-top:24px;padding-top:20px">
+        <h3 style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:10px">Sobre o profissional</h3>
+        <p style="font-size:13.5px;color:var(--ink);line-height:1.75">
+          O Dr. Gabriel Cruvinel Macor é médico pediatra com ampla experiência no acompanhamento do desenvolvimento infantil e puericultura. Fundador e diretor clínico da CapiKids, é dedicado a oferecer um atendimento pediátrico de excelência, humanizado e baseado nas mais recentes diretrizes da Sociedade Brasileira de Pediatria (SBP) e da American Academy of Pediatrics (AAP).
+        </p>
+        <p style="font-size:13.5px;color:var(--ink);line-height:1.75;margin-top:10px">
+          Sua atuação abrange consultas de rotina, acompanhamento do crescimento e desenvolvimento, orientação nutricional, vacinação e manejo de doenças agudas e crônicas na infância.
+        </p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px">
+        <div style="background:var(--soft);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:900;color:var(--blue)">👶</div>
+          <div style="font-size:12px;font-weight:800;color:var(--navy);margin-top:6px">Puericultura</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">0 a 18 anos</div>
+        </div>
+        <div style="background:var(--soft);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:900;color:var(--green)">📈</div>
+          <div style="font-size:12px;font-weight:800;color:var(--navy);margin-top:6px">Crescimento</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Desenvolvimento infantil</div>
+        </div>
+        <div style="background:var(--soft);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:900;color:var(--teal)">🩺</div>
+          <div style="font-size:12px;font-weight:800;color:var(--navy);margin-top:6px">Clínica geral</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Doenças agudas e crônicas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════ FALE CONOSCO ════════════════════ -->
+<section id="contato" class="page">
+
+  <div class="panel" style="max-width:680px;margin:0 auto">
+    <div class="panel-head">
+      <div>
+        <h2>✉️ Fale Conosco</h2>
+        <p class="sub">Envie sua mensagem e retornaremos em breve.</p>
+      </div>
+      <span class="chip chip-teal">CapiKids</span>
+    </div>
+
+    <!-- Campos do formulário -->
+    <div class="field" style="margin-bottom:12px">
+      <label>Nome completo *</label>
+      <input id="ct-nome" type="text" placeholder="Seu nome">
+    </div>
+    <div class="meta-2" style="margin-bottom:12px">
+      <div class="field">
+        <label>E-mail</label>
+        <input id="ct-email" type="email" placeholder="seuemail@exemplo.com">
+      </div>
+      <div class="field">
+        <label>Telefone / WhatsApp</label>
+        <input id="ct-tel" type="text" placeholder="(00) 90000-0000">
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:16px">
+      <label>Mensagem *</label>
+      <textarea id="ct-msg" placeholder="Escreva sua dúvida, sugestão ou solicitação…" style="min-height:120px"></textarea>
+    </div>
+
+    <!-- Feedback -->
+    <div id="ct-err"  style="display:none;background:#FDEEEE;color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:12px"></div>
+    <div id="ct-ok"   style="display:none;background:#E8F7EF;color:var(--green);border-radius:10px;padding:14px 18px;font-size:13.5px;font-weight:700;margin-bottom:12px;text-align:center">
+      ✅ Mensagem enviada com sucesso! Retornaremos em breve.
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="primary" onclick="enviarContato()" id="ct-btn">📨 Enviar mensagem</button>
+      <button class="secondary" onclick="limparContato()">Limpar</button>
+    </div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:24px;flex-wrap:wrap">
+      <div style="font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px">📍 Endereço da clínica a preencher</div>
+      <div style="font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px">📞 Telefone a preencher</div>
+      <div style="font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px">✉️ contato@capikids.com.br</div>
+    </div>
+  </div>
+
+</section>
 <section id="login-med" class="page">
   <div class="login-wrap">
     <div class="login-panel">
@@ -371,6 +469,7 @@ button.export{background:var(--teal);color:white}
   <!-- Sub-tabs médico -->
   <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
     <button class="step-btn active" id="msub0" onclick="showMedSub(0)">📋 Nova Consulta</button>
+    <button class="step-btn" id="msub-ret" onclick="showMedSub('ret')">🔄 Retorno</button>
     <button class="step-btn" id="msub1" onclick="showMedSub(1)">📁 Histórico</button>
     <button class="step-btn" id="msub2" onclick="showMedSub(2)">📅 Agenda</button>
     <button class="step-btn" id="msub3" onclick="showMedSub(3)">📤 Arquivos</button>
@@ -782,6 +881,161 @@ button.export{background:var(--teal);color:white}
         <button class="secondary" onclick="goStep(3)">← Anterior</button>
         <button class="primary" onclick="salvarProntuario()">✅ Finalizar e Salvar</button>
         <button class="secondary" onclick="novaConsulta()">Nova Consulta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SUB RETORNO: PUERICULTURA ─── -->
+  <div id="msub-panel-ret" style="display:none">
+
+    <!-- Busca do paciente para retorno -->
+    <div style="background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.25);border-radius:14px;padding:16px 20px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:800;color:var(--teal);margin-bottom:10px">🔄 Selecionar paciente para retorno</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input id="ret-busca" type="text" placeholder="Digite o nome do paciente…"
+          style="flex:1;min-width:200px;border:1px solid rgba(13,148,136,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white"
+          oninput="buscaRetorno(this.value)">
+        <button class="secondary" style="padding:8px 14px;font-size:12px;color:var(--teal);border-color:rgba(13,148,136,.3)" onclick="document.getElementById('ret-busca').value='';buscaRetorno('')">Limpar</button>
+      </div>
+      <div id="ret-busca-resultado" style="margin-top:10px;display:none"></div>
+    </div>
+
+    <!-- Card do paciente selecionado (aparece após seleção) -->
+    <div id="ret-paciente-card" style="display:none;background:rgba(180,230,200,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1.5px solid rgba(23,138,74,.25);color:#0a3320;border-radius:18px;padding:18px 22px;margin-bottom:16px;display:none;align-items:center;gap:16px;flex-wrap:wrap">
+      <div id="ret-avatar" style="width:50px;height:50px;border-radius:50%;background:rgba(23,138,74,.18);border:1.5px solid rgba(23,138,74,.3);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">👤</div>
+      <div style="flex:1;min-width:140px">
+        <div id="ret-nome" style="font-size:17px;font-weight:900;color:#0a3320"></div>
+        <div id="ret-info" style="font-size:12px;color:#2a6645;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="ret-vitais-wrap"></div>
+      <button onclick="cancelarRetorno()" style="margin-left:auto;background:none;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:5px 12px;font-size:11.5px;font-weight:700;color:#2a6645;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0">Trocar paciente</button>
+    </div>
+
+    <!-- Formulário de retorno (aparece após seleção) -->
+    <div id="ret-form" style="display:none">
+
+      <!-- Histórico resumido -->
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head">
+          <div><h2>📋 Resumo do histórico</h2></div>
+          <span class="chip chip-teal">Últimas consultas</span>
+        </div>
+        <div id="ret-historico-resumo" style="color:var(--muted);font-size:13px">—</div>
+      </div>
+
+      <!-- SOAP simplificado -->
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head">
+          <div><h2>📏 Medidas Antropométricas</h2></div>
+          <span class="chip chip-blue">Obrigatório · Puericultura</span>
+        </div>
+        <div class="meta" style="margin-bottom:12px">
+          <div class="field"><label>Peso (kg) *</label><input id="ret-peso" type="number" step=".1" placeholder="0.0" oninput="retCalcIMC();retUpdateGrowth()"></div>
+          <div class="field"><label>Estatura (cm) *</label><input id="ret-alt"  type="number" step=".1" placeholder="0.0" oninput="retCalcIMC()"></div>
+          <div class="field"><label>PC (cm)</label><input id="ret-pc"   type="number" step=".1" placeholder="Perímetro cefálico"></div>
+          <div class="field"><label>IMC (kg/m²)</label><input id="ret-imc" type="text" readonly placeholder="—"></div>
+        </div>
+        <div class="meta">
+          <div class="field"><label>Temperatura (°C)</label><input id="ret-temp" type="number" step=".1" placeholder="36.5"></div>
+          <div class="field"><label>SpO₂ (%)</label><input id="ret-spo2" type="number" placeholder="98"></div>
+          <div class="field"><label>FC (bpm)</label><input id="ret-fc" type="number" placeholder="—"></div>
+          <div class="field"><label>PA (mmHg)</label><input id="ret-pa" type="text" placeholder="100/60"></div>
+        </div>
+
+        <!-- Gráfico crescimento no retorno -->
+        <div class="growth-wrap" style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div><b style="font-size:13px">📊 Curva de Crescimento — OMS</b><div class="sub">Histórico + ponto atual</div></div>
+            <select id="ret-growth-sexo" onchange="retUpdateGrowth()" style="border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-family:'DM Sans',sans-serif;background:white">
+              <option value="M">Masculino</option><option value="F">Feminino</option>
+            </select>
+          </div>
+          <canvas id="retGrowthChart" height="240"></canvas>
+          <div id="ret-growth-result" style="margin-top:8px;font-size:12.5px;color:var(--muted)"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head"><h2>👶 Desenvolvimento e Vacinação</h2></div>
+        <div class="meta-2" style="margin-bottom:12px">
+          <div class="field">
+            <label>Estado geral</label>
+            <select id="ret-eg"><option value="">—</option><option>BEG</option><option>REG</option><option>MEG</option></select>
+          </div>
+          <div class="field">
+            <label>Vacinação</label>
+            <select id="ret-vac"><option value="">—</option><option>Em dia</option><option>Incompleto</option><option>Desatualizado</option></select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:10px">
+          <label>Marcos do desenvolvimento observados nesta consulta</label>
+          <textarea id="ret-dnpm" placeholder="Ex.: Sustento cefálico presente. Sorriso social. Balbucio. Sentando com apoio…" style="min-height:68px"></textarea>
+        </div>
+        <div class="field">
+          <label>Alimentação atual</label>
+          <textarea id="ret-alim" placeholder="Ex.: Aleitamento materno exclusivo. Iniciou papas. Boa aceitação…" style="min-height:56px"></textarea>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head"><h2>💬 Queixa e Evolução</h2></div>
+        <div class="field" style="margin-bottom:10px">
+          <label>Queixa / motivo do retorno</label>
+          <textarea id="ret-qp" placeholder="Ex.: Retorno de rotina. Sem queixas. Controle de peso…" style="min-height:56px"></textarea>
+        </div>
+        <div class="field">
+          <label>Evolução clínica desde a última consulta</label>
+          <textarea id="ret-evolucao" placeholder="Ex.: Criança em bom estado geral, ganho de peso adequado, sem intercorrências desde a última consulta…" style="min-height:80px"></textarea>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head"><h2>📝 Conduta e Orientações</h2></div>
+        <div class="field" style="margin-bottom:10px">
+          <label>Orientações à família</label>
+          <textarea id="ret-orient" placeholder="Ex.: Manter aleitamento materno. Introdução alimentar a partir dos 6 meses. Higiene do sono…" style="min-height:72px"></textarea>
+        </div>
+        <div class="meta-2" style="margin-bottom:10px">
+          <div class="field"><label>Próximo retorno (data)</label><input id="ret-proxret" type="date"></div>
+          <div class="field"><label>Condição de retorno</label><input id="ret-proxret-cond" type="text" placeholder="Ex.: Em 1 mês ou antes se necessário"></div>
+        </div>
+        <div class="field">
+          <label>Observações / Encaminhamentos</label>
+          <textarea id="ret-obs" placeholder="Encaminhamentos, pendências, notas para a próxima consulta…" style="min-height:56px"></textarea>
+        </div>
+      </div>
+
+      <!-- Assinatura -->
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head"><h2>✍️ Assinatura Digital</h2></div>
+        <div style="border:1.5px solid var(--line);border-radius:14px;overflow:hidden">
+          <div id="ret-sign-pending" style="padding:16px 18px">
+            <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px">
+                <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">Código de assinatura</label>
+                <input id="ret-sign-code" type="password" placeholder="Cole ou digite o código…"
+                  style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 13px;font-size:13px;font-family:'DM Mono',monospace;outline:none;background:white"
+                  onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--line)'"
+                  onkeydown="if(event.key==='Enter')assinarRetorno()">
+              </div>
+              <button onclick="assinarRetorno()" style="background:linear-gradient(135deg,#6B46C1,#4C2A9E);color:white;border:0;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">✍️ Assinar</button>
+            </div>
+            <div id="ret-sign-err" style="display:none;margin-top:8px;background:#FDEEEE;color:var(--red);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700">❌ Código inválido.</div>
+          </div>
+          <div id="ret-sign-done" style="display:none;background:#E8F7EF;padding:14px 18px;border-top:2px solid #A9E0BE">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:36px;height:36px;border-radius:50%;background:#178A4A;display:flex;align-items:center;justify-content:center;font-size:18px">✅</div>
+              <div><div style="font-size:13px;font-weight:900;color:#0a3320">Retorno assinado digitalmente</div><div id="ret-sign-info" style="font-size:11px;color:#2a6645;margin-top:2px"></div></div>
+              <button onclick="removerAssinaturaRetorno()" style="margin-left:auto;background:none;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:#2a6645;cursor:pointer;font-family:'DM Sans',sans-serif">Remover</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-status"><span class="dot" id="ret-s-dot"></span><span id="ret-s-text">Não salvo</span></div>
+      <div class="actions">
+        <button class="primary" onclick="salvarRetorno()">✅ Salvar retorno</button>
+        <button class="secondary" onclick="cancelarRetorno()">Cancelar</button>
       </div>
     </div>
   </div>
@@ -1300,15 +1554,269 @@ function logout(role) {
 
 // ═══════════════════════════ SUB-ABAS ═══════════════════════════
 function showMedSub(n) {
-  [0,1,2,3].forEach(i => {
+  const numericos = [0,1,2,3];
+  numericos.forEach(i => {
     document.getElementById('msub-panel-'+i).style.display = i===n ? 'block' : 'none';
     document.getElementById('msub'+i).classList.toggle('active', i===n);
     document.getElementById('msub'+i).classList.remove('done');
   });
+  // Aba retorno
+  document.getElementById('msub-panel-ret').style.display = n==='ret' ? 'block' : 'none';
+  document.getElementById('msub-ret').classList.toggle('active', n==='ret');
   currentMedSub = n;
   if (n===1) renderHistorico();
   if (n===2) renderMedCal();
   if (n===3) renderArquivosMed();
+  if (n==='ret') renderRetornoPacientes();
+}
+
+// ═══════════════════════════ RETORNO / PUERICULTURA ═══════════════════════════
+let retGrowthChart = null;
+let retPacienteSelecionado = null; // objeto da última consulta do paciente
+
+function renderRetornoPacientes() {
+  // Ao abrir a aba, limpar seleção anterior
+  document.getElementById('ret-busca').value = '';
+  document.getElementById('ret-busca-resultado').style.display = 'none';
+  cancelarRetorno(true);
+}
+
+function buscaRetorno(q) {
+  const res = document.getElementById('ret-busca-resultado');
+  if (!q || q.length < 2) { res.style.display = 'none'; return; }
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  // Pacientes únicos com histórico
+  const mapa = {};
+  arr.forEach(c => {
+    if (!c.nome) return;
+    if (!mapa[c.nome] || new Date(c.timestamp) > new Date(mapa[c.nome].timestamp))
+      mapa[c.nome] = c;
+  });
+  const matches = Object.values(mapa)
+    .filter(c => c.nome.toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 6);
+  if (!matches.length) { res.style.display = 'none'; return; }
+  res.style.display = 'block';
+  res.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
+    matches.map(c => {
+      const ult = fmtDate(c.dt_consulta || c.timestamp);
+      return `<button onclick="selecionarRetorno('${c.nome.replace(/'/g,"\\'")}');document.getElementById('ret-busca-resultado').style.display='none';document.getElementById('ret-busca').value=''"
+        style="background:#E0F7F5;border:1px solid rgba(13,148,136,.3);color:var(--teal);border-radius:12px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left">
+        <div style="font-weight:900">${c.nome}</div>
+        <div style="font-size:11px;opacity:.75">Última consulta: ${ult}</div>
+      </button>`;
+    }).join('') + '</div>';
+}
+
+function selecionarRetorno(nome) {
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  const hist = arr.filter(c => c.nome === nome).sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
+  if (!hist.length) return;
+  const ult = hist[0];
+  retPacienteSelecionado = ult;
+
+  // Preencher card do paciente
+  const card = document.getElementById('ret-paciente-card');
+  card.style.display = 'flex';
+  document.getElementById('ret-avatar').textContent = ult.sexo==='Feminino'?'👧':ult.sexo==='Masculino'?'👦':'👤';
+  document.getElementById('ret-nome').textContent = ult.nome;
+  const idade = ult.idade ? ult.idade + ' · ' : '';
+  document.getElementById('ret-info').textContent = idade + (ult.sexo||'') + (ult.convenio ? ' · ' + ult.convenio : '') + ' · Última consulta: ' + fmtDate(ult.dt_consulta||ult.timestamp);
+
+  // Vitais da última consulta
+  const vitais = [];
+  if (ult.peso)  vitais.push(`<div style="background:rgba(255,255,255,.55);border:1px solid rgba(23,138,74,.2);border-radius:8px;padding:5px 10px;text-align:center"><div style="font-size:14px;font-weight:900;color:#0a3320">${ult.peso}</div><div style="font-size:9px;color:#2a6645;text-transform:uppercase">kg</div></div>`);
+  if (ult.altura) vitais.push(`<div style="background:rgba(255,255,255,.55);border:1px solid rgba(23,138,74,.2);border-radius:8px;padding:5px 10px;text-align:center"><div style="font-size:14px;font-weight:900;color:#0a3320">${ult.altura}</div><div style="font-size:9px;color:#2a6645;text-transform:uppercase">cm</div></div>`);
+  if (ult.imc)   vitais.push(`<div style="background:rgba(255,255,255,.55);border:1px solid rgba(23,138,74,.2);border-radius:8px;padding:5px 10px;text-align:center"><div style="font-size:14px;font-weight:900;color:#0a3320">${parseFloat(ult.imc).toFixed(1)}</div><div style="font-size:9px;color:#2a6645;text-transform:uppercase">IMC</div></div>`);
+  document.getElementById('ret-vitais-wrap').innerHTML = vitais.join('');
+
+  // Histórico resumido
+  document.getElementById('ret-historico-resumo').innerHTML = hist.slice(0,3).map(c => {
+    const cids = tryParse(c.cids,[]).map(x=>x.cod+' '+x.desc).join(', ')||'—';
+    return `<div style="border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:12.5px">
+      <div style="font-weight:800;color:var(--navy)">${fmtDate(c.dt_consulta||c.timestamp)}</div>
+      <div style="color:var(--muted);margin-top:3px">${cids}</div>
+      ${c.peso?`<div style="color:var(--muted)">Peso: ${c.peso} kg · Alt: ${c.altura||'—'} cm</div>`:''}
+    </div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:13px">Nenhum histórico encontrado.</div>';
+
+  // Pré-preencher campos fixos do paciente
+  if (ult.sexo) document.getElementById('ret-growth-sexo').value = ult.sexo==='Feminino'?'F':'M';
+  // Data de hoje
+  const dtEl = document.getElementById('ret-proxret');
+  if (dtEl) dtEl.value = '';
+
+  // Mostrar formulário
+  document.getElementById('ret-form').style.display = 'block';
+  // Gráfico
+  setTimeout(() => retUpdateGrowth(), 150);
+}
+
+function cancelarRetorno(silencioso) {
+  retPacienteSelecionado = null;
+  document.getElementById('ret-paciente-card').style.display = 'none';
+  document.getElementById('ret-form').style.display = 'none';
+  // Limpar campos
+  ['ret-peso','ret-alt','ret-pc','ret-imc','ret-temp','ret-spo2','ret-fc','ret-pa',
+   'ret-dnpm','ret-alim','ret-qp','ret-evolucao','ret-orient','ret-proxret',
+   'ret-proxret-cond','ret-obs','ret-sign-code'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  const egEl = document.getElementById('ret-eg'); if (egEl) egEl.value = '';
+  const vacEl = document.getElementById('ret-vac'); if (vacEl) vacEl.value = '';
+  document.getElementById('ret-sign-pending').style.display = 'block';
+  document.getElementById('ret-sign-done').style.display = 'none';
+  document.getElementById('ret-sign-err').style.display = 'none';
+  const dot = document.getElementById('ret-s-dot'); if (dot) dot.className='dot';
+  const txt = document.getElementById('ret-s-text'); if (txt) txt.textContent='Não salvo';
+  if (retGrowthChart) { retGrowthChart.destroy(); retGrowthChart=null; }
+}
+
+function retCalcIMC() {
+  const p = parseFloat(document.getElementById('ret-peso').value);
+  const a = parseFloat(document.getElementById('ret-alt').value)/100;
+  document.getElementById('ret-imc').value = (p&&a) ? (p/(a*a)).toFixed(2) : '';
+}
+
+function retGetAgeMonths() {
+  if (!retPacienteSelecionado || !retPacienteSelecionado.dnasc) return null;
+  const nasc = new Date(retPacienteSelecionado.dnasc), hoje = new Date();
+  return (hoje.getFullYear()-nasc.getFullYear())*12+(hoje.getMonth()-nasc.getMonth());
+}
+
+function retUpdateGrowth() {
+  const canvas = document.getElementById('retGrowthChart');
+  if (!canvas) return;
+  const sexo = document.getElementById('ret-growth-sexo').value;
+  const ref = WHO_M[sexo];
+  const labels = WHO_M.labels;
+  const pesoAtual = parseFloat(document.getElementById('ret-peso').value);
+  const ageM = retGetAgeMonths();
+
+  // Pontos históricos do paciente
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  const nome = retPacienteSelecionado ? retPacienteSelecionado.nome : '';
+  const hist = arr.filter(c => c.nome===nome && c.peso && c.dnasc).map(c => {
+    const nasc = new Date(c.dnasc), dt = new Date(c.dt_consulta||c.timestamp);
+    const m = (dt.getFullYear()-nasc.getFullYear())*12+(dt.getMonth()-nasc.getMonth());
+    return { x: m, y: parseFloat(c.peso) };
+  });
+
+  // Ponto atual (se peso preenchido)
+  const patPts = [...hist];
+  if (!isNaN(pesoAtual) && ageM !== null) patPts.push({ x: ageM, y: pesoAtual });
+
+  const datasets = [
+    {label:'P3',  data:ref.p3,  borderColor:'rgba(163,192,247,.7)',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false,tension:.4},
+    {label:'P50', data:ref.p50, borderColor:'#1F6FEB',borderWidth:2.5,pointRadius:0,fill:false,tension:.4},
+    {label:'P97', data:ref.p97, borderColor:'rgba(163,192,247,.7)',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false,tension:.4},
+    {label:'Histórico',data:hist.map(p=>({x:p.x,y:p.y})),borderColor:'rgba(13,148,136,.6)',backgroundColor:'rgba(13,148,136,.6)',borderWidth:1.5,pointRadius:5,showLine:true,tension:.4},
+    {label:'Atual',data:!isNaN(pesoAtual)&&ageM!==null?[{x:ageM,y:pesoAtual}]:[],borderColor:'#E54B4B',backgroundColor:'#E54B4B',borderWidth:2,pointRadius:9,pointBorderColor:'white',pointBorderWidth:2,showLine:false},
+  ];
+
+  const cfg = {type:'line',data:{labels,datasets},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Idade (meses)',font:{size:11}}},y:{title:{display:true,text:'Peso (kg)',font:{size:11}}}}}};
+  if (retGrowthChart) retGrowthChart.destroy();
+  retGrowthChart = new Chart(canvas, cfg);
+
+  // Classificação
+  const res = document.getElementById('ret-growth-result');
+  if (!isNaN(pesoAtual) && ageM !== null && res) {
+    const idx = labels.indexOf(labels.reduce((a,b)=>Math.abs(b-ageM)<Math.abs(a-ageM)?b:a));
+    const p3=ref.p3[idx],p15=ref.p15[idx],p50=ref.p50[idx],p85=ref.p85[idx],p97=ref.p97[idx];
+    let classif='',color='';
+    if(pesoAtual<p3){classif='Abaixo do P3 — Baixo peso grave';color='#C7362F';}
+    else if(pesoAtual<p15){classif='Entre P3–P15 — Baixo peso';color='#C78A14';}
+    else if(pesoAtual<=p85){classif='Entre P15–P85 — Peso adequado ✅';color='#178A4A';}
+    else if(pesoAtual<=p97){classif='Entre P85–P97 — Sobrepeso';color='#C78A14';}
+    else{classif='Acima do P97 — Obesidade';color='#C7362F';}
+    res.innerHTML=`<span style="font-weight:800;color:${color}">${classif}</span> <span style="font-size:11px;color:var(--muted)">· P50 para a idade: ${p50.toFixed(1)} kg · Atual: ${pesoAtual.toFixed(1)} kg</span>`;
+  }
+}
+
+// Assinatura no retorno
+let retAssinado = false;
+function assinarRetorno() {
+  const code = (document.getElementById('ret-sign-code')||{}).value||'';
+  const esperado = SIGN_CODES[medCRM]||'';
+  const err = document.getElementById('ret-sign-err');
+  if (!code || code !== esperado) { err.style.display='block'; return; }
+  err.style.display='none'; retAssinado=true;
+  const ts = new Date().toLocaleString('pt-BR');
+  const medNome = (MED_NAMES[medCRM]||'').split('(')[0].trim();
+  document.getElementById('ret-sign-pending').style.display='none';
+  document.getElementById('ret-sign-done').style.display='block';
+  document.getElementById('ret-sign-info').textContent = `${medNome} · CRM ${medCRM} · ${ts}`;
+  toast('✍️ Retorno assinado!','ok');
+}
+function removerAssinaturaRetorno() {
+  retAssinado=false;
+  document.getElementById('ret-sign-pending').style.display='block';
+  document.getElementById('ret-sign-done').style.display='none';
+  document.getElementById('ret-sign-code').value='';
+}
+
+async function salvarRetorno() {
+  if (!retPacienteSelecionado) { toast('Selecione um paciente antes de salvar.','err'); return; }
+  const peso = document.getElementById('ret-peso').value;
+  if (!peso) { toast('Informe ao menos o peso do paciente.','err'); return; }
+
+  const dot = document.getElementById('ret-s-dot');
+  const txt = document.getElementById('ret-s-text');
+  dot.className='dot saving'; txt.textContent='Salvando…';
+
+  const base = retPacienteSelecionado;
+  const dados = {
+    timestamp: new Date().toISOString(),
+    tipo_registro: 'retorno',
+    medCRM,
+    nome: base.nome, dnasc: base.dnasc, idade: base.idade, sexo: base.sexo,
+    responsavel: base.responsavel, parentesco: base.parentesco,
+    convenio: base.convenio, crm: medCRM,
+    dt_consulta: new Date().toISOString().slice(0,10),
+    medico: (MED_NAMES[medCRM]||'').split('(')[0].trim(),
+    // Antecedentes fixos herdados da primeira consulta
+    antec_perinat: base.antec_perinat, dnpm_previo: base.dnpm,
+    doencas_prev: base.doencas_prev, alergias: base.alergias,
+    antec_fam: base.antec_fam,
+    // Dados desta consulta
+    peso:  document.getElementById('ret-peso').value,
+    altura:document.getElementById('ret-alt').value,
+    pc:    document.getElementById('ret-pc').value,
+    imc:   document.getElementById('ret-imc').value,
+    temp:  document.getElementById('ret-temp').value,
+    spo2:  document.getElementById('ret-spo2').value,
+    fc:    document.getElementById('ret-fc').value,
+    pa:    document.getElementById('ret-pa').value,
+    eg:    document.getElementById('ret-eg').value,
+    vacinacao: document.getElementById('ret-vac').value,
+    dnpm_atual: document.getElementById('ret-dnpm').value,
+    alimentacao: document.getElementById('ret-alim').value,
+    qp:    document.getElementById('ret-qp').value,
+    hma:   document.getElementById('ret-evolucao').value,
+    orientacoes: document.getElementById('ret-orient').value,
+    retorno: document.getElementById('ret-proxret').value,
+    retorno_cond: document.getElementById('ret-proxret-cond').value,
+    evolucao: document.getElementById('ret-obs').value,
+    assinado: retAssinado,
+    cids: '[]', prescricao: '[]', alarmes: '[]',
+  };
+
+  // Salvar no localStorage como consulta normal (aparece no histórico)
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  arr.push(dados);
+  localStorage.setItem('capikids_consultas', JSON.stringify(arr));
+
+  // Enviar ao Sheets
+  if (SHEETS_URL && SHEETS_URL !== 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT') {
+    try { await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)}); } catch(e) {}
+  }
+
+  setTimeout(() => {
+    dot.className='dot saved'; txt.textContent='Salvo em '+new Date().toLocaleTimeString('pt-BR');
+    toast('Retorno de '+base.nome+' salvo com sucesso! ✅','ok');
+    cancelarRetorno(true);
+    showMedSub(1); // abrir histórico
+  }, 500);
 }
 function showPacSub(n) {
   [0,1,2,3].forEach(i => {
@@ -2289,6 +2797,59 @@ function removerAssinatura() {
   document.getElementById('sign-pending').style.display = 'block';
   document.getElementById('sign-done').style.display = 'none';
   document.getElementById('sign-code').value = '';
+}
+
+// ═══════════════════════════ FALE CONOSCO ═══════════════════════════
+async function enviarContato() {
+  const nome = (document.getElementById('ct-nome')||{}).value.trim();
+  const email = (document.getElementById('ct-email')||{}).value.trim();
+  const tel   = (document.getElementById('ct-tel')||{}).value.trim();
+  const msg   = (document.getElementById('ct-msg')||{}).value.trim();
+  const err   = document.getElementById('ct-err');
+  const ok    = document.getElementById('ct-ok');
+  const btn   = document.getElementById('ct-btn');
+
+  // Validação
+  if (!nome) { err.textContent='Por favor, informe seu nome.'; err.style.display='block'; return; }
+  if (!email && !tel) { err.textContent='Informe ao menos um contato: e-mail ou telefone.'; err.style.display='block'; return; }
+  if (!msg) { err.textContent='Por favor, escreva sua mensagem.'; err.style.display='block'; return; }
+  err.style.display = 'none';
+
+  const dados = {
+    _aba: 'Contato',
+    timestamp: new Date().toISOString(),
+    nome, email, telefone: tel, mensagem: msg,
+  };
+
+  // Salvar localmente sempre
+  const contatos = JSON.parse(localStorage.getItem('capikids_contatos')||'[]');
+  contatos.push(dados);
+  localStorage.setItem('capikids_contatos', JSON.stringify(contatos));
+
+  btn.textContent = 'Enviando…'; btn.disabled = true;
+
+  // Enviar ao Sheets se configurado
+  if (SHEETS_URL && SHEETS_URL !== 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT') {
+    try {
+      await fetch(SHEETS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(dados) });
+    } catch(e) {}
+  }
+
+  btn.textContent = '📨 Enviar mensagem'; btn.disabled = false;
+  ok.style.display = 'block';
+  document.getElementById('ct-nome').value = '';
+  document.getElementById('ct-email').value = '';
+  document.getElementById('ct-tel').value = '';
+  document.getElementById('ct-msg').value = '';
+  setTimeout(() => { ok.style.display = 'none'; }, 6000);
+}
+
+function limparContato() {
+  ['ct-nome','ct-email','ct-tel','ct-msg'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('ct-err').style.display = 'none';
+  document.getElementById('ct-ok').style.display  = 'none';
 }
 
 // ═══════════════════════════ UTILS ═══════════════════════════
