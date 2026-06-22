@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PediAtende — Consultório Pediátrico</title>
+<title>CapiKids — Clínica Pediátrica</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦫</text></svg>">
 <style>
 :root{
   --navy:#0B1F3A;--navy2:#143B68;--blue:#1F6FEB;--cyan:#16A3B8;--green:#178A4A;
   --red:#C7362F;--amber:#C78A14;--purple:#6B46C1;--teal:#0D9488;--orange:#EA580C;
+  --capy1:#8B4513;--capy2:#A0522D;--capy3:#6B3410;
   --bg:#EEF2F8;--card:#FFFFFF;--ink:#102033;--muted:#667085;--line:#D0D8E8;--soft:#F4F7FC;
   --shadow:0 4px 24px rgba(12,32,58,.09);
 }
@@ -16,10 +18,13 @@
 body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.5}
 .hero{background:#ffffff;color:var(--ink);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--line),0 2px 12px rgba(12,32,58,.06)}
 .hero-inner{display:flex;align-items:center;flex-wrap:wrap;max-width:1320px;margin:0 auto;min-height:64px;gap:8px 0;padding:6px 0}
-.logo-area{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-right:40px;min-width:0}
-.logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1F6FEB,#0D9488);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.hero-title h1{font-size:16px;font-weight:900;letter-spacing:-.02em;color:var(--navy);line-height:1.2}
-.hero-title p{font-size:11px;color:var(--muted);margin-top:1px}
+.logo-area{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-right:32px;min-width:0}
+.logo-svg{width:44px;height:44px;flex-shrink:0}
+.logo-name{font-size:22px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.logo-name .c1{color:#E54B4B}.logo-name .c2{color:#F7A400}.logo-name .c3{color:#178A4A}
+.logo-name .c4{color:#1F6FEB}.logo-name .c5{color:#6B46C1}.logo-name .c6{color:#C7362F}
+.logo-name .c7{color:#0D9488}.logo-name .c8{color:#E54B4B}
+.hero-title p{font-size:11px;color:var(--muted);margin-top:1px;font-weight:600}
 .tabs{display:flex;gap:0;align-items:stretch;flex:1 1 auto;overflow-x:auto;height:64px;min-width:0;-webkit-overflow-scrolling:touch}
 .tab{border:none;background:transparent;color:var(--muted);padding:0 18px;font-weight:700;cursor:pointer;font-size:13.5px;border-bottom:3px solid transparent;border-top:3px solid transparent;transition:.15s;font-family:'DM Sans',sans-serif;white-space:nowrap;height:100%;display:flex;align-items:center;flex-shrink:0}
 .tab.active{color:var(--blue);border-bottom-color:var(--blue)}
@@ -27,9 +32,9 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-
 main{max-width:1320px;margin:0 auto;padding:22px 18px}
 .page{display:none}.page.active{display:block}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
-.panel-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.panel-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 h2{font-size:17px;font-weight:900;letter-spacing:-.02em}
-h3{font-size:14px;font-weight:800;color:var(--navy);margin:18px 0 8px}
+h3{font-size:14px;font-weight:800;color:var(--navy);margin:16px 0 8px}
 h3:first-child{margin-top:0}
 p.lead{font-size:13.5px;line-height:1.7;color:var(--ink);margin-bottom:4px}
 ul.bullets{margin:6px 0 6px 0;padding-left:22px}
@@ -38,8 +43,9 @@ ul.bullets li{margin-bottom:6px;font-size:13px;line-height:1.55}
 .chip-blue{background:#EAF2FF;color:var(--blue)}.chip-green{background:#E8F7EF;color:var(--green)}
 .chip-amber{background:#FFF5DF;color:var(--amber)}.chip-red{background:#FDEEEE;color:var(--red)}
 .chip-purple{background:#F3EEFF;color:var(--purple)}.chip-teal{background:#E0F7F5;color:var(--teal)}
+.chip-orange{background:#FFF0E8;color:var(--orange)}
 .sub{margin:4px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45;max-width:840px}
-/* ── META / FIELDS ── */
+/* ── FIELDS ── */
 .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .meta-3{grid-template-columns:repeat(3,1fr)}
 .meta-2{grid-template-columns:repeat(2,1fr)}
@@ -50,7 +56,7 @@ ul.bullets li{margin-bottom:6px;font-size:13px;line-height:1.55}
 .field input::placeholder,.field textarea::placeholder{color:#bbb}
 .field input[readonly]{color:var(--blue);font-weight:700}
 /* ── BUTTONS ── */
-button.primary,button.secondary,button.danger,button.export,button.warn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:.15s}
+button.primary,button.secondary,button.danger,button.warn,button.export{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:.15s}
 button.primary{background:linear-gradient(135deg,var(--blue),#1455C0);color:white;box-shadow:0 4px 14px rgba(31,111,235,.3)}
 button.secondary{background:white;color:var(--navy);border:1px solid var(--line)}
 button.secondary:hover{background:var(--soft)}
@@ -61,8 +67,8 @@ button.export{background:var(--teal);color:white}
 /* ── SECTION LABEL ── */
 .section-label{display:flex;align-items:center;gap:8px;margin:20px 0 10px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .section-label:before,.section-label:after{content:"";flex:1;height:1px;background:var(--line)}
-/* ── SOAP BADGES ── */
-.soap-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+/* ── SOAP ── */
+.soap-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .soap-badge{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border-radius:10px;font-size:12px;font-weight:700}
 .soap-s{background:#EAF2FF;color:var(--blue)}.soap-o{background:#E0F7F5;color:var(--teal)}
 .soap-a{background:#FFF5DF;color:var(--amber)}.soap-p{background:#F3EEFF;color:var(--purple)}
@@ -71,7 +77,7 @@ button.export{background:var(--teal);color:white}
 .soap-a .soap-letter{background:var(--amber)}.soap-p .soap-letter{background:var(--purple)}
 /* ── PATIENT CARD ── */
 .patient-card{background:linear-gradient(135deg,#0B1F3A,#143B68);color:white;border-radius:18px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.patient-avatar{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+.patient-avatar{width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
 .patient-name{font-size:20px;font-weight:900;letter-spacing:-.02em}
 .patient-meta{font-size:12px;opacity:.75;margin-top:3px}
 .vitals-row{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap}
@@ -84,55 +90,51 @@ button.export{background:var(--teal);color:white}
 .exam-box{border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .exam-box-title{background:var(--soft);padding:7px 12px;font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .exam-box textarea{display:block;width:100%;border:0;outline:0;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;min-height:64px;resize:none;line-height:1.5;color:var(--ink)}
-.exam-box textarea::placeholder{color:#bbb}
-/* ── CID ROWS ── */
-.cid-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.cid-row input:first-child{max-width:130px;flex-shrink:0}
-.cid-row select{max-width:160px;flex-shrink:0}
-.cid-del{border:1px solid var(--line);background:white;border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--red);font-size:13px;font-weight:700;transition:.1s}
+/* ── CID / RX ── */
+.cid-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.cid-del{border:1px solid var(--line);background:white;border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--red);font-size:13px;font-weight:700;transition:.1s;flex-shrink:0;margin-top:24px}
 .cid-del:hover{background:#FDEEEE;border-color:var(--red)}
 .add-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px dashed var(--blue);background:none;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;color:var(--blue);cursor:pointer;transition:.1s;font-family:'DM Sans',sans-serif}
 .add-btn:hover{background:#EAF2FF}
-/* ── RX BLOCK ── */
 .rx-item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:white}
-.rx-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.rx-item-title{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--teal)}
-/* ── CHECK PILLS ── */
+.rx-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rx-title{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--teal)}
+/* ── PILLS ── */
 .pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
 .pill{display:flex;align-items:center;gap:5px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer;transition:.1s;user-select:none}
 .pill input{width:auto;accent-color:var(--blue)}
 .pill:has(input:checked){background:#EAF2FF;border-color:#A3C0F7;color:var(--blue);font-weight:700}
-/* ── GRAVIDADE ALERT ── */
+/* ── GRAV ALERT ── */
 .grav-alert{border-radius:12px;padding:12px 16px;font-size:13px;display:none;margin-top:10px;border-width:1px;border-style:solid}
 .grav-grave{background:#FFF5DF;border-color:#E8CC80;color:var(--amber)}
 .grav-critico{background:#FDEEEE;border-color:#E9A0A0;color:var(--red)}
 /* ── SIGN AREA ── */
 .sign-area{border:1.5px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--muted);font-size:12.5px;margin-top:8px}
-/* ── PROGRESS NAV ── */
+/* ── PROGRESS ── */
 .progress-wrap{margin-bottom:20px}
 .progress-track{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--teal));transition:.4s}
-.step-nav{display:flex;gap:8px;margin-top:12px;overflow-x:auto}
+.step-nav{display:flex;gap:8px;margin-top:12px;overflow-x:auto;flex-wrap:wrap}
 .step-btn{border:1px solid var(--line);background:white;border-radius:10px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.12s}
 .step-btn.active{background:var(--blue);color:white;border-color:var(--blue)}
 .step-btn.done{background:#E8F7EF;color:var(--green);border-color:#A9E0BE}
 /* ── LOGIN ── */
 .login-wrap{max-width:420px;margin:60px auto}
 .login-panel{background:white;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:36px 32px}
-.login-icon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#1F6FEB,#0D9488);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px}
-.login-title{text-align:center;font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.login-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;overflow:hidden;background:transparent}
+.login-title{text-align:center;font-size:20px;font-weight:900;color:var(--navy);margin-bottom:4px}
 .login-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px}
 .login-field{margin-bottom:14px}
 .login-field label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
 .login-field input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:.15s}
 .login-field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,111,235,.12)}
 .login-err{background:#FDEEEE;color:var(--red);border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:12px;display:none}
-/* ── HOME HERO ── */
+/* ── HOME ── */
 .home-hero{background:linear-gradient(135deg,#0B1F3A 0%,#143B68 60%,#1F6FEB 100%);border-radius:20px;padding:48px 40px;color:white;margin-bottom:20px;position:relative;overflow:hidden}
-.home-hero:before{content:"👶";position:absolute;right:40px;top:50%;transform:translateY(-50%);font-size:100px;opacity:.12}
+.home-capy{position:absolute;right:40px;top:50%;transform:translateY(-50%);opacity:.18;width:160px}
 .home-hero h2{font-size:28px;font-weight:900;letter-spacing:-.03em;margin-bottom:10px}
 .home-hero p{font-size:15px;opacity:.8;max-width:520px;line-height:1.65}
-.home-hero .cta-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.cta-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
 .cta{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:.15s}
 .cta-primary{background:white;color:var(--blue)}
 .cta-secondary{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3)}
@@ -144,90 +146,154 @@ button.export{background:var(--teal);color:white}
 .doc-name{font-size:15px;font-weight:900;color:var(--navy)}
 .doc-crm{font-size:11.5px;color:var(--muted);margin-top:2px}
 .doc-esp{display:inline-flex;align-items:center;border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800;background:#EAF2FF;color:var(--blue);margin-top:8px}
-/* ── KPI ── */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.kpi{background:white;border:1px solid var(--line);border-radius:16px;padding:14px 16px;position:relative;overflow:hidden}
-.kpi:before{content:"";position:absolute;left:0;top:0;width:4px;height:100%}
-.kpi-blue:before{background:var(--blue)}.kpi-green:before{background:var(--green)}
-.kpi-teal:before{background:var(--teal)}.kpi-purple:before{background:var(--purple)}
-.kpi small{display:block;color:var(--muted);text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.06em}
-.kpi b{display:block;font-size:26px;font-weight:900;margin-top:7px;letter-spacing:-.03em}
-.kpi span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
-/* ── STATUS ── */
+/* ── SAVE STATUS ── */
 .save-status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:12px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
 .dot.saved{background:var(--green)}.dot.saving{background:var(--amber)}
 /* ── TOAST ── */
-#toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;color:white;opacity:0;transform:translateY(12px);transition:.3s;z-index:200;pointer-events:none}
+#toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;color:white;opacity:0;transform:translateY(12px);transition:.3s;z-index:9999;pointer-events:none}
 #toast.show{opacity:1;transform:translateY(0)}
 #toast.ok{background:var(--green)}#toast.err{background:var(--red)}#toast.info{background:var(--blue)}
+/* ── HISTÓRICO ── */
+.hist-item{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;background:white;cursor:pointer;transition:.12s}
+.hist-item:hover{box-shadow:var(--shadow)}
+.hist-date{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.hist-name{font-size:15px;font-weight:900;color:var(--navy);margin:3px 0}
+.hist-diag{font-size:12.5px;color:var(--muted)}
+/* ── CALENDAR ── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+.cal-day{text-align:center;padding:8px 4px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:.12s;border:1px solid transparent}
+.cal-day.header{color:var(--muted);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;cursor:default;padding:4px}
+.cal-day.today{background:#EAF2FF;color:var(--blue);border-color:#A3C0F7}
+.cal-day.avail{background:#E8F7EF;color:var(--green);border-color:#A9E0BE}
+.cal-day.unavail{background:var(--soft);color:var(--muted)}
+.cal-day.selected{background:var(--blue);color:white;border-color:var(--blue)}
+.cal-day:hover:not(.header):not(.unavail){box-shadow:var(--shadow)}
+/* ── CHART GROWTH ── */
+.growth-wrap{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px}
+/* ── FILE CARDS ── */
+.file-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+.file-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:white;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.12s}
+.file-card:hover{box-shadow:var(--shadow)}
+.file-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.file-name{font-size:13px;font-weight:700;color:var(--navy)}
+.file-sub{font-size:11px;color:var(--muted);margin-top:2px}
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:white;border-radius:20px;box-shadow:var(--shadow);padding:28px;max-width:680px;width:90vw;max-height:85vh;overflow-y:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-close{background:none;border:1px solid var(--line);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px;color:var(--muted);font-weight:700}
+/* ── AGENDAMENTO PACIENTE ── */
+.slot{display:inline-flex;align-items:center;border-radius:10px;padding:6px 14px;font-size:12.5px;font-weight:700;margin:4px;border:1px solid;cursor:pointer;transition:.12s}
+.slot-free{background:#E8F7EF;color:var(--green);border-color:#A9E0BE}
+.slot-free:hover{background:#d0efde}
+.slot-busy{background:var(--soft);color:var(--muted);border-color:var(--line);cursor:default}
 /* ── RESPONSIVE ── */
-@media(max-width:1080px){.doc-grid,.kpis,.meta{grid-template-columns:1fr 1fr}}
-@media(max-width:680px){.doc-grid,.kpis,.meta,.meta-3,.meta-2,.exam-grid{grid-template-columns:1fr}.vitals-row{margin-left:0}}
-@media(max-width:760px){.hero{padding:0 12px}.hero-inner{padding:8px 0;gap:6px 0}.logo-area{width:100%;margin-right:0}.tabs{width:100%;flex:1 1 100%;height:46px}.tab{padding:0 12px;font-size:12px}main{padding:14px 10px}.panel{padding:14px;border-radius:14px}.panel-head{flex-direction:column;align-items:flex-start;gap:8px}.home-hero{padding:28px 20px}.home-hero h2{font-size:20px}}
+@media(max-width:1080px){.doc-grid,.meta,.file-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.doc-grid,.meta,.meta-3,.meta-2,.exam-grid,.file-grid{grid-template-columns:1fr}.vitals-row{margin-left:0}.home-capy{display:none}}
+@media(max-width:760px){.hero{padding:0 12px}.hero-inner{padding:8px 0;gap:6px 0}.logo-area{width:100%;margin-right:0}.tabs{width:100%;flex:1 1 100%;height:46px}.tab{padding:0 12px;font-size:12px}main{padding:14px 10px}.panel{padding:14px;border-radius:14px}.home-hero{padding:28px 20px}.home-hero h2{font-size:20px}}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<!-- ════════════════════ HEADER ════════════════════ -->
 <header class="hero">
 <div class="hero-inner">
   <div class="logo-area">
-    <div class="logo-icon">👶</div>
-    <div class="hero-title">
-      <h1>PediAtende</h1>
-      <p>Sistema de Consultas Pediátricas</p>
+    <!-- SVG Capivara de Jaleco -->
+    <svg class="logo-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <!-- jaleco branco (body) -->
+      <ellipse cx="40" cy="58" rx="22" ry="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+      <!-- jaleco lapela -->
+      <path d="M30 45 L40 50 L50 45 L50 72 L30 72 Z" fill="#e8e8e8" stroke="#ccc" stroke-width=".8"/>
+      <path d="M40 50 L36 45 L40 48 L44 45 Z" fill="#bbb"/>
+      <!-- bolso -->
+      <rect x="43" y="56" width="8" height="7" rx="2" fill="#d0d0d0" stroke="#bbb" stroke-width=".8"/>
+      <!-- Cruz vermelha no bolso -->
+      <rect x="45.5" y="58" width="3" height="1" rx=".5" fill="#E54B4B"/>
+      <rect x="46.5" y="57" width="1" height="3" rx=".5" fill="#E54B4B"/>
+      <!-- corpo da capivara (marrom) -->
+      <ellipse cx="40" cy="38" rx="17" ry="14" fill="#8B4513"/>
+      <!-- barriga mais clara -->
+      <ellipse cx="40" cy="42" rx="10" ry="8" fill="#A0652A"/>
+      <!-- cabeça -->
+      <ellipse cx="40" cy="22" rx="14" ry="11" fill="#8B4513"/>
+      <!-- focinho -->
+      <ellipse cx="40" cy="27" rx="8" ry="5" fill="#7A3B10"/>
+      <!-- narinas -->
+      <ellipse cx="37.5" cy="26.5" rx="1.2" ry=".9" fill="#5A2A08"/>
+      <ellipse cx="42.5" cy="26.5" rx="1.2" ry=".9" fill="#5A2A08"/>
+      <!-- olhos -->
+      <circle cx="34.5" cy="20" r="2.5" fill="#2c1a08"/>
+      <circle cx="45.5" cy="20" r="2.5" fill="#2c1a08"/>
+      <circle cx="35" cy="19.5" r=".9" fill="white"/>
+      <circle cx="46" cy="19.5" r=".9" fill="white"/>
+      <!-- orelhas -->
+      <ellipse cx="28" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+      <ellipse cx="52" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+      <!-- estetoscópio -->
+      <path d="M33 30 Q27 35 28 42 Q28 48 33 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M47 30 Q53 35 52 42 Q52 48 47 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#2C3E6B"/>
+      <circle cx="40" cy="48" r="2.5" fill="#3A5099"/>
+      <!-- parafuso/headpiece -->
+      <circle cx="33" cy="29.5" r="2" fill="#2C3E6B"/>
+      <circle cx="47" cy="29.5" r="2" fill="#2C3E6B"/>
+      <!-- patas dianteiras -->
+      <ellipse cx="26" cy="55" rx="5" ry="4" fill="#7A3B10"/>
+      <ellipse cx="54" cy="55" rx="5" ry="4" fill="#7A3B10"/>
+      <!-- patas traseiras -->
+      <ellipse cx="30" cy="68" rx="6" ry="4" fill="#7A3B10"/>
+      <ellipse cx="50" cy="68" rx="6" ry="4" fill="#7A3B10"/>
+    </svg>
+    <div>
+      <div class="logo-name"><span class="c1">C</span><span class="c2">a</span><span class="c3">p</span><span class="c4">i</span><span class="c5">K</span><span class="c6">i</span><span class="c7">d</span><span class="c8">s</span></div>
+      <p style="font-size:10px;color:var(--muted);font-weight:600;margin-top:1px">Clínica Pediátrica</p>
     </div>
   </div>
   <nav class="tabs">
     <button class="tab active" onclick="showPage('home',this)">🏠 Página Inicial</button>
-    <button class="tab" onclick="goMedicos(this)">🩺 Médicos</button>
-    <button class="tab" onclick="showPage('pacientes',this)">👨‍👩‍👧 Pacientes</button>
+    <button class="tab" id="tab-med" onclick="goMedico(this)">🩺 Área do Médico</button>
+    <button class="tab" id="tab-pac" onclick="goPaciente(this)">👨‍👩‍👧 Área do Paciente</button>
   </nav>
 </div>
 </header>
 
 <main>
 
-<!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+<!-- ════════════════════ HOME ════════════════════ -->
 <section id="home" class="page active">
 
   <div class="home-hero">
-    <h2>Pediatria de excelência, ao seu alcance.</h2>
-    <p>Consultas pediátricas de rotina com prontuário eletrônico integrado, seguindo os melhores padrões internacionais de atenção à saúde infantil.</p>
+    <svg class="home-capy" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="40" cy="58" rx="22" ry="20" fill="white"/>
+      <ellipse cx="40" cy="38" rx="17" ry="14" fill="white"/>
+      <ellipse cx="40" cy="22" rx="14" ry="11" fill="white"/>
+      <ellipse cx="40" cy="27" rx="8" ry="5" fill="#eee"/>
+      <circle cx="34.5" cy="20" r="2.5" fill="#bbb"/>
+      <circle cx="45.5" cy="20" r="2.5" fill="#bbb"/>
+    </svg>
+    <h2>Crescer com saúde, crescer com cuidado. 🌱</h2>
+    <p>A CapiKids oferece consultas pediátricas com prontuário eletrônico integrado, curvas de crescimento em tempo real e acompanhamento familiar completo.</p>
     <div class="cta-row">
-      <button class="cta cta-primary" onclick="goMedicos(document.querySelectorAll('.tab')[1])">Área do Médico</button>
-      <button class="cta cta-secondary" onclick="showPage('pacientes',document.querySelectorAll('.tab')[2])">Portal do Paciente</button>
-    </div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi kpi-blue">
-      <small>Especialidade</small><b>Pediatria</b><span>Clínica geral infantil</span>
-    </div>
-    <div class="kpi kpi-green">
-      <small>Atendimentos</small><b id="k-total">—</b><span>Consultas registradas</span>
-    </div>
-    <div class="kpi kpi-teal">
-      <small>Modelo clínico</small><b>SOAP</b><span>Padrão internacional</span>
-    </div>
-    <div class="kpi kpi-purple">
-      <small>Banco de dados</small><b>Google Sheets</b><span>Integração em nuvem</span>
+      <button class="cta cta-primary" onclick="goMedico(document.getElementById('tab-med'))">Área do Médico</button>
+      <button class="cta cta-secondary" onclick="goPaciente(document.getElementById('tab-pac'))">Portal da Família</button>
     </div>
   </div>
 
   <div class="panel">
     <div class="panel-head">
-      <div><h2>Sobre o consultório</h2></div>
+      <div><h2>Sobre a CapiKids</h2></div>
       <span class="chip chip-blue">Puericultura · Pediatria Clínica</span>
     </div>
-    <p class="lead">O PediAtende é um sistema de gestão de consultas pediátricas que integra prontuário eletrônico estruturado segundo o método SOAP (Subjetivo · Objetivo · Avaliação · Plano), referenciado pelas diretrizes da Sociedade Brasileira de Pediatria (SBP), da American Academy of Pediatrics (AAP) e pelos padrões JCI de segurança do paciente.</p>
+    <p class="lead">Sistema integrado de gestão de consultas pediátricas com prontuário eletrônico estruturado segundo o método SOAP, referenciado pelas diretrizes da SBP, AAP e pelos padrões JCI de segurança do paciente. Curvas de crescimento segundo a OMS.</p>
     <ul class="bullets" style="margin-top:12px">
-      <li>Anamnese completa: queixa principal, HMA, antecedentes pessoais, familiares e socioeconômicos.</li>
-      <li>Exame físico sistematizado por aparelhos, com antropometria e sinais vitais com alertas automáticos.</li>
-      <li>Hipóteses diagnósticas com CID-10, raciocínio clínico e exames complementares.</li>
-      <li>Conduta estruturada: prescrição medicamentosa, orientações à família e seguimento.</li>
-      <li>Prontuário salvo automaticamente no Google Sheets.</li>
+      <li>Anamnese completa com HMA, antecedentes pessoais, familiares e socioeconômicos.</li>
+      <li>Exame físico por sistemas com alertas automáticos de sinais vitais.</li>
+      <li>Gráfico de crescimento pediátrico (OMS) com histórico evolutivo do paciente.</li>
+      <li>Área do paciente: prescrições, orientações, curva de crescimento e agendamentos.</li>
+      <li>Agenda médica integrada — famílias agendam diretamente pelo portal.</li>
     </ul>
   </div>
 
@@ -235,9 +301,9 @@ button.export{background:var(--teal);color:white}
   <div class="doc-grid">
     <div class="doc-card">
       <div class="doc-avatar">👨‍⚕️</div>
-      <div class="doc-name">Dr. Rafael Nascimento</div>
-      <div class="doc-crm">CRM 123456 / SP · RQE 45678</div>
-      <span class="doc-esp">Pediatra Geral</span>
+      <div class="doc-name">Dr. Admin CapiKids</div>
+      <div class="doc-crm">CRM 239138 · Diretor Clínico</div>
+      <span class="doc-esp">Pediatria Geral · Administração</span>
     </div>
     <div class="doc-card">
       <div class="doc-avatar">👩‍⚕️</div>
@@ -256,609 +322,1082 @@ button.export{background:var(--teal);color:white}
   <div class="panel">
     <div class="panel-head"><h2>Proposta de valor</h2></div>
     <div class="meta-3">
-      <div class="field">
-        <label>🩺 Para o Médico</label>
-        <div style="font-size:13px;color:var(--ink)">Prontuário digital estruturado, ágil e seguro. Toda a evolução salva em nuvem, acessível de qualquer dispositivo.</div>
-      </div>
-      <div class="field">
-        <label>👨‍👩‍👧 Para as Famílias</label>
-        <div style="font-size:13px;color:var(--ink)">Acesso ao histórico de consultas, orientações pós-consulta e acompanhamento do crescimento da criança.</div>
-      </div>
-      <div class="field">
-        <label>📊 Para a Gestão</label>
-        <div style="font-size:13px;color:var(--ink)">Dados estruturados para indicadores de qualidade, epidemiologia e melhoria contínua do atendimento.</div>
-      </div>
+      <div class="field"><label>🩺 Para o Médico</label><div style="font-size:13px">Prontuário digital ágil com curvas de crescimento OMS, agenda integrada e histórico completo dos pacientes.</div></div>
+      <div class="field"><label>👨‍👩‍👧 Para as Famílias</label><div style="font-size:13px">Acesso ao histórico, prescrições, orientações, curva de crescimento da criança e agendamento online.</div></div>
+      <div class="field"><label>📊 Para a Clínica</label><div style="font-size:13px">Dados estruturados, agenda organizada, arquivos compartilhados e gestão eficiente do cuidado pediátrico.</div></div>
     </div>
   </div>
 
 </section>
 
-<!-- ══════════════════════════════ LOGIN MÉDICO ══════════════════════════════ -->
-<section id="login" class="page">
+<!-- ════════════════════ LOGIN MÉDICO ════════════════════ -->
+<section id="login-med" class="page">
   <div class="login-wrap">
     <div class="login-panel">
-      <div class="login-icon">🩺</div>
+      <div class="login-icon">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+          <ellipse cx="40" cy="58" rx="22" ry="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+          <path d="M30 45 L40 50 L50 45 L50 72 L30 72 Z" fill="#e8e8e8" stroke="#ccc" stroke-width=".8"/>
+          <rect x="43" y="56" width="8" height="7" rx="2" fill="#d0d0d0" stroke="#bbb" stroke-width=".8"/>
+          <rect x="45.5" y="58" width="3" height="1" rx=".5" fill="#E54B4B"/>
+          <rect x="46.5" y="57" width="1" height="3" rx=".5" fill="#E54B4B"/>
+          <ellipse cx="40" cy="38" rx="17" ry="14" fill="#8B4513"/>
+          <ellipse cx="40" cy="22" rx="14" ry="11" fill="#8B4513"/>
+          <ellipse cx="40" cy="27" rx="8" ry="5" fill="#7A3B10"/>
+          <ellipse cx="37.5" cy="26.5" rx="1.2" ry=".9" fill="#5A2A08"/>
+          <ellipse cx="42.5" cy="26.5" rx="1.2" ry=".9" fill="#5A2A08"/>
+          <circle cx="34.5" cy="20" r="2.5" fill="#2c1a08"/>
+          <circle cx="45.5" cy="20" r="2.5" fill="#2c1a08"/>
+          <circle cx="35" cy="19.5" r=".9" fill="white"/>
+          <circle cx="46" cy="19.5" r=".9" fill="white"/>
+          <ellipse cx="28" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+          <ellipse cx="52" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+          <path d="M33 30 Q27 35 28 42 Q28 48 33 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M47 30 Q53 35 52 42 Q52 48 47 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+          <ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#2C3E6B"/>
+          <circle cx="40" cy="48" r="2.5" fill="#3A5099"/>
+          <circle cx="33" cy="29.5" r="2" fill="#2C3E6B"/>
+          <circle cx="47" cy="29.5" r="2" fill="#2C3E6B"/>
+        </svg>
+      </div>
       <div class="login-title">Área do Médico</div>
-      <div class="login-sub">Acesso restrito aos profissionais cadastrados.</div>
-      <div id="loginErr" class="login-err">Usuário ou senha incorretos.</div>
-      <div class="login-field">
-        <label>Usuário (CRM)</label>
-        <input id="loginUser" type="text" placeholder="Ex.: 123456SP" autocomplete="username">
-      </div>
-      <div class="login-field">
-        <label>Senha</label>
-        <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-      </div>
-      <button class="primary" style="width:100%;margin-top:8px" onclick="doLogin()">Entrar</button>
+      <div class="login-sub">Login com CRM. Acesso restrito aos profissionais cadastrados.</div>
+      <div id="loginMedErr" class="login-err">CRM ou senha incorretos.</div>
+      <div class="login-field"><label>CRM (login)</label><input id="lmUser" type="text" placeholder="Ex.: 239138" autocomplete="username"></div>
+      <div class="login-field"><label>Senha</label><input id="lmPass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLoginMed()"></div>
+      <button class="primary" style="width:100%;margin-top:8px" onclick="doLoginMed()">Entrar</button>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════ MÉDICOS (ATENDIMENTO) ══════════════════════════════ -->
+<!-- ════════════════════ MÉDICOS (PAINEL) ════════════════════ -->
 <section id="medicos" class="page">
 
-  <!-- Patient Card -->
-  <div class="patient-card" id="patient-card">
-    <div class="patient-avatar" id="pat-avatar">👤</div>
-    <div>
-      <div class="patient-name" id="pat-name">Novo Paciente</div>
-      <div class="patient-meta" id="pat-meta">—</div>
-    </div>
-    <div class="vitals-row">
-      <div class="vital"><div class="vv" id="v-peso">—</div><div class="vl">Peso kg</div></div>
-      <div class="vital"><div class="vv" id="v-alt">—</div><div class="vl">Alt cm</div></div>
-      <div class="vital" id="v-temp-box"><div class="vv" id="v-temp">—</div><div class="vl">Temp°C</div></div>
-      <div class="vital" id="v-spo2-box"><div class="vv" id="v-spo2">—</div><div class="vl">SpO₂%</div></div>
+  <!-- Sub-tabs médico -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="step-btn active" id="msub0" onclick="showMedSub(0)">📋 Nova Consulta</button>
+    <button class="step-btn" id="msub1" onclick="showMedSub(1)">📁 Histórico</button>
+    <button class="step-btn" id="msub2" onclick="showMedSub(2)">📅 Agenda</button>
+    <button class="step-btn" id="msub3" onclick="showMedSub(3)">📤 Arquivos</button>
+    <div style="margin-left:auto;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px">
+      <span id="med-logged-name" style="font-weight:700;color:var(--navy)"></span>
+      <button class="secondary" style="padding:6px 12px;font-size:12px" onclick="logout('med')">Sair</button>
     </div>
   </div>
 
-  <!-- SOAP Legend -->
-  <div class="soap-row">
-    <div class="soap-badge soap-s"><div class="soap-letter">S</div>Subjetivo — Anamnese</div>
-    <div class="soap-badge soap-o"><div class="soap-letter">O</div>Objetivo — Exame Físico</div>
-    <div class="soap-badge soap-a"><div class="soap-letter">A</div>Avaliação — Diagnóstico</div>
-    <div class="soap-badge soap-p"><div class="soap-letter">P</div>Plano — Conduta</div>
+  <!-- ─── SUB 0: NOVA CONSULTA ─── -->
+  <div id="msub-panel-0">
+
+    <div class="patient-card" id="patient-card">
+      <div class="patient-avatar" id="pat-avatar">👤</div>
+      <div>
+        <div class="patient-name" id="pat-name">Novo Paciente</div>
+        <div class="patient-meta" id="pat-meta">—</div>
+      </div>
+      <div class="vitals-row">
+        <div class="vital"><div class="vv" id="v-peso">—</div><div class="vl">Peso kg</div></div>
+        <div class="vital"><div class="vv" id="v-alt">—</div><div class="vl">Alt cm</div></div>
+        <div class="vital" id="v-temp-box"><div class="vv" id="v-temp">—</div><div class="vl">Temp°C</div></div>
+        <div class="vital" id="v-spo2-box"><div class="vv" id="v-spo2">—</div><div class="vl">SpO₂%</div></div>
+      </div>
+    </div>
+
+    <div class="soap-row">
+      <div class="soap-badge soap-s"><div class="soap-letter">S</div>Subjetivo</div>
+      <div class="soap-badge soap-o"><div class="soap-letter">O</div>Objetivo</div>
+      <div class="soap-badge soap-a"><div class="soap-letter">A</div>Avaliação</div>
+      <div class="soap-badge soap-p"><div class="soap-letter">P</div>Plano</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+      <div class="step-nav">
+        <button class="step-btn active" id="stp0" onclick="goStep(0)">1 · Identificação</button>
+        <button class="step-btn" id="stp1" onclick="goStep(1)">2 · Anamnese</button>
+        <button class="step-btn" id="stp2" onclick="goStep(2)">3 · Exame Físico</button>
+        <button class="step-btn" id="stp3" onclick="goStep(3)">4 · Diagnóstico</button>
+        <button class="step-btn" id="stp4" onclick="goStep(4)">5 · Conduta</button>
+      </div>
+    </div>
+
+    <!-- STEP 0: IDENTIFICAÇÃO -->
+    <div id="step0">
+      <div class="panel">
+        <div class="panel-head"><div><h2>🪪 Identificação do Paciente</h2></div><span class="chip chip-blue">S — Subjetivo</span></div>
+        <div class="meta">
+          <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Nome da criança" oninput="updatePatCard()"></div>
+          <div class="field"><label>Data de nascimento *</label><input id="f-dnasc" type="date" onchange="calcIdade()"></div>
+          <div class="field"><label>Idade calculada</label><input id="f-idade" type="text" readonly placeholder="—"></div>
+          <div class="field"><label>Sexo</label><select id="f-sexo" onchange="updatePatCard()"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
+        </div>
+        <div class="meta-3" style="margin-top:10px">
+          <div class="field"><label>Responsável</label><input id="f-resp" type="text" placeholder="Nome do responsável"></div>
+          <div class="field"><label>Parentesco</label><select id="f-par"><option value="">—</option><option>Mãe</option><option>Pai</option><option>Avó / Avô</option><option>Outro</option></select></div>
+          <div class="field"><label>Data da consulta</label><input id="f-dtcons" type="date"></div>
+        </div>
+        <div class="meta-2" style="margin-top:10px">
+          <div class="field"><label>Médico responsável</label><input id="f-med" type="text" placeholder="Nome do médico"></div>
+          <div class="field"><label>Convênio / Plano</label><input id="f-conv" type="text" placeholder="Unimed, SUS, Particular…"></div>
+        </div>
+      </div>
+      <div class="actions"><button class="primary" onclick="goStep(1)">Próximo: Anamnese →</button></div>
+    </div>
+
+    <!-- STEP 1: ANAMNESE -->
+    <div id="step1" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><h2>💬 Queixa Principal (QP)</h2></div>
+        <div class="field"><label>Motivo da consulta — em palavras do responsável</label><textarea id="f-qp" placeholder="Ex.: 'Minha filha está com febre há 3 dias e dor de garganta.'" style="min-height:70px"></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>📋 História da Moléstia Atual (HMA)</h2></div>
+        <div class="field"><label>Descrição cronológica detalhada</label><textarea id="f-hma" placeholder="Início, duração, características, fatores de melhora/piora, tratamentos realizados…" style="min-height:110px"></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>📁 Antecedentes Pessoais</h2></div>
+        <div class="meta-2">
+          <div class="field"><label>Perinatais</label><textarea id="f-peri" placeholder="Tipo de parto, IG, PN, PC, Apgar…"></textarea></div>
+          <div class="field"><label>DNPM</label><textarea id="f-dnpm" placeholder="Marcos: sorriso social, sentar, andar, palavras…"></textarea></div>
+        </div>
+        <div class="meta-2" style="margin-top:10px">
+          <div class="field"><label>Doenças prévias / Cirurgias / Internações</label><textarea id="f-dprev" placeholder="Ex.: Bronquiolite aos 4m. Adenoamigdalectomia aos 5a…"></textarea></div>
+          <div class="field"><label>Alergias ⚠️</label><textarea id="f-alerg" placeholder="Medicamentos, alimentos, látex. Sem alergias: NAIDA." oninput="updatePatCard()"></textarea></div>
+        </div>
+        <div class="field" style="margin-top:10px"><label>Medicamentos em uso</label><textarea id="f-meds" placeholder="Nome, dose, frequência, indicação."></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>💉 Vacinação (PNI)</h2></div>
+        <div class="pill-group">
+          <label class="pill"><input type="radio" name="vac" value="em_dia"> ✅ Em dia</label>
+          <label class="pill"><input type="radio" name="vac" value="incompleto"> ⚠️ Incompleto</label>
+          <label class="pill"><input type="radio" name="vac" value="desatualizado"> ❌ Desatualizado</label>
+          <label class="pill"><input type="radio" name="vac" value="ni"> ❓ Não informado</label>
+        </div>
+        <div class="field" style="margin-top:10px"><label>Observações vacinação</label><textarea id="f-vacobs" placeholder="Vacinas em atraso, recusa, esquemas especiais…" style="min-height:52px"></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>🍼 Alimentação · 👨‍👩‍👧 Família · 🏠 Social</h2></div>
+        <div class="meta-2">
+          <div class="field"><label>Aleitamento materno</label><select id="f-aleit"><option value="">—</option><option>Exclusivo até 6 meses</option><option>Parcial</option><option>Não amamentou</option><option>Em aleitamento</option></select></div>
+          <div class="field"><label>Alimentação atual</label><textarea id="f-alim" placeholder="Dieta, restrições, aceitação alimentar…" style="min-height:52px"></textarea></div>
+        </div>
+        <div class="field" style="margin-top:10px"><label>Antecedentes familiares</label><textarea id="f-afam" placeholder="Ex.: pai com HAS, mãe com asma, avó materna com DM2…" style="min-height:64px"></textarea></div>
+        <div class="meta" style="margin-top:10px">
+          <div class="field"><label>Moradia</label><select id="f-mor"><option value="">—</option><option>Própria</option><option>Alugada</option><option>Cedida</option></select></div>
+          <div class="field"><label>Saneamento</label><select id="f-san"><option value="">—</option><option>Adequado</option><option>Inadequado</option><option>Parcial</option></select></div>
+          <div class="field"><label>Animais</label><select id="f-anim"><option value="">—</option><option>Não</option><option>Cão</option><option>Gato</option><option>Outros</option></select></div>
+          <div class="field"><label>Escola / Creche</label><input id="f-esc" type="text" placeholder="Nome, série, turno"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="goStep(0)">← Anterior</button>
+        <button class="primary" onclick="goStep(2)">Próximo: Exame Físico →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: EXAME FÍSICO + GRÁFICO CRESCIMENTO -->
+    <div id="step2" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><div><h2>📏 Antropometria e Sinais Vitais</h2></div><span class="chip chip-teal">O — Objetivo</span></div>
+        <div class="meta">
+          <div class="field"><label>Peso (kg)</label><input id="f-peso" type="number" step=".1" placeholder="0.0" oninput="updateVitals();calcIMC();updateGrowthChart()"></div>
+          <div class="field"><label>Estatura (cm)</label><input id="f-alt" type="number" step=".1" placeholder="0.0" oninput="updateVitals();calcIMC()"></div>
+          <div class="field"><label>PC (cm)</label><input id="f-pc" type="number" step=".1" placeholder="Perímetro cefálico"></div>
+          <div class="field"><label>IMC (kg/m²)</label><input id="f-imc" type="text" readonly placeholder="—"></div>
+        </div>
+        <div class="meta" style="margin-top:10px">
+          <div class="field"><label>Temperatura (°C)</label><input id="f-temp" type="number" step=".1" placeholder="36.5" oninput="updateVitals()"></div>
+          <div class="field"><label>SpO₂ (%)</label><input id="f-spo2" type="number" placeholder="98" oninput="updateVitals()"></div>
+          <div class="field"><label>FC (bpm)</label><input id="f-fc" type="number" placeholder="Freq. cardíaca"></div>
+          <div class="field"><label>FR (irpm)</label><input id="f-fr" type="number" placeholder="Freq. respiratória"></div>
+        </div>
+        <div class="meta-2" style="margin-top:10px">
+          <div class="field"><label>PA (mmHg)</label><input id="f-pa" type="text" placeholder="Ex.: 100/60"></div>
+          <div class="field"><label>Glicemia capilar (mg/dL)</label><input id="f-gli" type="number" placeholder="—"></div>
+        </div>
+
+        <!-- GRÁFICO CRESCIMENTO OMS -->
+        <div class="growth-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div><b style="font-size:13px">📊 Curva de Crescimento Pediátrico — OMS</b><div class="sub">Peso-para-idade · Comparação com percentis da OMS</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <label style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sexo:</label>
+              <select id="growth-sexo" onchange="updateGrowthChart()" style="border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-family:'DM Sans',sans-serif;background:white">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+              </select>
+            </div>
+          </div>
+          <canvas id="growthChart" height="280"></canvas>
+          <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap">
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:18px;height:3px;background:#1F6FEB;display:inline-block;border-radius:2px"></span>P50 (mediana)</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:18px;height:2px;background:#A3C0F7;display:inline-block;border-radius:2px;border-top:2px dashed #A3C0F7"></span>P3 / P97</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:18px;height:2px;background:#FFA040;display:inline-block;border-radius:2px;border-top:2px dashed #FFA040"></span>P15 / P85</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#E54B4B;border:2px solid white;box-shadow:0 0 0 1px #E54B4B"></span>Paciente</span>
+          </div>
+          <div id="growth-result" style="margin-top:10px;font-size:12.5px;color:var(--muted)"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>🧒 Estado Geral e Exame por Sistemas</h2></div>
+        <div class="meta-3">
+          <div class="field"><label>Estado geral</label><select id="f-eg"><option value="">—</option><option>BEG</option><option>REG</option><option>MEG</option></select></div>
+          <div class="field"><label>Hidratação</label><select id="f-hidr"><option value="">—</option><option>Hidratado</option><option>Desidratação leve</option><option>Desidratação moderada</option><option>Desidratação grave</option></select></div>
+          <div class="field"><label>Coloração</label><select id="f-cor"><option value="">—</option><option>Corado (C)</option><option>Descorado +/4+</option><option>Descorado ++/4+</option><option>Ictérico</option><option>Cianótico</option></select></div>
+        </div>
+        <div class="field" style="margin-top:10px"><label>Complemento EG</label><textarea id="f-eg-obs" placeholder="Ex.: Criança ativa, reativa, eupneica, acianótica, anictérica, hidratada…" style="min-height:56px"></textarea></div>
+        <div class="exam-grid" style="margin-top:12px">
+          <div class="exam-box"><div class="exam-box-title">🫁 Respiratório</div><textarea id="ex-resp" placeholder="MV, ruídos, esforço, tiragem…"></textarea></div>
+          <div class="exam-box"><div class="exam-box-title">❤️ Cardiovascular</div><textarea id="ex-cv" placeholder="Bulhas, ritmo, sopros, TEC, pulsos…"></textarea></div>
+          <div class="exam-box"><div class="exam-box-title">🫃 Abdome</div><textarea id="ex-abd" placeholder="Palpação, fígado, baço, RHA…"></textarea></div>
+          <div class="exam-box"><div class="exam-box-title">🧠 Neurológico</div><textarea id="ex-neuro" placeholder="Consciência, fontanela, reflexos…"></textarea></div>
+          <div class="exam-box"><div class="exam-box-title">👂 ORL / Pescoço</div><textarea id="ex-orl" placeholder="Orofaringe, amígdalas, linfonodos…"></textarea></div>
+          <div class="exam-box"><div class="exam-box-title">🦴 Pele / MSKE</div><textarea id="ex-pele" placeholder="Lesões, exantemas, turgor, edemas…"></textarea></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="secondary" onclick="goStep(1)">← Anterior</button>
+        <button class="primary" onclick="goStep(3)">Próximo: Diagnóstico →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: DIAGNÓSTICO -->
+    <div id="step3" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><div><h2>🎯 Hipóteses Diagnósticas / CID-10</h2></div><span class="chip chip-amber">A — Avaliação</span></div>
+        <div id="cid-list"></div>
+        <button class="add-btn" onclick="addCID()">+ Adicionar diagnóstico / CID</button>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>🧩 Raciocínio Clínico e Exames</h2></div>
+        <div class="field"><label>Raciocínio diagnóstico</label><textarea id="f-rac" placeholder="Integração dos dados clínicos e laboratoriais…" style="min-height:100px"></textarea></div>
+        <div class="meta-2" style="margin-top:10px">
+          <div class="field"><label>Resultados de exames</label><textarea id="f-exres" placeholder="Hemograma, PCR, imagem…"></textarea></div>
+          <div class="field"><label>Exames solicitados</label><textarea id="f-exsol" placeholder="Lista com justificativa…"></textarea></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>⚠️ Classificação de Risco</h2></div>
+        <div class="meta-2">
+          <div class="field"><label>Gravidade</label><select id="f-grav" onchange="updateGrav()"><option value="">—</option><option value="leve">Leve — ambulatorial</option><option value="moderado">Moderado — retorno breve</option><option value="grave">Grave — internação</option><option value="critico">Crítico — UTI / emergência</option></select></div>
+          <div class="field"><label>Tipo de consulta</label><select id="f-tcons"><option value="">—</option><option>Rotina / puericultura</option><option>Consulta aguda</option><option>Retorno</option><option>Primeira consulta</option></select></div>
+        </div>
+        <div id="grav-alert" class="grav-alert"></div>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="goStep(2)">← Anterior</button>
+        <button class="primary" onclick="goStep(4)">Próximo: Conduta →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: CONDUTA -->
+    <div id="step4" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><div><h2>💊 Prescrição Medicamentosa</h2></div><span class="chip chip-purple">P — Plano</span></div>
+        <div id="rx-list"></div>
+        <button class="add-btn" onclick="addRx()">+ Adicionar medicamento</button>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>🌿 Medidas Não Farmacológicas e Orientações</h2></div>
+        <div class="field"><label>Medidas gerais</label><textarea id="f-nfar" placeholder="Repouso, hidratação, dieta, higiene nasal…" style="min-height:80px"></textarea></div>
+        <div style="margin-top:12px;font-size:12.5px;color:var(--muted);margin-bottom:6px">Sinais de alarme — retornar se:</div>
+        <div class="pill-group">
+          <label class="pill"><input type="checkbox" class="alarm" value="febre"> Febre &gt; 39°C</label>
+          <label class="pill"><input type="checkbox" class="alarm" value="dispneia"> Dificuldade respiratória</label>
+          <label class="pill"><input type="checkbox" class="alarm" value="letargia"> Sonolência / irritabilidade</label>
+          <label class="pill"><input type="checkbox" class="alarm" value="aliment"> Recusa alimentar</label>
+          <label class="pill"><input type="checkbox" class="alarm" value="vomitos"> Vômitos persistentes</label>
+          <label class="pill"><input type="checkbox" class="alarm" value="convulsao"> Convulsão</label>
+          <label class="pill"><input type="checkbox" class="alarm" value="piora"> Piora geral</label>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Outras orientações à família</label><textarea id="f-orient" placeholder="Afastamento escolar, cuidados domiciliares…" style="min-height:64px"></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>📅 Retorno · 📎 Encaminhamentos · 📤 Arquivos</h2></div>
+        <div class="meta-2">
+          <div class="field"><label>Data de retorno</label><input id="f-ret" type="date"></div>
+          <div class="field"><label>Condição de retorno</label><input id="f-retcond" type="text" placeholder="Ex.: Em 7 dias ou antes se piora"></div>
+        </div>
+        <div class="field" style="margin-top:10px"><label>Encaminhamentos</label><textarea id="f-encam" placeholder="Especialidades, CAPS, CRAS…" style="min-height:52px"></textarea></div>
+        <div class="field" style="margin-top:10px"><label>Arquivo / Receita para o paciente (descrição)</label><textarea id="f-arquivo" placeholder="Descreva arquivos ou receitas que serão disponibilizados ao responsável…" style="min-height:52px"></textarea></div>
+        <div class="field" style="margin-top:10px"><label>Evolução / Notas adicionais</label><textarea id="f-evol" placeholder="Observações para o próximo atendimento…" style="min-height:64px"></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>✍️ Assinatura</h2></div>
+        <div class="meta-2">
+          <div class="field"><label>CRM</label><input id="f-crm" type="text" placeholder="Ex.: 239138 / SP"></div>
+          <div class="field"><label>RQE</label><input id="f-rqe" type="text" placeholder="Ex.: 45678"></div>
+        </div>
+        <div class="sign-area">✍️ Assinatura digital · O prontuário será salvo com data, hora e identificação do profissional.</div>
+      </div>
+      <div class="save-status"><span class="dot" id="s-dot"></span><span id="s-text">Não salvo</span></div>
+      <div class="actions">
+        <button class="secondary" onclick="goStep(3)">← Anterior</button>
+        <button class="primary" onclick="salvarProntuario()">✅ Finalizar e Salvar</button>
+        <button class="secondary" onclick="novaConsulta()">Nova Consulta</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Progress steps -->
-  <div class="progress-wrap">
-    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
-    <div class="step-nav">
-      <button class="step-btn active" id="stp0" onclick="goStep(0)">1 · Anamnese</button>
-      <button class="step-btn" id="stp1" onclick="goStep(1)">2 · Exame Físico</button>
-      <button class="step-btn" id="stp2" onclick="goStep(2)">3 · Diagnóstico</button>
-      <button class="step-btn" id="stp3" onclick="goStep(3)">4 · Conduta</button>
+  <!-- ─── SUB 1: HISTÓRICO ─── -->
+  <div id="msub-panel-1" style="display:none">
+    <div class="panel">
+      <div class="panel-head"><div><h2>📁 Histórico de Atendimentos</h2></div><button class="export" onclick="showMedSub(0)" style="padding:8px 14px;font-size:12px">+ Nova Consulta</button></div>
+      <div id="hist-list"><div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">Nenhuma consulta registrada ainda.</div></div>
     </div>
   </div>
 
-  <!-- ────────────────── STEP 0: ANAMNESE ────────────────── -->
-  <div id="step0" class="step-panel">
-
+  <!-- ─── SUB 2: AGENDA ─── -->
+  <div id="msub-panel-2" style="display:none">
     <div class="panel">
-      <div class="panel-head"><div><h2>🪪 Identificação do Paciente</h2></div><span class="chip chip-blue">S — Subjetivo</span></div>
-      <div class="meta">
-        <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Nome do paciente" oninput="updatePatientCard()"></div>
-        <div class="field"><label>Data de nascimento *</label><input id="f-dnasc" type="date" onchange="calcIdade()"></div>
-        <div class="field"><label>Idade calculada</label><input id="f-idade" type="text" readonly placeholder="—"></div>
-        <div class="field"><label>Sexo</label><select id="f-sexo" onchange="updatePatientCard()"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
+      <div class="panel-head"><div><h2>📅 Gerenciamento de Agenda</h2></div><span class="chip chip-green">Visível pelos pacientes</span></div>
+      <p class="sub" style="margin-bottom:16px">Defina os dias e horários disponíveis para consultas. Os responsáveis poderão visualizar e solicitar agendamentos na Área do Paciente.</p>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <button class="secondary" style="padding:7px 14px;font-size:13px" onclick="prevMonth()">‹</button>
+        <span id="cal-month-label" style="font-size:15px;font-weight:900;color:var(--navy)"></span>
+        <button class="secondary" style="padding:7px 14px;font-size:13px" onclick="nextMonth()">›</button>
       </div>
-      <div class="meta-3" style="margin-top:10px">
-        <div class="field"><label>Responsável</label><input id="f-resp" type="text" placeholder="Nome do responsável"></div>
-        <div class="field"><label>Parentesco</label><select id="f-par"><option value="">—</option><option>Mãe</option><option>Pai</option><option>Avó / Avô</option><option>Outro</option></select></div>
-        <div class="field"><label>Data da consulta</label><input id="f-dtcons" type="date"></div>
+      <div class="cal-grid" id="med-cal"></div>
+      <div id="day-detail" style="display:none;margin-top:16px">
+        <div class="section-label">Horários para <span id="day-detail-date" style="color:var(--blue);font-weight:900"></span></div>
+        <div class="field"><label>Horários disponíveis (um por linha, ex: 09:00)</label><textarea id="day-slots" placeholder="08:00&#10;09:00&#10;10:00&#10;14:00&#10;15:00" style="min-height:100px"></textarea></div>
+        <div class="actions">
+          <button class="primary" onclick="saveSlots()">Salvar horários</button>
+          <button class="secondary" onclick="document.getElementById('day-detail').style.display='none'">Cancelar</button>
+        </div>
       </div>
-      <div class="meta-2" style="margin-top:10px">
-        <div class="field"><label>Médico responsável</label><input id="f-med" type="text" placeholder="Nome do médico"></div>
-        <div class="field"><label>Convênio / Plano</label><input id="f-conv" type="text" placeholder="Unimed, SUS, Particular…"></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>💬 Queixa Principal (QP)</h2></div>
-      <div class="field"><label>Motivo da consulta — em palavras do responsável</label><textarea id="f-qp" placeholder="Ex.: 'Minha filha está com febre há 3 dias e dor de garganta.'" style="min-height:70px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>📋 História da Moléstia Atual (HMA)</h2></div>
-      <p class="sub" style="margin-bottom:12px">Descreva cronologicamente: início, duração, características, fatores de melhora/piora, tratamentos realizados e evolução.</p>
-      <div class="field"><label>Descrição detalhada</label><textarea id="f-hma" placeholder="Ex.: Paciente iniciou quadro há 3 dias com febre (38,5°C), coriza hialina e dor de garganta…" style="min-height:110px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>📁 Antecedentes Pessoais</h2></div>
-      <div class="meta-2">
-        <div class="field"><label>Perinatais</label><textarea id="f-peri" placeholder="Tipo de parto, IG, PN, PC, Apgar, intercorrências neonatais…"></textarea></div>
-        <div class="field"><label>DNPM</label><textarea id="f-dnpm" placeholder="Marcos: sorriso social, sustento cefálico, sentar, andar, primeiras palavras…"></textarea></div>
-      </div>
-      <div class="meta-2" style="margin-top:10px">
-        <div class="field"><label>Doenças prévias / Cirurgias / Internações</label><textarea id="f-dprev" placeholder="Ex.: Bronquiolite aos 4m. Adenoamigdalectomia aos 5a…"></textarea></div>
-        <div class="field"><label>Alergias ⚠️</label><textarea id="f-alerg" placeholder="Medicamentos, alimentos, látex. Se não há: NAIDA." oninput="updatePatientCard()"></textarea></div>
-      </div>
-      <div class="field" style="margin-top:10px"><label>Medicamentos em uso</label><textarea id="f-meds" placeholder="Nome, dose, frequência, indicação."></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>💉 Vacinação</h2></div>
-      <div style="margin-bottom:10px;font-size:12.5px;color:var(--muted)">Calendário Vacinal Nacional (PNI)</div>
-      <div class="pill-group">
-        <label class="pill"><input type="radio" name="vac" value="em_dia"> ✅ Em dia</label>
-        <label class="pill"><input type="radio" name="vac" value="incompleto"> ⚠️ Incompleto</label>
-        <label class="pill"><input type="radio" name="vac" value="desatualizado"> ❌ Desatualizado</label>
-        <label class="pill"><input type="radio" name="vac" value="ni"> ❓ Não informado</label>
-      </div>
-      <div class="field" style="margin-top:10px"><label>Observações vacinação</label><textarea id="f-vacobs" placeholder="Vacinas em atraso, recusa, esquemas especiais…" style="min-height:52px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🍼 Alimentação e Nutrição</h2></div>
-      <div class="meta-2">
-        <div class="field"><label>Aleitamento materno</label><select id="f-aleit"><option value="">—</option><option>Exclusivo até 6 meses</option><option>Parcial</option><option>Não amamentou</option><option>Em aleitamento</option></select></div>
-        <div class="field"><label>Alimentação atual</label><textarea id="f-alim" placeholder="Dieta, restrições, aceitação alimentar…" style="min-height:52px"></textarea></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>👨‍👩‍👧 Antecedentes Familiares</h2></div>
-      <div class="field"><label>Doenças na família (pais, irmãos, avós)</label><textarea id="f-afam" placeholder="Ex.: pai com HAS, mãe com asma, avó materna com DM2…" style="min-height:72px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🏠 Condições Socioambientais</h2></div>
-      <div class="meta">
-        <div class="field"><label>Moradia</label><select id="f-mor"><option value="">—</option><option>Própria</option><option>Alugada</option><option>Cedida</option></select></div>
-        <div class="field"><label>Saneamento</label><select id="f-san"><option value="">—</option><option>Adequado</option><option>Inadequado</option><option>Parcial</option></select></div>
-        <div class="field"><label>Animais domésticos</label><select id="f-anim"><option value="">—</option><option>Não</option><option>Sim — cão</option><option>Sim — gato</option><option>Sim — outros</option></select></div>
-        <div class="field"><label>Creche / Escola</label><input id="f-esc" type="text" placeholder="Nome, série, turno"></div>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="primary" onclick="goStep(1)">Próximo: Exame Físico →</button>
     </div>
   </div>
 
-  <!-- ────────────────── STEP 1: EXAME FÍSICO ────────────────── -->
-  <div id="step1" class="step-panel" style="display:none">
-
+  <!-- ─── SUB 3: ARQUIVOS ─── -->
+  <div id="msub-panel-3" style="display:none">
     <div class="panel">
-      <div class="panel-head"><div><h2>📏 Antropometria e Sinais Vitais</h2></div><span class="chip chip-teal">O — Objetivo</span></div>
-      <div class="meta">
-        <div class="field"><label>Peso (kg)</label><input id="f-peso" type="number" step=".1" placeholder="0.0" oninput="updateVitals();calcIMC()"></div>
-        <div class="field"><label>Estatura (cm)</label><input id="f-alt" type="number" step=".1" placeholder="0.0" oninput="updateVitals();calcIMC()"></div>
-        <div class="field"><label>PC (cm)</label><input id="f-pc" type="number" step=".1" placeholder="Perímetro cefálico"></div>
-        <div class="field"><label>IMC (kg/m²)</label><input id="f-imc" type="text" readonly placeholder="—"></div>
-      </div>
-      <div class="meta" style="margin-top:10px">
-        <div class="field"><label>Temperatura (°C)</label><input id="f-temp" type="number" step=".1" placeholder="36.5" oninput="updateVitals()"></div>
-        <div class="field"><label>SpO₂ (%)</label><input id="f-spo2" type="number" placeholder="98" oninput="updateVitals()"></div>
-        <div class="field"><label>FC (bpm)</label><input id="f-fc" type="number" placeholder="Freq. cardíaca"></div>
-        <div class="field"><label>FR (irpm)</label><input id="f-fr" type="number" placeholder="Freq. respiratória"></div>
-      </div>
-      <div class="meta-2" style="margin-top:10px">
-        <div class="field"><label>PA (mmHg)</label><input id="f-pa" type="text" placeholder="Ex.: 100/60"></div>
-        <div class="field"><label>Glicemia capilar (mg/dL)</label><input id="f-gli" type="number" placeholder="—"></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🧒 Estado Geral e Aspecto</h2></div>
-      <div class="meta-3">
-        <div class="field"><label>Estado geral</label><select id="f-eg"><option value="">—</option><option>Bom estado geral (BEG)</option><option>Regular estado geral (REG)</option><option>Mau estado geral (MEG)</option></select></div>
-        <div class="field"><label>Hidratação</label><select id="f-hidr"><option value="">—</option><option>Hidratado</option><option>Desidratação leve</option><option>Desidratação moderada</option><option>Desidratação grave</option></select></div>
-        <div class="field"><label>Coloração</label><select id="f-cor"><option value="">—</option><option>Corado (C)</option><option>Descorado +/4+</option><option>Descorado ++/4+</option><option>Ictérico</option><option>Cianótico</option></select></div>
-      </div>
-      <div class="field" style="margin-top:10px"><label>Complemento (ativo, reativo, eupneico…)</label><textarea id="f-eg-obs" placeholder="Ex.: Criança ativa, reativa, eupneica, acianótica, anictérica, hidratada…" style="min-height:64px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🔬 Exame por Sistemas</h2></div>
-      <div class="exam-grid">
-        <div class="exam-box"><div class="exam-box-title">🫁 Aparelho Respiratório</div><textarea id="ex-resp" placeholder="Expansibilidade, MV, ruídos adventícios, esforço, tiragem…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">❤️ Aparelho Cardiovascular</div><textarea id="ex-cv" placeholder="Bulhas, ritmo, sopros, TEC, pulsos…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">🫃 Abdome</div><textarea id="ex-abd" placeholder="Inspeção, palpação (fígado, baço), ausculta, percussão, RHA…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">🧠 Neurológico</div><textarea id="ex-neuro" placeholder="Consciência, fontanela, reflexos, tônus, meningismo…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">👂 ORL / Cabeça e Pescoço</div><textarea id="ex-orl" placeholder="Orofaringe, amígdalas, tirante, linfonodos, otoscopia…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">🦴 Pele / Musculoesquelético</div><textarea id="ex-pele" placeholder="Lesões, exantemas, turgor, edemas, articulações…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">🔵 Genitourinário</div><textarea id="ex-geni" placeholder="Genitália externa, Tanner, diurese…"></textarea></div>
-        <div class="exam-box"><div class="exam-box-title">👁️ Olhos / Visão</div><textarea id="ex-olho" placeholder="Conjuntivas, reflexo de Hirschberg, acuidade…"></textarea></div>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="secondary" onclick="goStep(0)">← Anterior</button>
-      <button class="primary" onclick="goStep(2)">Próximo: Diagnóstico →</button>
-    </div>
-  </div>
-
-  <!-- ────────────────── STEP 2: DIAGNÓSTICO ────────────────── -->
-  <div id="step2" class="step-panel" style="display:none">
-
-    <div class="panel">
-      <div class="panel-head"><div><h2>🎯 Hipóteses Diagnósticas / CID-10</h2></div><span class="chip chip-amber">A — Avaliação</span></div>
-      <div id="cid-list"></div>
-      <button class="add-btn" onclick="addCID()" style="margin-top:4px">+ Adicionar diagnóstico / CID</button>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🧩 Raciocínio Clínico</h2></div>
-      <div class="field"><label>Impressão diagnóstica e correlação clínico-laboratorial</label><textarea id="f-rac" placeholder="Descreva a integração dos dados subjetivos, objetivos e exames para embasar o diagnóstico…" style="min-height:110px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🔭 Exames Complementares</h2></div>
-      <div class="meta-2">
-        <div class="field"><label>Resultados disponíveis</label><textarea id="f-exres" placeholder="Ex.: Hemograma: leucocitose 15.000 com desvio à esquerda. PCR: 4,8…" style="min-height:80px"></textarea></div>
-        <div class="field"><label>Exames solicitados nesta consulta</label><textarea id="f-exsol" placeholder="Lista de exames pedidos com justificativa…" style="min-height:80px"></textarea></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>⚠️ Classificação de Risco e Gravidade</h2></div>
-      <div class="meta-2">
-        <div class="field"><label>Gravidade do quadro</label><select id="f-grav" onchange="updateGrav()"><option value="">— Selecionar —</option><option value="leve">Leve — manejo ambulatorial</option><option value="moderado">Moderado — observação / retorno breve</option><option value="grave">Grave — internação indicada</option><option value="critico">Crítico — UTI / emergência</option></select></div>
-        <div class="field"><label>Tipo de consulta</label><select id="f-tcons"><option value="">—</option><option>Consulta de rotina / puericultura</option><option>Consulta aguda / intercorrência</option><option>Retorno</option><option>Primeira consulta</option></select></div>
-      </div>
-      <div id="grav-alert" class="grav-alert"></div>
-    </div>
-
-    <div class="actions">
-      <button class="secondary" onclick="goStep(1)">← Anterior</button>
-      <button class="primary" onclick="goStep(3)">Próximo: Conduta →</button>
-    </div>
-  </div>
-
-  <!-- ────────────────── STEP 3: CONDUTA ────────────────── -->
-  <div id="step3" class="step-panel" style="display:none">
-
-    <div class="panel">
-      <div class="panel-head"><div><h2>💊 Prescrição Medicamentosa</h2></div><span class="chip chip-purple">P — Plano</span></div>
-      <div id="rx-list"></div>
-      <button class="add-btn" onclick="addRx()" style="margin-top:4px">+ Adicionar medicamento</button>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>🌿 Medidas Não Farmacológicas</h2></div>
-      <div class="field"><label>Recomendações gerais (repouso, hidratação, dieta, higiene…)</label><textarea id="f-nfar" placeholder="Ex.: Repouso relativo. Hidratação oral. Higiene nasal com SF 0,9%…" style="min-height:80px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>👪 Orientações à Família</h2></div>
-      <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Sinais de alarme — retornar imediatamente se:</div>
-      <div class="pill-group">
-        <label class="pill"><input type="checkbox" class="alarm" value="febre"> Febre &gt; 39°C persistente</label>
-        <label class="pill"><input type="checkbox" class="alarm" value="dispneia"> Dificuldade respiratória</label>
-        <label class="pill"><input type="checkbox" class="alarm" value="letargia"> Sonolência / irritabilidade intensa</label>
-        <label class="pill"><input type="checkbox" class="alarm" value="aliment"> Recusa alimentar</label>
-        <label class="pill"><input type="checkbox" class="alarm" value="vomitos"> Vômitos persistentes</label>
-        <label class="pill"><input type="checkbox" class="alarm" value="convulsao"> Convulsão</label>
-        <label class="pill"><input type="checkbox" class="alarm" value="piora"> Piora geral do quadro</label>
-      </div>
-      <div class="field" style="margin-top:12px"><label>Outras orientações (escola, creche, cuidados domiciliares…)</label><textarea id="f-orient" placeholder="Afastamento escolar, dieta especial, medidas de higiene…" style="min-height:72px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>📅 Retorno e Encaminhamentos</h2></div>
-      <div class="meta-2">
-        <div class="field"><label>Data de retorno prevista</label><input id="f-ret" type="date"></div>
-        <div class="field"><label>Condição de retorno</label><input id="f-retcond" type="text" placeholder="Ex.: Em 7 dias ou antes se piora"></div>
-      </div>
-      <div class="field" style="margin-top:10px"><label>Encaminhamentos (especialidades, CAPS, CRAS…)</label><textarea id="f-encam" placeholder="Ex.: Encaminhamento para Pneumologia pediátrica…" style="min-height:64px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>📝 Evolução / Notas Adicionais</h2></div>
-      <div class="field"><label>Registro livre do médico</label><textarea id="f-evol" placeholder="Observações, intercorrências, notas para o próximo atendimento…" style="min-height:80px"></textarea></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>✍️ Assinatura</h2></div>
-      <div class="meta-2">
-        <div class="field"><label>CRM</label><input id="f-crm" type="text" placeholder="Ex.: 123456 / SP"></div>
-        <div class="field"><label>RQE (se especialista)</label><input id="f-rqe" type="text" placeholder="Ex.: 45678"></div>
-      </div>
-      <div class="sign-area">✍️ Assinatura digital / carimbo do médico<br><span style="font-size:11.5px">O prontuário será salvo com data, hora e identificação do profissional.</span></div>
-    </div>
-
-    <div class="save-status"><span class="dot" id="s-dot"></span><span id="s-text">Não salvo</span></div>
-
-    <div class="actions">
-      <button class="secondary" onclick="goStep(2)">← Anterior</button>
-      <button class="primary" onclick="salvarProntuario()">✅ Finalizar e Salvar Consulta</button>
-      <button class="secondary" onclick="novaConsulta()">Nova Consulta</button>
+      <div class="panel-head"><div><h2>📤 Arquivos e Materiais</h2></div><span class="chip chip-teal">Disponível para pacientes</span></div>
+      <p class="sub" style="margin-bottom:16px">Gerencie os arquivos que ficam disponíveis para os responsáveis na Área do Paciente.</p>
+      <div class="field" style="margin-bottom:12px"><label>Novo arquivo / material (descrição)</label><textarea id="new-file-desc" placeholder="Ex.: Tabela de Introdução Alimentar — SBP 2024&#10;Calendário Vacinal PNI 2024&#10;Orientações pós-febre"></textarea></div>
+      <div class="actions"><button class="primary" onclick="addArquivo()">+ Publicar arquivo</button></div>
+      <div id="arquivo-list" style="margin-top:16px"></div>
     </div>
   </div>
 
 </section>
 
-<!-- ══════════════════════════════ PACIENTES ══════════════════════════════ -->
+<!-- ════════════════════ LOGIN PACIENTE ════════════════════ -->
+<section id="login-pac" class="page">
+  <div class="login-wrap">
+    <div class="login-panel">
+      <div class="login-icon" style="background:linear-gradient(135deg,#0D9488,#178A4A);border-radius:18px">
+        <span style="font-size:32px">👨‍👩‍👧</span>
+      </div>
+      <div class="login-title">Área do Paciente</div>
+      <div class="login-sub">Login: nome da criança + iniciais. Senha: capikids123</div>
+      <div id="loginPacErr" class="login-err">Usuário ou senha incorretos.</div>
+      <div class="login-field"><label>Usuário</label><input id="lpUser" type="text" placeholder="Ex.: JoaoPSO" autocomplete="username"></div>
+      <div class="login-field"><label>Senha</label><input id="lpPass" type="password" placeholder="capikids123" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLoginPac()"></div>
+      <button class="primary" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#0D9488,#178A4A)" onclick="doLoginPac()">Entrar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ PACIENTE (PAINEL) ════════════════════ -->
 <section id="pacientes" class="page">
 
-  <div class="panel">
-    <div class="panel-head">
-      <div><h2>Portal do Paciente</h2><p class="sub">Acompanhe o histórico de consultas da criança e acesse orientações médicas.</p></div>
-      <span class="chip chip-teal">Em breve</span>
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="step-btn active" id="psub0" onclick="showPacSub(0)">🏥 Minha Saúde</button>
+    <button class="step-btn" id="psub1" onclick="showPacSub(1)">📈 Crescimento</button>
+    <button class="step-btn" id="psub2" onclick="showPacSub(2)">📅 Agendamentos</button>
+    <button class="step-btn" id="psub3" onclick="showPacSub(3)">📄 Arquivos</button>
+    <div style="margin-left:auto;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px">
+      <span id="pac-logged-name" style="font-weight:700;color:var(--navy)"></span>
+      <button class="secondary" style="padding:6px 12px;font-size:12px" onclick="logout('pac')">Sair</button>
     </div>
-    <p class="lead">Esta área está em desenvolvimento. Em breve as famílias poderão:</p>
-    <ul class="bullets" style="margin-top:10px">
-      <li>Visualizar o resumo das consultas realizadas.</li>
-      <li>Acompanhar as curvas de crescimento (peso, altura, IMC e PC).</li>
-      <li>Consultar orientações pós-consulta e sinais de alarme.</li>
-      <li>Verificar o calendário vacinal e datas de retorno.</li>
-      <li>Solicitar agendamentos online.</li>
-    </ul>
-    <div class="meta-3" style="margin-top:18px">
-      <div class="field"><label>Buscar paciente</label><input type="text" placeholder="Nome ou data de nascimento…" disabled></div>
-      <div class="field"><label>Período</label><input type="date" disabled></div>
-      <div class="field"><label>Médico</label><select disabled><option>Todos</option></select></div>
+  </div>
+
+  <!-- ─── PSUB 0: MINHA SAÚDE ─── -->
+  <div id="psub-panel-0">
+    <div class="panel">
+      <div class="panel-head"><div><h2>🏥 Última Consulta</h2></div><span id="pac-last-date" class="chip chip-blue">—</span></div>
+      <div id="pac-last-content"><div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma consulta encontrada para este paciente.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>💊 Prescrições e Orientações</h2></div>
+      <div id="pac-prescricao"><div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma prescrição registrada.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>⏰ Próximos Agendamentos</h2></div>
+      <div id="pac-proximos"><div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhum agendamento futuro.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>📋 Pendências</h2></div>
+      <div id="pac-pendencias"><div style="color:var(--muted);font-size:13px;padding:8px 0">Sem pendências no momento.</div></div>
+    </div>
+  </div>
+
+  <!-- ─── PSUB 1: CRESCIMENTO ─── -->
+  <div id="psub-panel-1" style="display:none">
+    <div class="panel">
+      <div class="panel-head"><h2>📈 Curva de Crescimento — Histórico do Paciente</h2></div>
+      <canvas id="growthChartPac" height="300"></canvas>
+      <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap">
+        <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:18px;height:3px;background:#1F6FEB;display:inline-block;border-radius:2px"></span>P50 OMS</span>
+        <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#E54B4B;border:2px solid white;box-shadow:0 0 0 1px #E54B4B"></span>Consultas registradas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PSUB 2: AGENDAMENTOS ─── -->
+  <div id="psub-panel-2" style="display:none">
+    <div class="panel">
+      <div class="panel-head"><h2>📅 Solicitar Agendamento</h2></div>
+      <p class="sub" style="margin-bottom:14px">Escolha o médico e o dia para ver os horários disponíveis.</p>
+      <div class="meta-2">
+        <div class="field"><label>Médico</label><select id="pac-med-sel"><option value="239138">Dr. Admin CapiKids (CRM 239138)</option><option value="234567">Dra. Camila Ferreira (CRM 234567)</option><option value="345678">Dr. Lucas Tavares (CRM 345678)</option></select></div>
+        <div class="field"><label>Mês</label><select id="pac-mes-sel" onchange="loadPacCal()">
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option><option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option><option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option><option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select></div>
+      </div>
+      <button class="primary" style="margin-top:10px" onclick="loadPacCal()">Ver disponibilidade</button>
+      <div id="pac-cal-wrap" style="margin-top:16px;display:none">
+        <div class="section-label">Disponibilidade</div>
+        <div class="cal-grid" id="pac-cal"></div>
+        <div id="pac-slots-wrap" style="margin-top:14px;display:none">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Horários disponíveis em <span id="pac-slot-day"></span>:</div>
+          <div id="pac-slots"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>📋 Meus Agendamentos</h2></div>
+      <div id="pac-meus-agend"><div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhum agendamento solicitado.</div></div>
+    </div>
+  </div>
+
+  <!-- ─── PSUB 3: ARQUIVOS ─── -->
+  <div id="psub-panel-3" style="display:none">
+    <div class="panel">
+      <div class="panel-head"><h2>📄 Arquivos e Materiais</h2></div>
+      <p class="sub" style="margin-bottom:12px">Materiais disponibilizados pela equipe médica e documentos do paciente.</p>
+      <div id="pac-arquivos">
+        <div class="file-grid">
+          <div class="file-card"><div class="file-icon" style="background:#E8F7EF">🥗</div><div><div class="file-name">Introdução Alimentar</div><div class="file-sub">Orientações SBP 2024</div></div></div>
+          <div class="file-card"><div class="file-icon" style="background:#EAF2FF">💉</div><div><div class="file-name">Calendário Vacinal</div><div class="file-sub">PNI 2024</div></div></div>
+          <div class="file-card"><div class="file-icon" style="background:#FFF0E8">🌡️</div><div><div class="file-name">Manejo da Febre</div><div class="file-sub">Orientações para os pais</div></div></div>
+          <div class="file-card"><div class="file-icon" style="background:#F3EEFF">😴</div><div><div class="file-name">Sono Seguro</div><div class="file-sub">Prevenção da morte súbita</div></div></div>
+          <div class="file-card"><div class="file-icon" style="background:#E0F7F5">🦷</div><div><div class="file-name">Saúde Bucal Infantil</div><div class="file-sub">Higiene oral desde o nascimento</div></div></div>
+          <div class="file-card"><div class="file-icon" style="background:#FFF5DF">📋</div><div><div class="file-name">Receituário</div><div class="file-sub">Última consulta</div></div></div>
+        </div>
+        <div id="pac-arq-extra"></div>
+      </div>
     </div>
   </div>
 
 </section>
 
-</main>
+<!-- ════════════════════ MODAL PRONTUÁRIO ════════════════════ -->
+<div class="modal-bg" id="modal-pront">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-pront-title">Prontuário</h2>
+      <button class="modal-close" onclick="document.getElementById('modal-pront').classList.remove('open')">✕</button>
+    </div>
+    <div id="modal-pront-body"></div>
+  </div>
+</div>
+
+<!-- ════════════════════ MODAL AGENDAMENTO ════════════════════ -->
+<div class="modal-bg" id="modal-agend">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-agend-title">Solicitar Agendamento</h2>
+      <button class="modal-close" onclick="document.getElementById('modal-agend').classList.remove('open')">✕</button>
+    </div>
+    <div id="modal-agend-body"></div>
+  </div>
+</div>
 
 <div id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
 // ══════════════════════════════════════════════════════
-// CONFIGURAÇÃO — GOOGLE SHEETS (Apps Script Web App)
-// Substitua pela URL do seu Web App publicado (/exec)
-// ══════════════════════════════════════════════════════
+// CONFIGURAÇÃO GOOGLE SHEETS
 const SHEETS_URL = 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT';
 
-// ── Credenciais (simples — adicione quantas quiser)
-const USERS = {
-  '123456SP': 'pediatria2025',
-  'admin':    'pedia123',
+// ══ CREDENCIAIS ══
+const MED_USERS = {
+  '239138': '1231218vcEZf1@', // admin
+  '234567': '234567capikids',
+  '345678': '345678capikids',
+};
+const MED_NAMES = {
+  '239138': 'Dr. Admin CapiKids (CRM 239138)',
+  '234567': 'Dra. Camila Ferreira (CRM 234567)',
+  '345678': 'Dr. Lucas Tavares (CRM 345678)',
 };
 
-// ─── NAVEGAÇÃO ENTRE PÁGINAS ───────────────────────────────
-let loggedIn = false;
+// Paciente: usuario=NomePrimeiro+iniciais, senha=capikids123
+const PAC_PASS = 'capikids123';
 
-function showPage(id, btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+// ══ ESTADO ══
+let loggedMed = false, medCRM = '', loggedPac = false, pacName = '';
+let currentStep = 0, currentMedSub = 0, currentPacSub = 0;
+let cidCount = 0, rxCount = 0;
+let growthChart = null, growthChartPac = null;
+let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
+let selectedDay = null;
+
+// ═══════════════════════════ NAVEGAÇÃO ═══════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if(btn) btn.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+function goMedico(btn) {
+  if (loggedMed) { showPage('medicos', btn); renderHistorico(); }
+  else showPage('login-med', btn);
+}
+function goPaciente(btn) {
+  if (loggedPac) showPage('pacientes', btn);
+  else showPage('login-pac', btn);
 }
 
-function goMedicos(btn){
-  if(loggedIn){
-    showPage('medicos',btn);
-  } else {
-    showPage('login',btn);
-  }
+// ═══════════════════════════ LOGIN ═══════════════════════════
+function doLoginMed() {
+  const u = document.getElementById('lmUser').value.trim();
+  const p = document.getElementById('lmPass').value;
+  const err = document.getElementById('loginMedErr');
+  if (MED_USERS[u] && MED_USERS[u] === p) {
+    loggedMed = true; medCRM = u; err.style.display = 'none';
+    document.getElementById('med-logged-name').textContent = MED_NAMES[u];
+    document.getElementById('f-crm').value = u;
+    document.getElementById('f-dtcons').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('growth-sexo').value = 'M';
+    showPage('medicos', document.getElementById('tab-med'));
+    renderHistorico(); renderMedCal(); updateGrowthChart();
+    toast('Bem-vindo, ' + MED_NAMES[u].split(' ').slice(0, 2).join(' ') + '!', 'ok');
+  } else { err.style.display = 'block'; }
 }
 
-// ─── LOGIN ────────────────────────────────────────────────
-function doLogin(){
-  const u=document.getElementById('loginUser').value.trim();
-  const p=document.getElementById('loginPass').value;
-  const err=document.getElementById('loginErr');
-  if(USERS[u] && USERS[u]===p){
-    loggedIn=true;
-    err.style.display='none';
-    showPage('medicos',document.querySelectorAll('.tab')[1]);
-    document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10);
-    updateKPIs();
-  } else {
-    err.style.display='block';
-  }
+function doLoginPac() {
+  const u = document.getElementById('lpUser').value.trim();
+  const p = document.getElementById('lpPass').value;
+  const err = document.getElementById('loginPacErr');
+  if (p === PAC_PASS && u.length > 0) {
+    loggedPac = true; pacName = u; err.style.display = 'none';
+    document.getElementById('pac-logged-name').textContent = u;
+    showPage('pacientes', document.getElementById('tab-pac'));
+    loadPacData(); initGrowthChartPac();
+    toast('Bem-vindo, ' + u + '!', 'ok');
+  } else { err.style.display = 'block'; }
 }
 
-// ─── KPIs INICIAIS ────────────────────────────────────────
-function updateKPIs(){
-  const data = JSON.parse(localStorage.getItem('pedia_consultas')||'[]');
-  document.getElementById('k-total').textContent = data.length || '0';
+function logout(role) {
+  if (role === 'med') { loggedMed = false; medCRM = ''; showPage('home', document.querySelectorAll('.tab')[0]); document.querySelectorAll('.tab')[0].classList.add('active'); }
+  else { loggedPac = false; pacName = ''; showPage('home', document.querySelectorAll('.tab')[0]); document.querySelectorAll('.tab')[0].classList.add('active'); }
 }
-updateKPIs();
 
-// ─── PATIENT CARD ─────────────────────────────────────────
-function updatePatientCard(){
+// ═══════════════════════════ SUB-ABAS ═══════════════════════════
+function showMedSub(n) {
+  [0,1,2,3].forEach(i => {
+    document.getElementById('msub-panel-'+i).style.display = i===n ? 'block' : 'none';
+    document.getElementById('msub'+i).classList.toggle('active', i===n);
+    document.getElementById('msub'+i).classList.remove('done');
+  });
+  currentMedSub = n;
+  if (n===1) renderHistorico();
+  if (n===2) renderMedCal();
+  if (n===3) renderArquivosMed();
+}
+function showPacSub(n) {
+  [0,1,2,3].forEach(i => {
+    document.getElementById('psub-panel-'+i).style.display = i===n ? 'block' : 'none';
+    document.getElementById('psub'+i).classList.toggle('active', i===n);
+  });
+  currentPacSub = n;
+  if (n===1) initGrowthChartPac();
+}
+
+// ═══════════════════════════ STEPS CONSULTA ═══════════════════════════
+const progWidths = ['20%','40%','60%','80%','100%'];
+function goStep(n) {
+  document.getElementById('step'+currentStep).style.display = 'none';
+  document.getElementById('stp'+currentStep).classList.remove('active');
+  if (n > currentStep) document.getElementById('stp'+currentStep).classList.add('done');
+  currentStep = n;
+  document.getElementById('step'+n).style.display = 'block';
+  document.getElementById('stp'+n).classList.add('active');
+  document.getElementById('stp'+n).classList.remove('done');
+  document.getElementById('progress-fill').style.width = progWidths[n];
+  window.scrollTo({top:0,behavior:'smooth'});
+  if (n===2) setTimeout(updateGrowthChart, 100);
+}
+
+// ═══════════════════════════ PATIENT CARD ═══════════════════════════
+function updatePatCard() {
   const nome = document.getElementById('f-nome').value || 'Novo Paciente';
   const sexo = document.getElementById('f-sexo').value;
   const idade = document.getElementById('f-idade').value;
   const alerg = document.getElementById('f-alerg').value;
   document.getElementById('pat-name').textContent = nome;
   document.getElementById('pat-avatar').textContent = sexo==='Feminino'?'👧':sexo==='Masculino'?'👦':'👤';
-  let meta = [];
-  if(idade) meta.push(idade);
-  if(sexo) meta.push(sexo);
-  if(alerg && alerg.toUpperCase()!=='NAIDA') meta.push('⚠️ Alergia registrada');
+  const meta = [idade,sexo,alerg&&alerg.toUpperCase()!=='NAIDA'?'⚠️ Alergia':''].filter(Boolean);
   document.getElementById('pat-meta').textContent = meta.join(' · ') || '—';
+  if (sexo) document.getElementById('growth-sexo').value = sexo==='Feminino'?'F':'M';
+  updateGrowthChart();
 }
 
-function calcIdade(){
-  const v=document.getElementById('f-dnasc').value;
-  if(!v){return;}
-  const nasc=new Date(v), hoje=new Date();
-  const meses=(hoje.getFullYear()-nasc.getFullYear())*12+(hoje.getMonth()-nasc.getMonth());
-  let txt='';
-  if(meses<1){const d=Math.floor((hoje-nasc)/86400000);txt=`${d} dia${d!==1?'s':''}`;}
-  else if(meses<24){txt=`${meses} mês${meses!==1?'es':''}`;}
-  else{const a=Math.floor(meses/12),m=meses%12;txt=`${a} ano${a!==1?'s':''}${m?` e ${m} mês`:''}`;}
-  document.getElementById('f-idade').value=txt;
-  updatePatientCard();
+function calcIdade() {
+  const v = document.getElementById('f-dnasc').value;
+  if (!v) return;
+  const nasc = new Date(v), hoje = new Date();
+  const meses = (hoje.getFullYear()-nasc.getFullYear())*12+(hoje.getMonth()-nasc.getMonth());
+  let txt = '';
+  if (meses<1){const d=Math.floor((hoje-nasc)/86400000);txt=d+' dia'+(d!==1?'s':'');}
+  else if (meses<24){txt=meses+' mês'+(meses!==1?'es':'');}
+  else{const a=Math.floor(meses/12),m=meses%12;txt=a+' ano'+(a!==1?'s':'')+(m?' e '+m+' mês':'');}
+  document.getElementById('f-idade').value = txt;
+  updatePatCard();
 }
 
-function updateVitals(){
-  const p=document.getElementById('f-peso').value||'—';
-  const a=document.getElementById('f-alt').value||'—';
-  const t=parseFloat(document.getElementById('f-temp').value);
-  const s=parseFloat(document.getElementById('f-spo2').value);
-  document.getElementById('v-peso').textContent=p;
-  document.getElementById('v-alt').textContent=a;
-  document.getElementById('v-temp').textContent=isNaN(t)?'—':t;
-  document.getElementById('v-spo2').textContent=isNaN(s)?'—':s;
+function updateVitals() {
+  const p = document.getElementById('f-peso').value||'—';
+  const a = document.getElementById('f-alt').value||'—';
+  const t = parseFloat(document.getElementById('f-temp').value);
+  const s = parseFloat(document.getElementById('f-spo2').value);
+  document.getElementById('v-peso').textContent = p;
+  document.getElementById('v-alt').textContent = a;
+  document.getElementById('v-temp').textContent = isNaN(t)?'—':t;
+  document.getElementById('v-spo2').textContent = isNaN(s)?'—':s;
   document.getElementById('v-temp-box').classList.toggle('alert-v',!isNaN(t)&&t>=38);
   document.getElementById('v-spo2-box').classList.toggle('alert-v',!isNaN(s)&&s<95);
 }
-
 function calcIMC(){
   const p=parseFloat(document.getElementById('f-peso').value);
   const a=parseFloat(document.getElementById('f-alt').value)/100;
-  document.getElementById('f-imc').value=(p&&a)?( p/(a*a)).toFixed(2):'';
+  document.getElementById('f-imc').value=(p&&a)?(p/(a*a)).toFixed(2):'';
 }
 
-// ─── PROGRESS STEPS ───────────────────────────────────────
-let currentStep=0;
-const progWidths=['25%','50%','75%','100%'];
+// ═══════════════════════════ GRÁFICO CRESCIMENTO OMS ═══════════════════════════
+// Percentis peso-para-idade OMS (aproximados) - meses 0-60
+// [P3, P15, P50, P85, P97]
+const WHO_M = {
+  labels:[0,1,2,3,4,5,6,7,8,9,10,11,12,15,18,21,24,30,36,42,48,54,60],
+  M:{ // menino
+    p3: [2.5,3.4,4.4,5.1,5.6,6.1,6.4,6.7,7.0,7.2,7.5,7.7,7.8,8.3,8.8,9.2,9.7,10.5,11.3,12.0,12.7,13.3,13.9],
+    p15:[2.9,3.9,5.0,5.8,6.4,6.9,7.3,7.6,8.0,8.2,8.5,8.7,9.0,9.6,10.2,10.7,11.3,12.2,13.1,13.9,14.7,15.4,16.1],
+    p50:[3.3,4.5,5.6,6.4,7.0,7.5,7.9,8.3,8.6,8.9,9.2,9.4,9.6,10.3,11.1,11.8,12.2,13.3,14.3,15.2,16.1,17.0,17.7],
+    p85:[3.9,5.1,6.3,7.2,7.9,8.4,8.9,9.3,9.7,10.0,10.4,10.7,11.0,11.8,12.6,13.4,14.1,15.4,16.5,17.5,18.6,19.5,20.4],
+    p97:[4.4,5.8,7.1,8.0,8.7,9.3,9.8,10.3,10.7,11.0,11.4,11.7,12.0,12.9,13.8,14.6,15.3,16.8,18.2,19.4,20.5,21.5,22.5]
+  },
+  F:{ // menina
+    p3: [2.4,3.2,4.0,4.6,5.1,5.5,5.8,6.1,6.3,6.6,6.8,7.0,7.1,7.6,8.1,8.5,9.0,9.9,10.8,11.6,12.3,12.9,13.5],
+    p15:[2.8,3.6,4.6,5.3,5.8,6.3,6.6,6.9,7.2,7.5,7.7,7.9,8.1,8.7,9.3,9.8,10.3,11.3,12.3,13.2,14.0,14.8,15.5],
+    p50:[3.2,4.2,5.1,5.8,6.4,6.9,7.3,7.6,7.9,8.2,8.5,8.7,8.9,9.6,10.2,10.9,11.5,12.7,13.9,14.9,15.9,16.8,17.7],
+    p85:[3.7,4.8,5.8,6.7,7.3,7.8,8.2,8.6,9.0,9.3,9.6,9.9,10.1,10.9,11.7,12.4,13.0,14.4,15.7,16.8,17.9,18.9,19.8],
+    p97:[4.2,5.5,6.6,7.5,8.2,8.8,9.3,9.8,10.2,10.5,10.9,11.2,11.5,12.4,13.3,14.2,14.9,16.4,17.9,19.2,20.5,21.6,22.6]
+  }
+};
 
-function goStep(n){
-  document.getElementById('step'+currentStep).style.display='none';
-  document.getElementById('stp'+currentStep).classList.remove('active');
-  if(n>currentStep) document.getElementById('stp'+currentStep).classList.add('done');
-  currentStep=n;
-  document.getElementById('step'+n).style.display='block';
-  document.getElementById('stp'+n).classList.add('active');
-  document.getElementById('stp'+n).classList.remove('done');
-  document.getElementById('progress-fill').style.width=progWidths[n];
-  window.scrollTo({top:0,behavior:'smooth'});
+function getAgeMonths(){
+  const v=document.getElementById('f-dnasc').value;
+  if(!v) return null;
+  const nasc=new Date(v),hoje=new Date();
+  return (hoje.getFullYear()-nasc.getFullYear())*12+(hoje.getMonth()-nasc.getMonth());
 }
 
-// ─── CID ROWS ─────────────────────────────────────────────
-let cidCount=0;
+function updateGrowthChart(){
+  const canvas=document.getElementById('growthChart');
+  if(!canvas) return;
+  const sexo=document.getElementById('growth-sexo').value;
+  const ref=WHO_M[sexo];
+  const labels=WHO_M.labels;
+  const peso=parseFloat(document.getElementById('f-peso').value);
+  const ageM=getAgeMonths();
+  const patPts=WHO_M.labels.map((m,i)=>{
+    if(ageM!==null && m===WHO_M.labels.reduce((a,b)=>Math.abs(b-ageM)<Math.abs(a-ageM)?b:a) && !isNaN(peso))
+      return {x:m,y:peso};
+    return null;
+  }).filter(Boolean);
+
+  const datasets=[
+    {label:'P3',data:ref.p3,borderColor:'rgba(163,192,247,.7)',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false,tension:.4},
+    {label:'P15',data:ref.p15,borderColor:'rgba(255,160,64,.7)',borderWidth:1.5,borderDash:[4,3],pointRadius:0,fill:false,tension:.4},
+    {label:'P50',data:ref.p50,borderColor:'#1F6FEB',borderWidth:2.5,pointRadius:0,fill:false,tension:.4},
+    {label:'P85',data:ref.p85,borderColor:'rgba(255,160,64,.7)',borderWidth:1.5,borderDash:[4,3],pointRadius:0,fill:false,tension:.4},
+    {label:'P97',data:ref.p97,borderColor:'rgba(163,192,247,.7)',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false,tension:.4},
+    {label:'Paciente',data:patPts.map(p=>({x:p.x,y:p.y})),borderColor:'#E54B4B',backgroundColor:'#E54B4B',borderWidth:2,pointRadius:8,pointBorderColor:'white',pointBorderWidth:2,showLine:true,tension:.4}
+  ];
+
+  const cfg={type:'line',data:{labels,datasets},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.y.toFixed(1)+' kg'}}},scales:{x:{title:{display:true,text:'Idade (meses)',font:{size:11}},grid:{color:'rgba(0,0,0,.05)'}},y:{title:{display:true,text:'Peso (kg)',font:{size:11}},grid:{color:'rgba(0,0,0,.05)'}}}}};
+
+  if(growthChart){growthChart.destroy();}
+  growthChart=new Chart(canvas,cfg);
+
+  // resultado
+  const res=document.getElementById('growth-result');
+  if(!isNaN(peso)&&ageM!==null&&res){
+    const idx=labels.indexOf(labels.reduce((a,b)=>Math.abs(b-ageM)<Math.abs(a-ageM)?b:a));
+    const p3=ref.p3[idx],p15=ref.p15[idx],p50=ref.p50[idx],p85=ref.p85[idx],p97=ref.p97[idx];
+    let classif='',color='';
+    if(peso<p3){classif='Abaixo do P3 — Baixo peso grave';color=var_r('red');}
+    else if(peso<p15){classif='Entre P3–P15 — Baixo peso';color=var_r('amber');}
+    else if(peso<=p85){classif='Entre P15–P85 — Peso adequado ✅';color=var_r('green');}
+    else if(peso<=p97){classif='Entre P85–P97 — Sobrepeso';color=var_r('amber');}
+    else{classif='Acima do P97 — Obesidade';color=var_r('red');}
+    res.innerHTML=`<span style="font-weight:800;color:${color}">Classificação: ${classif}</span><br><span style="font-size:11px">P50 para a idade: ${p50.toFixed(1)} kg &nbsp;|&nbsp; Peso atual: ${peso.toFixed(1)} kg</span>`;
+  }
+}
+
+function var_r(c){return c==='green'?'#178A4A':c==='amber'?'#C78A14':'#C7362F';}
+
+// Curva paciente (histórico)
+function initGrowthChartPac(){
+  const canvas=document.getElementById('growthChartPac');
+  if(!canvas||growthChartPac) return;
+  const consultas=JSON.parse(localStorage.getItem('capikids_consultas')||'[]')
+    .filter(c=>c.nome&&pacName&&c.nome.toLowerCase().includes(pacName.replace(/[A-Z]/g,'').toLowerCase().trim()));
+
+  const labels=WHO_M.labels;
+  const ref=WHO_M.M;
+  const patPts=consultas.filter(c=>c.peso&&c.dnasc).map(c=>{
+    const nasc=new Date(c.dnasc),dt=new Date(c.dt_consulta||c.timestamp);
+    const m=(dt.getFullYear()-nasc.getFullYear())*12+(dt.getMonth()-nasc.getMonth());
+    return{x:m,y:parseFloat(c.peso)};
+  });
+
+  const cfg={type:'line',data:{labels,datasets:[
+    {label:'P50 OMS',data:ref.p50,borderColor:'#1F6FEB',borderWidth:2,pointRadius:0,fill:false,tension:.4},
+    {label:'Paciente',data:patPts.map(p=>({x:p.x,y:p.y})),borderColor:'#E54B4B',backgroundColor:'#E54B4B',borderWidth:2,pointRadius:7,pointBorderColor:'white',pointBorderWidth:2,showLine:true,tension:.4}
+  ]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Idade (meses)'}},y:{title:{display:true,text:'Peso (kg)'}}}}};
+  growthChartPac=new Chart(canvas,cfg);
+}
+
+// ═══════════════════════════ CID / RX ═══════════════════════════
 function addCID(){
   cidCount++;
   const id='cid'+cidCount;
-  const div=document.createElement('div');
-  div.className='cid-row'; div.id=id;
-  div.innerHTML=`<div class="field" style="flex:0 0 120px"><label>CID-10</label><input type="text" placeholder="J02.0" id="${id}-cod"></div>
-<div class="field" style="flex:1"><label>Descrição</label><input type="text" placeholder="Descrição do diagnóstico" id="${id}-desc"></div>
-<div class="field" style="flex:0 0 150px"><label>Tipo</label><select id="${id}-tipo"><option>Principal</option><option>Secundário</option><option>Hipótese</option><option>Diferencial</option></select></div>
-<button class="cid-del" onclick="document.getElementById('${id}').remove()">✕</button>`;
-  document.getElementById('cid-list').appendChild(div);
+  const d=document.createElement('div');
+  d.className='cid-row';d.id=id;
+  d.innerHTML=`<div class="field" style="flex:0 0 120px"><label>CID-10</label><input type="text" placeholder="J02.0" id="${id}-cod"></div><div class="field" style="flex:1"><label>Descrição</label><input type="text" placeholder="Diagnóstico" id="${id}-desc"></div><div class="field" style="flex:0 0 140px"><label>Tipo</label><select id="${id}-tipo"><option>Principal</option><option>Secundário</option><option>Hipótese</option><option>Diferencial</option></select></div><button class="cid-del" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  document.getElementById('cid-list').appendChild(d);
 }
 addCID();
 
-// ─── RX ───────────────────────────────────────────────────
-let rxCount=0;
 function addRx(){
   rxCount++;
   const id='rx'+rxCount;
-  const div=document.createElement('div');
-  div.className='rx-item'; div.id=id;
-  div.innerHTML=`<div class="rx-item-header"><span class="rx-item-title">💊 Medicamento ${rxCount}</span><button class="cid-del" onclick="document.getElementById('${id}').remove()">✕ Remover</button></div>
-<div class="meta">
-  <div class="field" style="grid-column:span 2"><label>Medicamento / princípio ativo</label><input type="text" placeholder="Nome genérico ou comercial" id="${id}-nome"></div>
-  <div class="field"><label>Dose</label><input type="text" placeholder="Ex.: 10 mg/kg" id="${id}-dose"></div>
-  <div class="field"><label>Via</label><select id="${id}-via"><option>VO</option><option>EV</option><option>IM</option><option>SC</option><option>Inalatória</option><option>Tópica</option></select></div>
-</div>
-<div class="meta-2" style="margin-top:8px">
-  <div class="field"><label>Frequência</label><input type="text" placeholder="Ex.: 8/8h, 1x/dia" id="${id}-freq"></div>
-  <div class="field"><label>Duração</label><input type="text" placeholder="Ex.: 7 dias" id="${id}-dur"></div>
-</div>`;
-  document.getElementById('rx-list').appendChild(div);
+  const d=document.createElement('div');
+  d.className='rx-item';d.id=id;
+  d.innerHTML=`<div class="rx-header"><span class="rx-title">💊 Medicamento ${rxCount}</span><button class="cid-del" onclick="document.getElementById('${id}').remove()" style="margin-top:0">✕</button></div><div class="meta"><div class="field" style="grid-column:span 2"><label>Medicamento</label><input type="text" placeholder="Nome genérico ou comercial" id="${id}-nome"></div><div class="field"><label>Dose</label><input type="text" placeholder="Ex.: 10 mg/kg" id="${id}-dose"></div><div class="field"><label>Via</label><select id="${id}-via"><option>VO</option><option>EV</option><option>IM</option><option>IM</option><option>Inalatória</option><option>Tópica</option></select></div></div><div class="meta-2" style="margin-top:8px"><div class="field"><label>Frequência</label><input type="text" placeholder="Ex.: 8/8h" id="${id}-freq"></div><div class="field"><label>Duração</label><input type="text" placeholder="Ex.: 7 dias" id="${id}-dur"></div></div>`;
+  document.getElementById('rx-list').appendChild(d);
 }
 
-// ─── GRAVIDADE ALERT ──────────────────────────────────────
 function updateGrav(){
   const v=document.getElementById('f-grav').value;
   const el=document.getElementById('grav-alert');
-  el.style.display='none'; el.className='grav-alert';
-  if(v==='grave'){el.style.display='block';el.classList.add('grav-grave');el.innerHTML='⚠️ <b>Quadro grave</b> — avaliar necessidade de internação hospitalar.';}
-  else if(v==='critico'){el.style.display='block';el.classList.add('grav-critico');el.innerHTML='🚨 <b>Quadro crítico</b> — acionar equipe de emergência / UTI pediátrica imediatamente.';}
+  el.style.display='none';el.className='grav-alert';
+  if(v==='grave'){el.style.display='block';el.classList.add('grav-grave');el.innerHTML='⚠️ <b>Quadro grave</b> — avaliar internação hospitalar.';}
+  else if(v==='critico'){el.style.display='block';el.classList.add('grav-critico');el.innerHTML='🚨 <b>Quadro crítico</b> — UTI pediátrica / emergência imediata.';}
 }
 
-// ─── COLETAR DADOS ────────────────────────────────────────
-function v(id){return (document.getElementById(id)||{}).value||'';}
+// ═══════════════════════════ COLETA E SAVE ═══════════════════════════
+function fv(id){return(document.getElementById(id)||{}).value||'';}
+
 function coletarDados(){
   const cids=[]; document.querySelectorAll('.cid-row').forEach(row=>{
-    const n=row.id; if(!n.startsWith('cid')) return;
-    const num=n.replace('cid','');
-    cids.push({cod:v(n+'-cod'),desc:v(n+'-desc'),tipo:v(n+'-tipo')});
+    const n=row.id;if(!n.startsWith('cid'))return;
+    cids.push({cod:fv(n+'-cod'),desc:fv(n+'-desc'),tipo:fv(n+'-tipo')});
   });
   const rxs=[]; document.querySelectorAll('.rx-item').forEach(row=>{
     const n=row.id;
-    rxs.push({nome:v(n+'-nome'),dose:v(n+'-dose'),via:v(n+'-via'),freq:v(n+'-freq'),dur:v(n+'-dur')});
+    rxs.push({nome:fv(n+'-nome'),dose:fv(n+'-dose'),via:fv(n+'-via'),freq:fv(n+'-freq'),dur:fv(n+'-dur')});
   });
   const alarms=[...document.querySelectorAll('.alarm:checked')].map(c=>c.value);
-  const vacval=(document.querySelector('input[name="vac"]:checked')||{}).value||'';
-  return {
-    timestamp:new Date().toISOString(),
-    // Identificação
-    nome:v('f-nome'),dnasc:v('f-dnasc'),idade:v('f-idade'),sexo:v('f-sexo'),
-    responsavel:v('f-resp'),parentesco:v('f-par'),dt_consulta:v('f-dtcons'),
-    medico:v('f-med'),convenio:v('f-conv'),crm:v('f-crm'),rqe:v('f-rqe'),
-    // Anamnese
-    qp:v('f-qp'),hma:v('f-hma'),antec_perinat:v('f-peri'),dnpm:v('f-dnpm'),
-    doencas_prev:v('f-dprev'),alergias:v('f-alerg'),medicamentos:v('f-meds'),
-    vacinacao:vacval,vac_obs:v('f-vacobs'),aleitamento:v('f-aleit'),alimentacao:v('f-alim'),
-    antec_fam:v('f-afam'),moradia:v('f-mor'),saneamento:v('f-san'),animais:v('f-anim'),escola:v('f-esc'),
-    // Exame físico
-    peso:v('f-peso'),altura:v('f-alt'),pc:v('f-pc'),imc:v('f-imc'),
-    temp:v('f-temp'),spo2:v('f-spo2'),fc:v('f-fc'),fr:v('f-fr'),pa:v('f-pa'),gli:v('f-gli'),
-    eg:v('f-eg'),hidratacao:v('f-hidr'),coloracao:v('f-cor'),eg_obs:v('f-eg-obs'),
-    ex_resp:v('ex-resp'),ex_cv:v('ex-cv'),ex_abd:v('ex-abd'),ex_neuro:v('ex-neuro'),
-    ex_orl:v('ex-orl'),ex_pele:v('ex-pele'),ex_geni:v('ex-geni'),ex_olho:v('ex-olho'),
-    // Diagnóstico
-    cids:JSON.stringify(cids),raciocinio:v('f-rac'),exames_res:v('f-exres'),
-    exames_sol:v('f-exsol'),gravidade:v('f-grav'),tipo_consulta:v('f-tcons'),
-    // Conduta
-    prescricao:JSON.stringify(rxs),med_nfar:v('f-nfar'),alarmes:JSON.stringify(alarms),
-    orientacoes:v('f-orient'),retorno:v('f-ret'),retorno_cond:v('f-retcond'),
-    encaminhamentos:v('f-encam'),evolucao:v('f-evol'),
+  const vac=(document.querySelector('input[name="vac"]:checked')||{}).value||'';
+  return{
+    timestamp:new Date().toISOString(),medCRM,
+    nome:fv('f-nome'),dnasc:fv('f-dnasc'),idade:fv('f-idade'),sexo:fv('f-sexo'),
+    responsavel:fv('f-resp'),parentesco:fv('f-par'),dt_consulta:fv('f-dtcons'),
+    medico:fv('f-med'),convenio:fv('f-conv'),crm:fv('f-crm'),rqe:fv('f-rqe'),
+    qp:fv('f-qp'),hma:fv('f-hma'),antec_perinat:fv('f-peri'),dnpm:fv('f-dnpm'),
+    doencas_prev:fv('f-dprev'),alergias:fv('f-alerg'),medicamentos:fv('f-meds'),
+    vacinacao:vac,vac_obs:fv('f-vacobs'),aleitamento:fv('f-aleit'),alimentacao:fv('f-alim'),
+    antec_fam:fv('f-afam'),moradia:fv('f-mor'),saneamento:fv('f-san'),animais:fv('f-anim'),escola:fv('f-esc'),
+    peso:fv('f-peso'),altura:fv('f-alt'),pc:fv('f-pc'),imc:fv('f-imc'),
+    temp:fv('f-temp'),spo2:fv('f-spo2'),fc:fv('f-fc'),fr:fv('f-fr'),pa:fv('f-pa'),gli:fv('f-gli'),
+    eg:fv('f-eg'),hidratacao:fv('f-hidr'),coloracao:fv('f-cor'),eg_obs:fv('f-eg-obs'),
+    ex_resp:fv('ex-resp'),ex_cv:fv('ex-cv'),ex_abd:fv('ex-abd'),ex_neuro:fv('ex-neuro'),ex_orl:fv('ex-orl'),ex_pele:fv('ex-pele'),
+    cids:JSON.stringify(cids),raciocinio:fv('f-rac'),exames_res:fv('f-exres'),exames_sol:fv('f-exsol'),
+    gravidade:fv('f-grav'),tipo_consulta:fv('f-tcons'),
+    prescricao:JSON.stringify(rxs),med_nfar:fv('f-nfar'),alarmes:JSON.stringify(alarms),
+    orientacoes:fv('f-orient'),arquivo_desc:fv('f-arquivo'),retorno:fv('f-ret'),
+    retorno_cond:fv('f-retcond'),encaminhamentos:fv('f-encam'),evolucao:fv('f-evol'),
   };
 }
 
-// ─── SALVAR LOCAL ─────────────────────────────────────────
-function salvarLocal(dados){
-  const arr=JSON.parse(localStorage.getItem('pedia_consultas')||'[]');
-  arr.push(dados); localStorage.setItem('pedia_consultas',JSON.stringify(arr));
-}
-
-// ─── SALVAR NO SHEETS ─────────────────────────────────────
 async function salvarProntuario(){
   const dados=coletarDados();
   if(!dados.nome){toast('Informe o nome do paciente antes de salvar.','err');return;}
-  setStatus('saving','Salvando…');
-  salvarLocal(dados);
-  updateKPIs();
-  if(!SHEETS_URL||SHEETS_URL==='COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT'){
-    setTimeout(()=>{setStatus('saved','Salvo localmente em '+new Date().toLocaleTimeString('pt-BR'));toast('Prontuário salvo localmente! (Google Sheets não configurado)','info');},600);
-    return;
+  document.getElementById('s-dot').className='dot saving';
+  document.getElementById('s-text').textContent='Salvando…';
+  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  arr.push(dados);localStorage.setItem('capikids_consultas',JSON.stringify(arr));
+  if(SHEETS_URL&&SHEETS_URL!=='COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT'){
+    try{await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});}catch(e){}
   }
-  try{
-    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});
-    setStatus('saved','Salvo em '+new Date().toLocaleTimeString('pt-BR'));
-    toast('Prontuário enviado ao Google Sheets! ✅','ok');
-  }catch(e){
-    setStatus('','Salvo localmente. Falha no envio ao Sheets.');
-    toast('Salvo localmente. Verifique a URL do Google Script.','err');
-  }
+  setTimeout(()=>{
+    document.getElementById('s-dot').className='dot saved';
+    document.getElementById('s-text').textContent='Salvo em '+new Date().toLocaleTimeString('pt-BR');
+    toast('Consulta de '+dados.nome+' salva com sucesso! ✅','ok');
+  },500);
 }
 
-function setStatus(cls,txt){
-  const dot=document.getElementById('s-dot');
-  dot.className='dot'+(cls?' '+cls:'');
-  document.getElementById('s-text').textContent=txt;
-}
-
-// ─── NOVA CONSULTA ────────────────────────────────────────
 function novaConsulta(){
-  if(!confirm('Deseja iniciar uma nova consulta? Os dados atuais não salvos serão perdidos.'))return;
-  document.querySelectorAll('#medicos input:not([readonly]),#medicos textarea,#medicos select').forEach(el=>{el.value='';});
+  if(!confirm('Iniciar nova consulta? Dados não salvos serão perdidos.'))return;
+  document.querySelectorAll('#medicos input:not([readonly]),#medicos textarea,#medicos select').forEach(el=>el.value='');
   document.querySelectorAll('.alarm').forEach(c=>c.checked=false);
   document.querySelectorAll('input[name="vac"]').forEach(r=>r.checked=false);
-  document.getElementById('cid-list').innerHTML=''; cidCount=0; addCID();
-  document.getElementById('rx-list').innerHTML=''; rxCount=0;
+  document.getElementById('cid-list').innerHTML='';cidCount=0;addCID();
+  document.getElementById('rx-list').innerHTML='';rxCount=0;
   document.getElementById('grav-alert').style.display='none';
-  setStatus('','Não salvo');
-  updatePatientCard(); updateVitals();
+  if(growthChart){growthChart.destroy();growthChart=null;}
+  document.getElementById('s-dot').className='dot';
+  document.getElementById('s-text').textContent='Não salvo';
   document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10);
-  goStep(0);
-  toast('Nova consulta iniciada.','info');
+  document.getElementById('f-crm').value=medCRM;
+  document.getElementById('growth-sexo').value='M';
+  updatePatCard();updateVitals();
+  goStep(0);toast('Nova consulta iniciada.','info');
 }
 
-// ─── TOAST ────────────────────────────────────────────────
-function toast(msg,type='info'){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='show '+type;
-  setTimeout(()=>t.className='',3800);
+// ═══════════════════════════ HISTÓRICO ═══════════════════════════
+function renderHistorico(){
+  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]').slice().reverse();
+  const el=document.getElementById('hist-list');
+  if(!arr.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">Nenhuma consulta registrada ainda.</div>';return;}
+  el.innerHTML=arr.map((c,i)=>{
+    const cids=tryParse(c.cids,[]);
+    const diag=cids.map(x=>x.cod+' '+x.desc).join(', ')||'—';
+    return `<div class="hist-item" onclick="openPront(${arr.length-1-i})">
+      <div class="hist-date">${fmtDate(c.dt_consulta||c.timestamp)}</div>
+      <div class="hist-name">${c.nome||'—'} <span style="font-size:11px;font-weight:400;color:var(--muted)">${c.idade||''} · ${c.sexo||''}</span></div>
+      <div class="hist-diag">${diag}</div>
+    </div>`;
+  }).join('');
 }
 
-// ─── INIT ─────────────────────────────────────────────────
-document.getElementById('f-dtcons') && (document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10));
+function openPront(idx){
+  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  const c=arr[idx];if(!c)return;
+  const cids=tryParse(c.cids,[]);
+  const rxs=tryParse(c.prescricao,[]);
+  const alarms=tryParse(c.alarmes,[]);
+  document.getElementById('modal-pront-title').textContent='Prontuário — '+c.nome;
+  document.getElementById('modal-pront-body').innerHTML=`
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:12px">${fmtDate(c.dt_consulta||c.timestamp)} · Dr(a) ${c.medico||c.crm||'—'}</div>
+    <div class="section-label">Identificação</div>
+    <div class="meta-3">
+      <div class="field"><label>Nome</label><input type="text" value="${c.nome||''}" readonly></div>
+      <div class="field"><label>Idade / Sexo</label><input type="text" value="${c.idade||''} · ${c.sexo||''}" readonly></div>
+      <div class="field"><label>Responsável</label><input type="text" value="${c.responsavel||''}" readonly></div>
+    </div>
+    <div class="section-label">Anamnese</div>
+    <div class="field" style="margin-bottom:8px"><label>QP</label><textarea readonly style="min-height:48px">${c.qp||''}</textarea></div>
+    <div class="field" style="margin-bottom:8px"><label>HMA</label><textarea readonly style="min-height:72px">${c.hma||''}</textarea></div>
+    <div class="field" style="margin-bottom:8px"><label>Alergias</label><textarea readonly style="min-height:40px">${c.alergias||''}</textarea></div>
+    <div class="section-label">Exame Físico</div>
+    <div class="meta" style="margin-bottom:8px">
+      <div class="field"><label>Peso</label><input type="text" value="${c.peso||'—'} kg" readonly></div>
+      <div class="field"><label>Altura</label><input type="text" value="${c.altura||'—'} cm" readonly></div>
+      <div class="field"><label>Temperatura</label><input type="text" value="${c.temp||'—'}°C" readonly></div>
+      <div class="field"><label>SpO₂</label><input type="text" value="${c.spo2||'—'}%" readonly></div>
+    </div>
+    <div class="section-label">Diagnóstico</div>
+    <div style="margin-bottom:8px">${cids.map(x=>`<span class="chip chip-amber" style="margin:3px">${x.cod} ${x.desc} (${x.tipo})</span>`).join('')||'—'}</div>
+    <div class="field" style="margin-bottom:8px"><label>Raciocínio</label><textarea readonly style="min-height:60px">${c.raciocinio||''}</textarea></div>
+    <div class="section-label">Conduta</div>
+    ${rxs.map(r=>`<div style="background:var(--soft);border-radius:10px;padding:8px 12px;margin-bottom:6px;font-size:13px"><b>${r.nome}</b> ${r.dose} ${r.via} — ${r.freq} por ${r.dur}</div>`).join('')||'<div style="color:var(--muted);font-size:13px">Sem prescrição registrada.</div>'}
+    <div class="field" style="margin-top:8px"><label>Orientações</label><textarea readonly style="min-height:52px">${c.orientacoes||''}</textarea></div>
+    ${c.arquivo_desc?`<div class="field" style="margin-top:8px"><label>Arquivo / Receita</label><textarea readonly style="min-height:40px">${c.arquivo_desc}</textarea></div>`:''}
+    <div class="actions" style="margin-top:8px">
+      <button class="secondary" onclick="document.getElementById('modal-pront').classList.remove('open')">Fechar</button>
+    </div>`;
+  document.getElementById('modal-pront').classList.add('open');
+}
+
+// ═══════════════════════════ AGENDA MÉDICO ═══════════════════════════
+function renderMedCal(){
+  const d=new Date(calYear,calMonth,1);
+  document.getElementById('cal-month-label').textContent=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,s=>s.toUpperCase());
+  const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const agenda=JSON.parse(localStorage.getItem('capikids_agenda')||'{}');
+  let html=days.map(d=>`<div class="cal-day header">${d}</div>`).join('');
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-day unavail"></div>`;
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  for(let day=1;day<=daysInMonth;day++){
+    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const hasSlots=agenda[key]&&agenda[key].length>0;
+    const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===day;
+    const cls=isToday?'today':hasSlots?'avail':'unavail';
+    html+=`<div class="cal-day ${cls}" onclick="selectDay('${key}',${day})">${day}${hasSlots?'<br><span style="font-size:9px">✓</span>':''}</div>`;
+  }
+  document.getElementById('med-cal').innerHTML=html;
+}
+
+function selectDay(key,day){
+  selectedDay=key;
+  document.getElementById('day-detail').style.display='block';
+  document.getElementById('day-detail-date').textContent=day+'/'+String(calMonth+1).padStart(2,'0')+'/'+calYear;
+  const agenda=JSON.parse(localStorage.getItem('capikids_agenda')||'{}');
+  document.getElementById('day-slots').value=(agenda[key]||[]).join('\n');
+}
+
+function saveSlots(){
+  if(!selectedDay)return;
+  const slots=document.getElementById('day-slots').value.trim().split('\n').map(s=>s.trim()).filter(Boolean);
+  const agenda=JSON.parse(localStorage.getItem('capikids_agenda')||'{}');
+  agenda[selectedDay]=slots;
+  localStorage.setItem('capikids_agenda',JSON.stringify(agenda));
+  document.getElementById('day-detail').style.display='none';
+  renderMedCal();
+  toast('Horários salvos para '+selectedDay,'ok');
+}
+
+function prevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderMedCal();}
+function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderMedCal();}
+
+// ═══════════════════════════ ARQUIVOS MÉDICO ═══════════════════════════
+function renderArquivosMed(){
+  const arqs=JSON.parse(localStorage.getItem('capikids_arquivos')||'[]');
+  const el=document.getElementById('arquivo-list');
+  if(!arqs.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhum arquivo publicado.</div>';return;}
+  el.innerHTML=arqs.map((a,i)=>`
+    <div class="file-card" style="margin-bottom:8px;cursor:default">
+      <div class="file-icon" style="background:#EAF2FF">📄</div>
+      <div style="flex:1"><div class="file-name">${a.desc}</div><div class="file-sub">${fmtDate(a.ts)}</div></div>
+      <button class="cid-del" onclick="removeArquivo(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addArquivo(){
+  const desc=document.getElementById('new-file-desc').value.trim();
+  if(!desc){toast('Descreva o arquivo antes de publicar.','err');return;}
+  const arqs=JSON.parse(localStorage.getItem('capikids_arquivos')||'[]');
+  desc.split('\n').filter(Boolean).forEach(d=>arqs.push({desc:d.trim(),ts:new Date().toISOString(),medCRM}));
+  localStorage.setItem('capikids_arquivos',JSON.stringify(arqs));
+  document.getElementById('new-file-desc').value='';
+  renderArquivosMed();
+  toast('Arquivo publicado!','ok');
+}
+
+function removeArquivo(i){
+  const arqs=JSON.parse(localStorage.getItem('capikids_arquivos')||'[]');
+  arqs.splice(i,1);localStorage.setItem('capikids_arquivos',JSON.stringify(arqs));
+  renderArquivosMed();
+}
+
+// ═══════════════════════════ DADOS PACIENTE ═══════════════════════════
+function loadPacData(){
+  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  // busca por nome similar ao login
+  const term=pacName.toLowerCase().replace(/[A-Z]/g,'').trim();
+  const mine=arr.filter(c=>c.nome&&c.nome.toLowerCase().includes(term));
+  const last=mine[mine.length-1];
+
+  // última consulta
+  if(last){
+    document.getElementById('pac-last-date').textContent=fmtDate(last.dt_consulta||last.timestamp);
+    document.getElementById('pac-last-content').innerHTML=`
+      <div class="meta-3">
+        <div class="field"><label>Médico</label><input readonly value="${last.medico||last.crm||'—'}"></div>
+        <div class="field"><label>Diagnóstico</label><input readonly value="${tryParse(last.cids,[]).map(c=>c.cod+' '+c.desc).join(', ')||'—'}"></div>
+        <div class="field"><label>Retorno</label><input readonly value="${last.retorno||'—'}"></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>QP</label><textarea readonly style="min-height:48px">${last.qp||''}</textarea></div>`;
+    const rxs=tryParse(last.prescricao,[]);
+    const alarms=tryParse(last.alarmes,[]);
+    document.getElementById('pac-prescricao').innerHTML=
+      (rxs.length?rxs.map(r=>`<div style="background:var(--soft);border-radius:10px;padding:8px 14px;margin-bottom:6px;font-size:13px"><b>${r.nome}</b> — ${r.dose} ${r.via}, ${r.freq} por ${r.dur}</div>`).join(''):'<div style="color:var(--muted);font-size:13px">Sem prescrição.</div>')+
+      (last.orientacoes?`<div class="field" style="margin-top:8px"><label>Orientações</label><textarea readonly style="min-height:52px">${last.orientacoes}</textarea></div>`:'')+
+      (alarms.length?`<div style="margin-top:10px;padding:10px 14px;background:#FFF5DF;border-radius:10px;border:1px solid #E8CC80;font-size:13px">⚠️ <b>Sinais de alarme:</b> ${alarms.join(', ')}</div>`:'');
+    if(last.retorno){
+      document.getElementById('pac-proximos').innerHTML=`<div style="background:#E8F7EF;border-radius:10px;padding:12px 16px;font-size:13px;border:1px solid #A9E0BE">📅 <b>Retorno previsto:</b> ${fmtDate(last.retorno)} — ${last.retorno_cond||''}</div>`;
+    }
+    const pend=[];
+    if(last.exames_sol) pend.push('📋 Exames solicitados: '+last.exames_sol);
+    if(last.encaminhamentos) pend.push('🔁 Encaminhamento: '+last.encaminhamentos);
+    document.getElementById('pac-pendencias').innerHTML=pend.length?pend.map(p=>`<div style="background:var(--soft);border-radius:10px;padding:10px 14px;margin-bottom:6px;font-size:13px">${p}</div>`).join(''):'<div style="color:var(--muted);font-size:13px">Sem pendências.</div>';
+  }
+
+  // arquivos extras
+  const arqs=JSON.parse(localStorage.getItem('capikids_arquivos')||'[]');
+  if(arqs.length){
+    document.getElementById('pac-arq-extra').innerHTML='<div class="section-label" style="margin-top:12px">Publicados pela equipe</div><div class="file-grid">'+
+      arqs.map(a=>`<div class="file-card"><div class="file-icon" style="background:#EAF2FF">📄</div><div><div class="file-name">${a.desc}</div><div class="file-sub">${fmtDate(a.ts)}</div></div></div>`).join('')+'</div>';
+  }
+
+  // agendamentos
+  const agends=JSON.parse(localStorage.getItem('capikids_agendamentos')||'[]').filter(a=>a.pac===pacName);
+  if(agends.length){
+    document.getElementById('pac-meus-agend').innerHTML=agends.map(a=>`<div style="background:var(--soft);border-radius:10px;padding:10px 14px;margin-bottom:6px;font-size:13px">📅 ${a.data} às ${a.hora} — ${MED_NAMES[a.med]||a.med}</div>`).join('');
+  }
+}
+
+function loadPacCal(){
+  const med=document.getElementById('pac-med-sel').value;
+  const mes=parseInt(document.getElementById('pac-mes-sel').value);
+  const year=new Date().getFullYear();
+  const agenda=JSON.parse(localStorage.getItem('capikids_agenda')||'{}');
+  const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html=days.map(d=>`<div class="cal-day header">${d}</div>`).join('');
+  const firstDay=new Date(year,mes,1).getDay();
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-day unavail"></div>`;
+  const daysInMonth=new Date(year,mes+1,0).getDate();
+  for(let day=1;day<=daysInMonth;day++){
+    const key=`${year}-${String(mes+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const hasSlots=agenda[key]&&agenda[key].length>0;
+    const cls=hasSlots?'avail':'unavail';
+    html+=`<div class="cal-day ${cls}" onclick="${hasSlots?`showPacSlots('${key}',${day},${mes+1},${year},'${med}')`:''}">${day}</div>`;
+  }
+  document.getElementById('pac-cal').innerHTML=html;
+  document.getElementById('pac-cal-wrap').style.display='block';
+  document.getElementById('pac-slots-wrap').style.display='none';
+}
+
+function showPacSlots(key,day,mes,year,med){
+  const agenda=JSON.parse(localStorage.getItem('capikids_agenda')||'{}');
+  const slots=agenda[key]||[];
+  const agends=JSON.parse(localStorage.getItem('capikids_agendamentos')||'[]');
+  const ocupados=agends.filter(a=>a.data===key).map(a=>a.hora);
+  document.getElementById('pac-slot-day').textContent=`${day}/${String(mes).padStart(2,'0')}/${year}`;
+  document.getElementById('pac-slots').innerHTML=slots.map(h=>`
+    <span class="slot ${ocupados.includes(h)?'slot-busy':'slot-free'}" onclick="${ocupados.includes(h)?'':'confirmarAgend(\''+key+'\',\''+h+'\',\''+med+'\')'}">${h} ${ocupados.includes(h)?'(ocupado)':'— Solicitar'}</span>`).join('');
+  document.getElementById('pac-slots-wrap').style.display='block';
+}
+
+function confirmarAgend(data,hora,med){
+  if(!confirm(`Solicitar agendamento em ${data} às ${hora} com ${MED_NAMES[med]||med}?`))return;
+  const agends=JSON.parse(localStorage.getItem('capikids_agendamentos')||'[]');
+  agends.push({pac:pacName,data,hora,med,ts:new Date().toISOString()});
+  localStorage.setItem('capikids_agendamentos',JSON.stringify(agends));
+  toast('Agendamento solicitado para '+data+' às '+hora+'!','ok');
+  loadPacCal();loadPacData();showPacSub(0);
+}
+
+// ═══════════════════════════ UTILS ═══════════════════════════
+function fmtDate(s){if(!s)return'—';const d=new Date(s);return isNaN(d)?s:d.toLocaleDateString('pt-BR');}
+function tryParse(s,def){try{return JSON.parse(s)||def;}catch{return def;}}
+function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='show '+type;setTimeout(()=>t.className='',3800);}
+
+// ═══════════════════════════ INIT ═══════════════════════════
+document.getElementById('f-dtcons')&&(document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10));
+const nowMonth=new Date().getMonth();
+document.getElementById('pac-mes-sel')&&(document.getElementById('pac-mes-sel').value=nowMonth);
 </script>
 </body>
 </html>
