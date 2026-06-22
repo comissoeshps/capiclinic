@@ -1,1331 +1,864 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Prontuário Pediátrico — Atendimento</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --sky:        #E8F4FD;
-      --sky-mid:    #B8D9F0;
-      --azure:      #2F7EC1;
-      --azure-dark: #1A5A94;
-      --teal:       #1A8A7A;
-      --teal-light: #E6F4F2;
-      --slate:      #2C3E50;
-      --slate-mid:  #5A7080;
-      --slate-light:#ECF0F4;
-      --white:      #FFFFFF;
-      --warn:       #E67E22;
-      --warn-light: #FEF3E7;
-      --danger:     #C0392B;
-      --danger-light:#FDECEA;
-      --success:    #27AE60;
-      --success-light:#EBF9F1;
-      --border:     #D1DCE5;
-      --radius:     8px;
-      --shadow:     0 2px 12px rgba(44,62,80,0.09);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #F2F6FA;
-      color: var(--slate);
-      min-height: 100vh;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: var(--azure-dark);
-      color: var(--white);
-      padding: 0 32px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    .logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 20px;
-      letter-spacing: -0.3px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-icon {
-      width: 32px; height: 32px;
-      background: var(--azure);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-    }
-    .header-right {
-      display: flex; align-items: center; gap: 16px;
-    }
-    .btn-salvar {
-      background: var(--teal);
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: var(--radius);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
-      transition: background .2s;
-    }
-    .btn-salvar:hover { background: #156B5E; }
-    .btn-salvar.saved { background: var(--success); }
-    .doctor-label {
-      font-size: 12px;
-      opacity: .75;
-    }
-
-    /* ── LAYOUT ── */
-    .page-wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px 24px 80px;
-    }
-
-    /* ── PATIENT CARD ── */
-    .patient-card {
-      background: var(--white);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      border-left: 5px solid var(--azure);
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 20px;
-      align-items: center;
-    }
-    .patient-avatar {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      background: var(--sky);
-      border: 3px solid var(--sky-mid);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-    }
-    .patient-info h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      color: var(--azure-dark);
-      margin-bottom: 6px;
-    }
-    .patient-tags {
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .tag {
-      background: var(--sky);
-      color: var(--azure-dark);
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .4px;
-    }
-    .tag.alert { background: var(--warn-light); color: var(--warn); }
-    .patient-vitals {
-      display: flex; gap: 16px;
-    }
-    .vital-box {
-      text-align: center;
-      background: var(--slate-light);
-      border-radius: var(--radius);
-      padding: 8px 14px;
-      min-width: 72px;
-    }
-    .vital-box .v-val {
-      font-size: 18px; font-weight: 700; color: var(--slate);
-    }
-    .vital-box .v-lbl {
-      font-size: 10px; color: var(--slate-mid); text-transform: uppercase; letter-spacing: .5px;
-    }
-    .vital-box.alert .v-val { color: var(--danger); }
-
-    /* ── SECTION TABS ── */
-    .section-nav {
-      display: flex; gap: 4px;
-      margin-bottom: 0;
-      border-bottom: 2px solid var(--border);
-      padding: 0 2px;
-    }
-    .s-tab {
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--slate-mid);
-      border: none;
-      background: none;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      margin-bottom: -2px;
-      border-radius: 6px 6px 0 0;
-      transition: all .15s;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .s-tab:hover { color: var(--azure); background: var(--sky); }
-    .s-tab.active {
-      color: var(--azure);
-      border-bottom-color: var(--azure);
-      background: var(--white);
-    }
-    .s-tab .tab-num {
-      background: var(--sky-mid);
-      color: var(--azure-dark);
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      font-size: 10px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .s-tab.active .tab-num { background: var(--azure); color: white; }
-
-    /* ── PANELS ── */
-    .panel-container {
-      background: var(--white);
-      border-radius: 0 0 12px 12px;
-      box-shadow: var(--shadow);
-      margin-bottom: 24px;
-    }
-    .panel { display: none; padding: 28px 28px 32px; }
-    .panel.active { display: block; }
-
-    /* ── FORM ELEMENTS ── */
-    .field-group { margin-bottom: 20px; }
-    label.field-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      color: var(--slate-mid);
-      margin-bottom: 6px;
-    }
-    textarea, input[type="text"], input[type="date"], input[type="number"], select {
-      width: 100%;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 14px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13.5px;
-      color: var(--slate);
-      background: var(--white);
-      transition: border .15s;
-      outline: none;
-    }
-    textarea:focus, input:focus, select:focus {
-      border-color: var(--azure);
-      box-shadow: 0 0 0 3px rgba(47,126,193,0.12);
-    }
-    textarea { resize: vertical; min-height: 90px; }
-    .small-input { width: auto; min-width: 80px; }
-
-    /* ── SECTION HEADING ── */
-    .section-heading {
-      font-family: 'DM Serif Display', serif;
-      font-size: 17px;
-      color: var(--azure-dark);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .section-heading .icon { font-size: 18px; }
-
-    /* ── GRID ── */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-
-    /* ── CHECKBOX GROUPS ── */
-    .check-group {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
-    }
-    .check-item {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--slate-light);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 12.5px;
-      cursor: pointer;
-      transition: background .15s;
-    }
-    .check-item input { width: auto; }
-    .check-item:has(input:checked) {
-      background: var(--sky);
-      color: var(--azure-dark);
-      font-weight: 600;
-    }
-
-    /* ── SISTEMA REVIEW (anamnese por sistemas) ── */
-    .systems-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .system-item {
-      background: var(--slate-light);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-    }
-    .system-item label.field-label { margin-bottom: 4px; }
-    .system-item select { font-size: 12.5px; padding: 6px 10px; }
-
-    /* ── EXAME FÍSICO: CORPO ── */
-    .body-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .exam-region {
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-    .exam-region-title {
-      background: var(--slate-light);
-      padding: 7px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      color: var(--slate-mid);
-    }
-    .exam-region textarea {
-      border: none;
-      border-radius: 0;
-      min-height: 60px;
-      font-size: 13px;
-      padding: 8px 12px;
-    }
-    .exam-region textarea:focus { box-shadow: none; border: none; }
-
-    /* ── CID / DIAGNÓSTICO ── */
-    .cid-row {
-      display: flex; gap: 10px; align-items: flex-start;
-      margin-bottom: 10px;
-    }
-    .cid-row input { flex: 1; }
-    .btn-remove {
-      background: none; border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      width: 38px; height: 38px;
-      cursor: pointer; color: var(--danger); font-size: 16px;
-      display: flex; align-items: center; justify-content: center;
-      transition: all .15s;
-      flex-shrink: 0; margin-top: 0;
-    }
-    .btn-remove:hover { background: var(--danger-light); border-color: var(--danger); }
-    .btn-add {
-      background: none;
-      border: 1.5px dashed var(--azure);
-      color: var(--azure);
-      border-radius: var(--radius);
-      padding: 7px 16px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .15s;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .btn-add:hover { background: var(--sky); }
-
-    /* ── CONDUTA / PRESCRIÇÃO ── */
-    .rx-block {
-      background: var(--teal-light);
-      border: 1.5px solid #B2DDD8;
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      margin-bottom: 12px;
-    }
-    .rx-block .rx-title {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .5px; color: var(--teal); margin-bottom: 10px;
-    }
-
-    /* ── SOAP REFERENCE BADGE ── */
-    .soap-badge {
-      display: inline-flex; gap: 3px; margin-bottom: 20px;
-    }
-    .soap-letter {
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      font-size: 13px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      color: white;
-    }
-    .soap-s { background: var(--azure); }
-    .soap-o { background: var(--teal); }
-    .soap-a { background: var(--warn); }
-    .soap-p { background: #8E44AD; }
-
-    /* ── RODAPÉ DO PAINEL ── */
-    .panel-footer {
-      border-top: 1px solid var(--border);
-      padding: 16px 28px;
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--slate-light);
-      border-radius: 0 0 12px 12px;
-    }
-    .btn-nav {
-      background: var(--azure);
-      color: white;
-      border: none;
-      padding: 9px 22px;
-      border-radius: var(--radius);
-      font-size: 13px; font-weight: 600;
-      cursor: pointer;
-      transition: background .2s;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .btn-nav:hover { background: var(--azure-dark); }
-    .btn-nav.secondary {
-      background: none;
-      color: var(--azure);
-      border: 1.5px solid var(--azure);
-    }
-    .btn-nav.secondary:hover { background: var(--sky); }
-
-    /* ── SIGNATURE ── */
-    .signature-area {
-      background: var(--slate-light);
-      border-radius: var(--radius);
-      border: 1.5px dashed var(--border);
-      padding: 16px;
-      text-align: center;
-      color: var(--slate-mid);
-      font-size: 12px;
-    }
-
-    /* ── STATUS INDICATOR ── */
-    .save-status {
-      font-size: 12px;
-      color: var(--slate-mid);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--slate-mid);
-    }
-    .status-dot.saved { background: var(--success); }
-    .status-dot.saving { background: var(--warn); }
-
-    /* ── INLINE PROGRESS BAR ── */
-    .progress-bar {
-      height: 3px;
-      background: var(--sky-mid);
-      border-radius: 2px;
-      margin-bottom: 28px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--azure);
-      border-radius: 2px;
-      transition: width .4s ease;
-    }
-
-    /* ── MODAL LOADING ── */
-    #loading-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(44,62,80,.55);
-      z-index: 999;
-      align-items: center; justify-content: center;
-    }
-    #loading-overlay.active { display: flex; }
-    .spinner {
-      width: 48px; height: 48px;
-      border: 4px solid rgba(255,255,255,.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── TOAST ── */
-    #toast {
-      position: fixed; bottom: 28px; right: 28px;
-      background: var(--slate);
-      color: white;
-      padding: 12px 20px;
-      border-radius: var(--radius);
-      font-size: 13px;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: all .3s;
-      z-index: 200;
-    }
-    #toast.show { opacity: 1; transform: translateY(0); }
-    #toast.success { background: var(--success); }
-    #toast.error { background: var(--danger); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .patient-card { grid-template-columns: 1fr; }
-      .patient-vitals { flex-wrap: wrap; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .systems-grid, .body-grid { grid-template-columns: 1fr; }
-      .section-nav { overflow-x: auto; }
-      header { padding: 0 16px; }
-      .page-wrap { padding: 16px 12px 80px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PediAtende — Consultório Pediátrico</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1F3A;--navy2:#143B68;--blue:#1F6FEB;--cyan:#16A3B8;--green:#178A4A;
+  --red:#C7362F;--amber:#C78A14;--purple:#6B46C1;--teal:#0D9488;--orange:#EA580C;
+  --bg:#EEF2F8;--card:#FFFFFF;--ink:#102033;--muted:#667085;--line:#D0D8E8;--soft:#F4F7FC;
+  --shadow:0 4px 24px rgba(12,32,58,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.5}
+.hero{background:#ffffff;color:var(--ink);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--line),0 2px 12px rgba(12,32,58,.06)}
+.hero-inner{display:flex;align-items:center;flex-wrap:wrap;max-width:1320px;margin:0 auto;min-height:64px;gap:8px 0;padding:6px 0}
+.logo-area{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-right:40px;min-width:0}
+.logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1F6FEB,#0D9488);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.hero-title h1{font-size:16px;font-weight:900;letter-spacing:-.02em;color:var(--navy);line-height:1.2}
+.hero-title p{font-size:11px;color:var(--muted);margin-top:1px}
+.tabs{display:flex;gap:0;align-items:stretch;flex:1 1 auto;overflow-x:auto;height:64px;min-width:0;-webkit-overflow-scrolling:touch}
+.tab{border:none;background:transparent;color:var(--muted);padding:0 18px;font-weight:700;cursor:pointer;font-size:13.5px;border-bottom:3px solid transparent;border-top:3px solid transparent;transition:.15s;font-family:'DM Sans',sans-serif;white-space:nowrap;height:100%;display:flex;align-items:center;flex-shrink:0}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab:hover:not(.active){color:var(--navy);background:#F4F7FC}
+main{max-width:1320px;margin:0 auto;padding:22px 18px}
+.page{display:none}.page.active{display:block}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.panel-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+h2{font-size:17px;font-weight:900;letter-spacing:-.02em}
+h3{font-size:14px;font-weight:800;color:var(--navy);margin:18px 0 8px}
+h3:first-child{margin-top:0}
+p.lead{font-size:13.5px;line-height:1.7;color:var(--ink);margin-bottom:4px}
+ul.bullets{margin:6px 0 6px 0;padding-left:22px}
+ul.bullets li{margin-bottom:6px;font-size:13px;line-height:1.55}
+.chip{display:inline-flex;align-items:center;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;white-space:nowrap;font-family:'DM Mono',monospace}
+.chip-blue{background:#EAF2FF;color:var(--blue)}.chip-green{background:#E8F7EF;color:var(--green)}
+.chip-amber{background:#FFF5DF;color:var(--amber)}.chip-red{background:#FDEEEE;color:var(--red)}
+.chip-purple{background:#F3EEFF;color:var(--purple)}.chip-teal{background:#E0F7F5;color:var(--teal)}
+.sub{margin:4px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45;max-width:840px}
+/* ── META / FIELDS ── */
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.meta-3{grid-template-columns:repeat(3,1fr)}
+.meta-2{grid-template-columns:repeat(2,1fr)}
+.field{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+.field label{display:block;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font-size:13.5px;font-family:'DM Sans',sans-serif;resize:none}
+.field textarea{min-height:72px;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:#bbb}
+.field input[readonly]{color:var(--blue);font-weight:700}
+/* ── BUTTONS ── */
+button.primary,button.secondary,button.danger,button.export,button.warn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:.15s}
+button.primary{background:linear-gradient(135deg,var(--blue),#1455C0);color:white;box-shadow:0 4px 14px rgba(31,111,235,.3)}
+button.secondary{background:white;color:var(--navy);border:1px solid var(--line)}
+button.secondary:hover{background:var(--soft)}
+button.danger{background:var(--red);color:white}
+button.warn{background:var(--amber);color:white}
+button.export{background:var(--teal);color:white}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+/* ── SECTION LABEL ── */
+.section-label{display:flex;align-items:center;gap:8px;margin:20px 0 10px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.section-label:before,.section-label:after{content:"";flex:1;height:1px;background:var(--line)}
+/* ── SOAP BADGES ── */
+.soap-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.soap-badge{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border-radius:10px;font-size:12px;font-weight:700}
+.soap-s{background:#EAF2FF;color:var(--blue)}.soap-o{background:#E0F7F5;color:var(--teal)}
+.soap-a{background:#FFF5DF;color:var(--amber)}.soap-p{background:#F3EEFF;color:var(--purple)}
+.soap-letter{width:26px;height:26px;border-radius:7px;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;color:white}
+.soap-s .soap-letter{background:var(--blue)}.soap-o .soap-letter{background:var(--teal)}
+.soap-a .soap-letter{background:var(--amber)}.soap-p .soap-letter{background:var(--purple)}
+/* ── PATIENT CARD ── */
+.patient-card{background:linear-gradient(135deg,#0B1F3A,#143B68);color:white;border-radius:18px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.patient-avatar{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+.patient-name{font-size:20px;font-weight:900;letter-spacing:-.02em}
+.patient-meta{font-size:12px;opacity:.75;margin-top:3px}
+.vitals-row{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap}
+.vital{background:rgba(255,255,255,.12);border-radius:10px;padding:8px 14px;text-align:center;min-width:64px}
+.vital .vv{font-size:18px;font-weight:900}
+.vital .vl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.05em}
+.vital.alert-v{background:rgba(199,54,47,.35)}
+/* ── EXAM GRID ── */
+.exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.exam-box{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.exam-box-title{background:var(--soft);padding:7px 12px;font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.exam-box textarea{display:block;width:100%;border:0;outline:0;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;min-height:64px;resize:none;line-height:1.5;color:var(--ink)}
+.exam-box textarea::placeholder{color:#bbb}
+/* ── CID ROWS ── */
+.cid-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.cid-row input:first-child{max-width:130px;flex-shrink:0}
+.cid-row select{max-width:160px;flex-shrink:0}
+.cid-del{border:1px solid var(--line);background:white;border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--red);font-size:13px;font-weight:700;transition:.1s}
+.cid-del:hover{background:#FDEEEE;border-color:var(--red)}
+.add-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px dashed var(--blue);background:none;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;color:var(--blue);cursor:pointer;transition:.1s;font-family:'DM Sans',sans-serif}
+.add-btn:hover{background:#EAF2FF}
+/* ── RX BLOCK ── */
+.rx-item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:white}
+.rx-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rx-item-title{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--teal)}
+/* ── CHECK PILLS ── */
+.pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.pill{display:flex;align-items:center;gap:5px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer;transition:.1s;user-select:none}
+.pill input{width:auto;accent-color:var(--blue)}
+.pill:has(input:checked){background:#EAF2FF;border-color:#A3C0F7;color:var(--blue);font-weight:700}
+/* ── GRAVIDADE ALERT ── */
+.grav-alert{border-radius:12px;padding:12px 16px;font-size:13px;display:none;margin-top:10px;border-width:1px;border-style:solid}
+.grav-grave{background:#FFF5DF;border-color:#E8CC80;color:var(--amber)}
+.grav-critico{background:#FDEEEE;border-color:#E9A0A0;color:var(--red)}
+/* ── SIGN AREA ── */
+.sign-area{border:1.5px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--muted);font-size:12.5px;margin-top:8px}
+/* ── PROGRESS NAV ── */
+.progress-wrap{margin-bottom:20px}
+.progress-track{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--teal));transition:.4s}
+.step-nav{display:flex;gap:8px;margin-top:12px;overflow-x:auto}
+.step-btn{border:1px solid var(--line);background:white;border-radius:10px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.12s}
+.step-btn.active{background:var(--blue);color:white;border-color:var(--blue)}
+.step-btn.done{background:#E8F7EF;color:var(--green);border-color:#A9E0BE}
+/* ── LOGIN ── */
+.login-wrap{max-width:420px;margin:60px auto}
+.login-panel{background:white;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:36px 32px}
+.login-icon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#1F6FEB,#0D9488);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px}
+.login-title{text-align:center;font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.login-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.login-field input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:.15s}
+.login-field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,111,235,.12)}
+.login-err{background:#FDEEEE;color:var(--red);border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:12px;display:none}
+/* ── HOME HERO ── */
+.home-hero{background:linear-gradient(135deg,#0B1F3A 0%,#143B68 60%,#1F6FEB 100%);border-radius:20px;padding:48px 40px;color:white;margin-bottom:20px;position:relative;overflow:hidden}
+.home-hero:before{content:"👶";position:absolute;right:40px;top:50%;transform:translateY(-50%);font-size:100px;opacity:.12}
+.home-hero h2{font-size:28px;font-weight:900;letter-spacing:-.03em;margin-bottom:10px}
+.home-hero p{font-size:15px;opacity:.8;max-width:520px;line-height:1.65}
+.home-hero .cta-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.cta{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:.15s}
+.cta-primary{background:white;color:var(--blue)}
+.cta-secondary{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3)}
+/* ── DOC CARDS ── */
+.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.doc-card{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+.doc-card:before{content:"";position:absolute;left:0;top:0;width:4px;height:100%;background:var(--blue)}
+.doc-avatar{width:52px;height:52px;border-radius:14px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px}
+.doc-name{font-size:15px;font-weight:900;color:var(--navy)}
+.doc-crm{font-size:11.5px;color:var(--muted);margin-top:2px}
+.doc-esp{display:inline-flex;align-items:center;border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800;background:#EAF2FF;color:var(--blue);margin-top:8px}
+/* ── KPI ── */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:white;border:1px solid var(--line);border-radius:16px;padding:14px 16px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;width:4px;height:100%}
+.kpi-blue:before{background:var(--blue)}.kpi-green:before{background:var(--green)}
+.kpi-teal:before{background:var(--teal)}.kpi-purple:before{background:var(--purple)}
+.kpi small{display:block;color:var(--muted);text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.06em}
+.kpi b{display:block;font-size:26px;font-weight:900;margin-top:7px;letter-spacing:-.03em}
+.kpi span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+/* ── STATUS ── */
+.save-status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.dot.saved{background:var(--green)}.dot.saving{background:var(--amber)}
+/* ── TOAST ── */
+#toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;color:white;opacity:0;transform:translateY(12px);transition:.3s;z-index:200;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.ok{background:var(--green)}#toast.err{background:var(--red)}#toast.info{background:var(--blue)}
+/* ── RESPONSIVE ── */
+@media(max-width:1080px){.doc-grid,.kpis,.meta{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.doc-grid,.kpis,.meta,.meta-3,.meta-2,.exam-grid{grid-template-columns:1fr}.vitals-row{margin-left:0}}
+@media(max-width:760px){.hero{padding:0 12px}.hero-inner{padding:8px 0;gap:6px 0}.logo-area{width:100%;margin-right:0}.tabs{width:100%;flex:1 1 100%;height:46px}.tab{padding:0 12px;font-size:12px}main{padding:14px 10px}.panel{padding:14px;border-radius:14px}.panel-head{flex-direction:column;align-items:flex-start;gap:8px}.home-hero{padding:28px 20px}.home-hero h2{font-size:20px}}
+</style>
 </head>
 <body>
 
-<!-- ── HEADER ── -->
-<header>
-  <div class="logo">
+<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<header class="hero">
+<div class="hero-inner">
+  <div class="logo-area">
     <div class="logo-icon">👶</div>
-    PediAtende
+    <div class="hero-title">
+      <h1>PediAtende</h1>
+      <p>Sistema de Consultas Pediátricas</p>
+    </div>
   </div>
-  <div class="header-right">
-    <span class="doctor-label">Dr(a). <span id="doctor-name">—</span></span>
-    <button class="btn-salvar" id="btn-main-save" onclick="salvarProntuario()">
-      💾 Salvar Prontuário
-    </button>
-  </div>
+  <nav class="tabs">
+    <button class="tab active" onclick="showPage('home',this)">🏠 Página Inicial</button>
+    <button class="tab" onclick="goMedicos(this)">🩺 Médicos</button>
+    <button class="tab" onclick="showPage('pacientes',this)">👨‍👩‍👧 Pacientes</button>
+  </nav>
+</div>
 </header>
 
-<div class="page-wrap">
+<main>
 
-  <!-- ── PATIENT CARD ── -->
-  <div class="patient-card">
-    <div class="patient-avatar" id="patient-avatar">👤</div>
-    <div class="patient-info">
-      <h2 id="display-name">Novo Paciente</h2>
-      <div class="patient-tags" id="patient-tags">
-        <span class="tag">—</span>
-      </div>
+<!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+<section id="home" class="page active">
+
+  <div class="home-hero">
+    <h2>Pediatria de excelência, ao seu alcance.</h2>
+    <p>Consultas pediátricas de rotina com prontuário eletrônico integrado, seguindo os melhores padrões internacionais de atenção à saúde infantil.</p>
+    <div class="cta-row">
+      <button class="cta cta-primary" onclick="goMedicos(document.querySelectorAll('.tab')[1])">Área do Médico</button>
+      <button class="cta cta-secondary" onclick="showPage('pacientes',document.querySelectorAll('.tab')[2])">Portal do Paciente</button>
     </div>
-    <div class="patient-vitals" id="vitals-display">
-      <div class="vital-box">
-        <div class="v-val" id="v-peso">—</div>
-        <div class="v-lbl">Peso (kg)</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi kpi-blue">
+      <small>Especialidade</small><b>Pediatria</b><span>Clínica geral infantil</span>
+    </div>
+    <div class="kpi kpi-green">
+      <small>Atendimentos</small><b id="k-total">—</b><span>Consultas registradas</span>
+    </div>
+    <div class="kpi kpi-teal">
+      <small>Modelo clínico</small><b>SOAP</b><span>Padrão internacional</span>
+    </div>
+    <div class="kpi kpi-purple">
+      <small>Banco de dados</small><b>Google Sheets</b><span>Integração em nuvem</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div><h2>Sobre o consultório</h2></div>
+      <span class="chip chip-blue">Puericultura · Pediatria Clínica</span>
+    </div>
+    <p class="lead">O PediAtende é um sistema de gestão de consultas pediátricas que integra prontuário eletrônico estruturado segundo o método SOAP (Subjetivo · Objetivo · Avaliação · Plano), referenciado pelas diretrizes da Sociedade Brasileira de Pediatria (SBP), da American Academy of Pediatrics (AAP) e pelos padrões JCI de segurança do paciente.</p>
+    <ul class="bullets" style="margin-top:12px">
+      <li>Anamnese completa: queixa principal, HMA, antecedentes pessoais, familiares e socioeconômicos.</li>
+      <li>Exame físico sistematizado por aparelhos, com antropometria e sinais vitais com alertas automáticos.</li>
+      <li>Hipóteses diagnósticas com CID-10, raciocínio clínico e exames complementares.</li>
+      <li>Conduta estruturada: prescrição medicamentosa, orientações à família e seguimento.</li>
+      <li>Prontuário salvo automaticamente no Google Sheets.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:8px"><span style="font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Nossa equipe médica</span></div>
+  <div class="doc-grid">
+    <div class="doc-card">
+      <div class="doc-avatar">👨‍⚕️</div>
+      <div class="doc-name">Dr. Rafael Nascimento</div>
+      <div class="doc-crm">CRM 123456 / SP · RQE 45678</div>
+      <span class="doc-esp">Pediatra Geral</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-avatar">👩‍⚕️</div>
+      <div class="doc-name">Dra. Camila Ferreira</div>
+      <div class="doc-crm">CRM 234567 / SP · RQE 56789</div>
+      <span class="doc-esp">Neonatologista</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-avatar">👨‍⚕️</div>
+      <div class="doc-name">Dr. Lucas Tavares</div>
+      <div class="doc-crm">CRM 345678 / MG · RQE 67890</div>
+      <span class="doc-esp">Alergo-Imunologista Pediátrico</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h2>Proposta de valor</h2></div>
+    <div class="meta-3">
+      <div class="field">
+        <label>🩺 Para o Médico</label>
+        <div style="font-size:13px;color:var(--ink)">Prontuário digital estruturado, ágil e seguro. Toda a evolução salva em nuvem, acessível de qualquer dispositivo.</div>
       </div>
-      <div class="vital-box">
-        <div class="v-val" id="v-altura">—</div>
-        <div class="v-lbl">Alt. (cm)</div>
+      <div class="field">
+        <label>👨‍👩‍👧 Para as Famílias</label>
+        <div style="font-size:13px;color:var(--ink)">Acesso ao histórico de consultas, orientações pós-consulta e acompanhamento do crescimento da criança.</div>
       </div>
-      <div class="vital-box">
-        <div class="v-val" id="v-temp">—</div>
-        <div class="v-lbl">Temp. °C</div>
-      </div>
-      <div class="vital-box">
-        <div class="v-val" id="v-spo2">—</div>
-        <div class="v-lbl">SpO₂ %</div>
+      <div class="field">
+        <label>📊 Para a Gestão</label>
+        <div style="font-size:13px;color:var(--ink)">Dados estruturados para indicadores de qualidade, epidemiologia e melhoria contínua do atendimento.</div>
       </div>
     </div>
   </div>
 
-  <!-- ── PROGRESS ── -->
-  <div class="progress-bar">
-    <div class="progress-fill" id="progress-fill" style="width:25%"></div>
+</section>
+
+<!-- ══════════════════════════════ LOGIN MÉDICO ══════════════════════════════ -->
+<section id="login" class="page">
+  <div class="login-wrap">
+    <div class="login-panel">
+      <div class="login-icon">🩺</div>
+      <div class="login-title">Área do Médico</div>
+      <div class="login-sub">Acesso restrito aos profissionais cadastrados.</div>
+      <div id="loginErr" class="login-err">Usuário ou senha incorretos.</div>
+      <div class="login-field">
+        <label>Usuário (CRM)</label>
+        <input id="loginUser" type="text" placeholder="Ex.: 123456SP" autocomplete="username">
+      </div>
+      <div class="login-field">
+        <label>Senha</label>
+        <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="primary" style="width:100%;margin-top:8px" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ MÉDICOS (ATENDIMENTO) ══════════════════════════════ -->
+<section id="medicos" class="page">
+
+  <!-- Patient Card -->
+  <div class="patient-card" id="patient-card">
+    <div class="patient-avatar" id="pat-avatar">👤</div>
+    <div>
+      <div class="patient-name" id="pat-name">Novo Paciente</div>
+      <div class="patient-meta" id="pat-meta">—</div>
+    </div>
+    <div class="vitals-row">
+      <div class="vital"><div class="vv" id="v-peso">—</div><div class="vl">Peso kg</div></div>
+      <div class="vital"><div class="vv" id="v-alt">—</div><div class="vl">Alt cm</div></div>
+      <div class="vital" id="v-temp-box"><div class="vv" id="v-temp">—</div><div class="vl">Temp°C</div></div>
+      <div class="vital" id="v-spo2-box"><div class="vv" id="v-spo2">—</div><div class="vl">SpO₂%</div></div>
+    </div>
   </div>
 
-  <!-- ── TABS ── -->
-  <div class="section-nav">
-    <button class="s-tab active" onclick="showPanel('anamnese', this)">
-      <span class="tab-num">1</span> Anamnese
-    </button>
-    <button class="s-tab" onclick="showPanel('exame', this)">
-      <span class="tab-num">2</span> Exame Físico
-    </button>
-    <button class="s-tab" onclick="showPanel('diagnostico', this)">
-      <span class="tab-num">3</span> Diagnóstico
-    </button>
-    <button class="s-tab" onclick="showPanel('conduta', this)">
-      <span class="tab-num">4</span> Conduta
-    </button>
+  <!-- SOAP Legend -->
+  <div class="soap-row">
+    <div class="soap-badge soap-s"><div class="soap-letter">S</div>Subjetivo — Anamnese</div>
+    <div class="soap-badge soap-o"><div class="soap-letter">O</div>Objetivo — Exame Físico</div>
+    <div class="soap-badge soap-a"><div class="soap-letter">A</div>Avaliação — Diagnóstico</div>
+    <div class="soap-badge soap-p"><div class="soap-letter">P</div>Plano — Conduta</div>
   </div>
 
-  <div class="panel-container">
+  <!-- Progress steps -->
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
+    <div class="step-nav">
+      <button class="step-btn active" id="stp0" onclick="goStep(0)">1 · Anamnese</button>
+      <button class="step-btn" id="stp1" onclick="goStep(1)">2 · Exame Físico</button>
+      <button class="step-btn" id="stp2" onclick="goStep(2)">3 · Diagnóstico</button>
+      <button class="step-btn" id="stp3" onclick="goStep(3)">4 · Conduta</button>
+    </div>
+  </div>
 
-    <!-- ════════════════════════════════════
-         PAINEL 1 — ANAMNESE (SOAP: S)
-    ════════════════════════════════════ -->
-    <div class="panel active" id="panel-anamnese">
-      <div class="soap-badge">
-        <div class="soap-letter soap-s">S</div>
-        <div style="font-size:11px;color:var(--slate-mid);display:flex;align-items:center;padding-left:6px;">
-          Subjetivo — informações referidas pelo paciente/responsável
-        </div>
-      </div>
+  <!-- ────────────────── STEP 0: ANAMNESE ────────────────── -->
+  <div id="step0" class="step-panel">
 
-      <!-- IDENTIFICAÇÃO -->
-      <div class="section-heading"><span class="icon">🪪</span> Identificação do Paciente</div>
-      <div class="grid-3">
-        <div class="field-group">
-          <label class="field-label">Nome Completo *</label>
-          <input type="text" id="nome" placeholder="Nome do paciente" oninput="updateDisplay()"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Data de Nascimento *</label>
-          <input type="date" id="dnasc" onchange="calcularIdade()"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Idade Calculada</label>
-          <input type="text" id="idade" placeholder="—" readonly style="background:var(--slate-light);color:var(--azure-dark);font-weight:600;"/>
-        </div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>🪪 Identificação do Paciente</h2></div><span class="chip chip-blue">S — Subjetivo</span></div>
+      <div class="meta">
+        <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Nome do paciente" oninput="updatePatientCard()"></div>
+        <div class="field"><label>Data de nascimento *</label><input id="f-dnasc" type="date" onchange="calcIdade()"></div>
+        <div class="field"><label>Idade calculada</label><input id="f-idade" type="text" readonly placeholder="—"></div>
+        <div class="field"><label>Sexo</label><select id="f-sexo" onchange="updatePatientCard()"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
       </div>
-      <div class="grid-4">
-        <div class="field-group">
-          <label class="field-label">Sexo</label>
-          <select id="sexo" onchange="updateDisplay()">
-            <option value="">—</option>
-            <option>Masculino</option>
-            <option>Feminino</option>
-            <option>Outro</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Responsável</label>
-          <input type="text" id="responsavel" placeholder="Nome do responsável"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Parentesco</label>
-          <select id="parentesco">
-            <option value="">—</option>
-            <option>Mãe</option><option>Pai</option>
-            <option>Avó/Avô</option><option>Outro</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Data da Consulta</label>
-          <input type="date" id="data-consulta"/>
-        </div>
+      <div class="meta-3" style="margin-top:10px">
+        <div class="field"><label>Responsável</label><input id="f-resp" type="text" placeholder="Nome do responsável"></div>
+        <div class="field"><label>Parentesco</label><select id="f-par"><option value="">—</option><option>Mãe</option><option>Pai</option><option>Avó / Avô</option><option>Outro</option></select></div>
+        <div class="field"><label>Data da consulta</label><input id="f-dtcons" type="date"></div>
       </div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">Convênio / Plano de Saúde</label>
-          <input type="text" id="convenio" placeholder="Ex: Unimed, SUS, Particular…"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Médico Responsável</label>
-          <input type="text" id="medico" placeholder="Nome do médico" oninput="document.getElementById('doctor-name').textContent=this.value||'—'"/>
-        </div>
-      </div>
-
-      <!-- QUEIXA PRINCIPAL -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">💬</span> Queixa Principal (QP)</div>
-      <div class="field-group">
-        <label class="field-label">Motivo da consulta — em palavras do responsável</label>
-        <textarea id="qp" placeholder="Ex: 'Minha filha está com febre há 3 dias e dor de garganta.'" style="min-height:70px;"></textarea>
-      </div>
-
-      <!-- HMA -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">📋</span> História da Moléstia Atual (HMA)</div>
-      <p style="font-size:12px;color:var(--slate-mid);margin-bottom:12px;">
-        Descreva de forma cronológica: início, duração, características, fatores de melhora/piora, tratamentos realizados e evolução.
-      </p>
-      <div class="field-group">
-        <label class="field-label">Descrição detalhada</label>
-        <textarea id="hma" placeholder="Ex: Paciente iniciou quadro há 3 dias com febre (38,5°C), coriza hialina e dor de garganta. Mãe refere piora progressiva. Negam outros sintomas. Usaram dipirona com melhora parcial..." style="min-height:130px;"></textarea>
-      </div>
-
-      <!-- ANTECEDENTES -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">📁</span> Antecedentes Pessoais</div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">Antecedentes Perinatais</label>
-          <textarea id="perinatais" placeholder="Tipo de parto, IG ao nascer, PN, PC, Apgar, intercorrências neonatais..." style="min-height:80px;"></textarea>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Desenvolvimento Neuropsicomotor (DNPM)</label>
-          <textarea id="dnpm" placeholder="Marcos do desenvolvimento: sorriso social, sustento cefálico, sentar, andar, primeiras palavras..." style="min-height:80px;"></textarea>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">Doenças Prévias / Cirurgias / Internações</label>
-          <textarea id="doencas-previas" placeholder="Ex: Internação por bronquiolite aos 4 meses. Adenoamigdalectomia aos 5 anos..." style="min-height:80px;"></textarea>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Alergias</label>
-          <textarea id="alergias" placeholder="Medicamentos, alimentos, látex, outros. Se não há, registre 'NAIDA'." style="min-height:80px;"></textarea>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Medicamentos em uso</label>
-        <textarea id="medicamentos-uso" placeholder="Nome, dose, frequência, indicação." style="min-height:60px;"></textarea>
-      </div>
-
-      <!-- VACINAS -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">💉</span> Vacinação</div>
-      <div class="field-group">
-        <label class="field-label">Status do Calendário Vacinal (PNI)</label>
-        <div class="check-group">
-          <label class="check-item"><input type="radio" name="vacinas" value="em_dia"> Em dia</label>
-          <label class="check-item"><input type="radio" name="vacinas" value="incompleto"> Incompleto</label>
-          <label class="check-item"><input type="radio" name="vacinas" value="desatualizado"> Desatualizado</label>
-          <label class="check-item"><input type="radio" name="vacinas" value="nao_informado"> Não informado</label>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Observações sobre vacinação</label>
-        <textarea id="vacinas-obs" placeholder="Vacinas em atraso, recusa, esquemas especiais..." style="min-height:55px;"></textarea>
-      </div>
-
-      <!-- ANTECEDENTES NUTRICIONAIS -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">🍼</span> Alimentação e Nutrição</div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">Aleitamento materno</label>
-          <select id="aleitamento">
-            <option value="">—</option>
-            <option>Exclusivo até 6 meses</option>
-            <option>Parcial</option>
-            <option>Não amamentou</option>
-            <option>Em aleitamento</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Alimentação atual</label>
-          <textarea id="alimentacao" placeholder="Dieta, restrições, aceitação alimentar..." style="min-height:55px;"></textarea>
-        </div>
-      </div>
-
-      <!-- ANTECEDENTES FAMILIARES -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">👨‍👩‍👧</span> Antecedentes Familiares</div>
-      <div class="field-group">
-        <label class="field-label">Doenças na família (pais, irmãos, avós)</label>
-        <textarea id="antec-familiares" placeholder="Ex: pai com hipertensão, mãe com asma, avó materna com DM2..." style="min-height:80px;"></textarea>
-      </div>
-
-      <!-- CONDIÇÕES SOCIAIS -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">🏠</span> Condições Socioambientais</div>
-      <div class="grid-3">
-        <div class="field-group">
-          <label class="field-label">Tipo de moradia</label>
-          <select id="moradia">
-            <option value="">—</option>
-            <option>Própria</option><option>Alugada</option><option>Cedida</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Saneamento básico</label>
-          <select id="saneamento">
-            <option value="">—</option>
-            <option>Adequado</option><option>Inadequado</option><option>Parcial</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Animais domésticos</label>
-          <select id="animais">
-            <option value="">—</option>
-            <option>Não</option><option>Sim — cão</option>
-            <option>Sim — gato</option><option>Sim — outros</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Creche / Escola</label>
-        <input type="text" id="escola" placeholder="Nome, série, turno"/>
+      <div class="meta-2" style="margin-top:10px">
+        <div class="field"><label>Médico responsável</label><input id="f-med" type="text" placeholder="Nome do médico"></div>
+        <div class="field"><label>Convênio / Plano</label><input id="f-conv" type="text" placeholder="Unimed, SUS, Particular…"></div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════
-         PAINEL 2 — EXAME FÍSICO (SOAP: O)
-    ════════════════════════════════════ -->
-    <div class="panel" id="panel-exame">
-      <div class="soap-badge">
-        <div class="soap-letter soap-o">O</div>
-        <div style="font-size:11px;color:var(--slate-mid);display:flex;align-items:center;padding-left:6px;">
-          Objetivo — dados mensuráveis e achados do exame clínico
-        </div>
-      </div>
+    <div class="panel">
+      <div class="panel-head"><h2>💬 Queixa Principal (QP)</h2></div>
+      <div class="field"><label>Motivo da consulta — em palavras do responsável</label><textarea id="f-qp" placeholder="Ex.: 'Minha filha está com febre há 3 dias e dor de garganta.'" style="min-height:70px"></textarea></div>
+    </div>
 
-      <!-- MEDIDAS ANTROPOMÉTRICAS -->
-      <div class="section-heading"><span class="icon">📏</span> Antropometria e Sinais Vitais</div>
-      <div class="grid-4">
-        <div class="field-group">
-          <label class="field-label">Peso (kg)</label>
-          <input type="number" id="peso" step="0.1" placeholder="0.0" oninput="updateVitals()"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Estatura (cm)</label>
-          <input type="number" id="altura" step="0.1" placeholder="0.0" oninput="updateVitals(); calcIMC();"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">PC (cm)</label>
-          <input type="number" id="pc" step="0.1" placeholder="Perímetro cefálico"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">IMC (kg/m²)</label>
-          <input type="text" id="imc" placeholder="—" readonly style="background:var(--slate-light);font-weight:600;color:var(--azure-dark);"/>
-        </div>
-      </div>
-      <div class="grid-4">
-        <div class="field-group">
-          <label class="field-label">Temperatura (°C)</label>
-          <input type="number" id="temp" step="0.1" placeholder="36.5" oninput="updateVitals()"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">SpO₂ (%)</label>
-          <input type="number" id="spo2" placeholder="98" oninput="updateVitals()"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">FC (bpm)</label>
-          <input type="number" id="fc" placeholder="Frq. cardíaca"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">FR (irpm)</label>
-          <input type="number" id="fr" placeholder="Frq. respiratória"/>
-        </div>
-      </div>
-      <div class="grid-2" style="margin-bottom:20px;">
-        <div class="field-group">
-          <label class="field-label">Pressão Arterial (mmHg)</label>
-          <input type="text" id="pa" placeholder="Ex: 100/60"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Glicemia capilar (mg/dL)</label>
-          <input type="number" id="glicemia" placeholder="—"/>
-        </div>
-      </div>
+    <div class="panel">
+      <div class="panel-head"><h2>📋 História da Moléstia Atual (HMA)</h2></div>
+      <p class="sub" style="margin-bottom:12px">Descreva cronologicamente: início, duração, características, fatores de melhora/piora, tratamentos realizados e evolução.</p>
+      <div class="field"><label>Descrição detalhada</label><textarea id="f-hma" placeholder="Ex.: Paciente iniciou quadro há 3 dias com febre (38,5°C), coriza hialina e dor de garganta…" style="min-height:110px"></textarea></div>
+    </div>
 
-      <!-- ESTADO GERAL -->
-      <div class="section-heading"><span class="icon">🧒</span> Estado Geral e Aspecto</div>
-      <div class="grid-3" style="margin-bottom:16px;">
-        <div class="field-group">
-          <label class="field-label">Estado geral</label>
-          <select id="eg">
-            <option value="">—</option>
-            <option>Bom estado geral (BEG)</option>
-            <option>Regular estado geral (REG)</option>
-            <option>Mau estado geral (MEG)</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Hidratação</label>
-          <select id="hidratacao">
-            <option value="">—</option>
-            <option>Hidratado</option>
-            <option>Desidratação leve</option>
-            <option>Desidratação moderada</option>
-            <option>Desidratação grave</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Coloração</label>
-          <select id="coloracao">
-            <option value="">—</option>
-            <option>Corado (C)</option>
-            <option>Descorado (+/4+)</option>
-            <option>Descorado (++/4+)</option>
-            <option>Ictérico</option>
-            <option>Cianótico</option>
-          </select>
-        </div>
+    <div class="panel">
+      <div class="panel-head"><h2>📁 Antecedentes Pessoais</h2></div>
+      <div class="meta-2">
+        <div class="field"><label>Perinatais</label><textarea id="f-peri" placeholder="Tipo de parto, IG, PN, PC, Apgar, intercorrências neonatais…"></textarea></div>
+        <div class="field"><label>DNPM</label><textarea id="f-dnpm" placeholder="Marcos: sorriso social, sustento cefálico, sentar, andar, primeiras palavras…"></textarea></div>
       </div>
-      <div class="field-group">
-        <label class="field-label">Complemento do estado geral (ativo, reativo, choroso, irritável...)</label>
-        <textarea id="eg-obs" placeholder="Ex: Criança ativa, reativa, eupneica, acianótica, anictérica, normocorada, hidratada..." style="min-height:70px;"></textarea>
+      <div class="meta-2" style="margin-top:10px">
+        <div class="field"><label>Doenças prévias / Cirurgias / Internações</label><textarea id="f-dprev" placeholder="Ex.: Bronquiolite aos 4m. Adenoamigdalectomia aos 5a…"></textarea></div>
+        <div class="field"><label>Alergias ⚠️</label><textarea id="f-alerg" placeholder="Medicamentos, alimentos, látex. Se não há: NAIDA." oninput="updatePatientCard()"></textarea></div>
       </div>
+      <div class="field" style="margin-top:10px"><label>Medicamentos em uso</label><textarea id="f-meds" placeholder="Nome, dose, frequência, indicação."></textarea></div>
+    </div>
 
-      <!-- EXAME POR SISTEMAS -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">🔬</span> Exame por Sistemas</div>
-      <div class="body-grid">
-        <div class="exam-region">
-          <div class="exam-region-title">🫁 Aparelho Respiratório</div>
-          <textarea id="ex-resp" placeholder="Expansibilidade, MV, ruídos adventícios, esforço respiratório, tiragem..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">❤️ Aparelho Cardiovascular</div>
-          <textarea id="ex-cv" placeholder="Bulhas, ritmo, sopros, TEC, pulsos..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">🫃 Abdome</div>
-          <textarea id="ex-abd" placeholder="Inspeção, palpação (fígado, baço), ausculta, percussão, RHA..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">🧠 Neurológico</div>
-          <textarea id="ex-neuro" placeholder="Consciência, fontanela (lactentes), reflexos, tônus, meningismo..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">👂 ORL / Cabeça e Pescoço</div>
-          <textarea id="ex-orl" placeholder="Orofaringe, amígdalas, tirante, linfonodos, otoscopia..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">🦴 Musculoesquelético / Pele</div>
-          <textarea id="ex-pele" placeholder="Lesões de pele, exantemas, turgor, edemas, articulações..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">🔵 Genitourinário</div>
-          <textarea id="ex-genito" placeholder="Genitália externa, desenvolvimento puberal (Tanner), diurese..."></textarea>
-        </div>
-        <div class="exam-region">
-          <div class="exam-region-title">👁️ Olhos / Visão</div>
-          <textarea id="ex-olhos" placeholder="Conjuntivas, reflexo de Hirschberg, acuidade visual..."></textarea>
-        </div>
+    <div class="panel">
+      <div class="panel-head"><h2>💉 Vacinação</h2></div>
+      <div style="margin-bottom:10px;font-size:12.5px;color:var(--muted)">Calendário Vacinal Nacional (PNI)</div>
+      <div class="pill-group">
+        <label class="pill"><input type="radio" name="vac" value="em_dia"> ✅ Em dia</label>
+        <label class="pill"><input type="radio" name="vac" value="incompleto"> ⚠️ Incompleto</label>
+        <label class="pill"><input type="radio" name="vac" value="desatualizado"> ❌ Desatualizado</label>
+        <label class="pill"><input type="radio" name="vac" value="ni"> ❓ Não informado</label>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Observações vacinação</label><textarea id="f-vacobs" placeholder="Vacinas em atraso, recusa, esquemas especiais…" style="min-height:52px"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>🍼 Alimentação e Nutrição</h2></div>
+      <div class="meta-2">
+        <div class="field"><label>Aleitamento materno</label><select id="f-aleit"><option value="">—</option><option>Exclusivo até 6 meses</option><option>Parcial</option><option>Não amamentou</option><option>Em aleitamento</option></select></div>
+        <div class="field"><label>Alimentação atual</label><textarea id="f-alim" placeholder="Dieta, restrições, aceitação alimentar…" style="min-height:52px"></textarea></div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════
-         PAINEL 3 — DIAGNÓSTICO (SOAP: A)
-    ════════════════════════════════════ -->
-    <div class="panel" id="panel-diagnostico">
-      <div class="soap-badge">
-        <div class="soap-letter soap-a">A</div>
-        <div style="font-size:11px;color:var(--slate-mid);display:flex;align-items:center;padding-left:6px;">
-          Avaliação — interpretação clínica e hipóteses diagnósticas
-        </div>
-      </div>
+    <div class="panel">
+      <div class="panel-head"><h2>👨‍👩‍👧 Antecedentes Familiares</h2></div>
+      <div class="field"><label>Doenças na família (pais, irmãos, avós)</label><textarea id="f-afam" placeholder="Ex.: pai com HAS, mãe com asma, avó materna com DM2…" style="min-height:72px"></textarea></div>
+    </div>
 
-      <!-- HIPÓTESES DIAGNÓSTICAS -->
-      <div class="section-heading"><span class="icon">🎯</span> Hipóteses Diagnósticas / CID-10</div>
+    <div class="panel">
+      <div class="panel-head"><h2>🏠 Condições Socioambientais</h2></div>
+      <div class="meta">
+        <div class="field"><label>Moradia</label><select id="f-mor"><option value="">—</option><option>Própria</option><option>Alugada</option><option>Cedida</option></select></div>
+        <div class="field"><label>Saneamento</label><select id="f-san"><option value="">—</option><option>Adequado</option><option>Inadequado</option><option>Parcial</option></select></div>
+        <div class="field"><label>Animais domésticos</label><select id="f-anim"><option value="">—</option><option>Não</option><option>Sim — cão</option><option>Sim — gato</option><option>Sim — outros</option></select></div>
+        <div class="field"><label>Creche / Escola</label><input id="f-esc" type="text" placeholder="Nome, série, turno"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="goStep(1)">Próximo: Exame Físico →</button>
+    </div>
+  </div>
+
+  <!-- ────────────────── STEP 1: EXAME FÍSICO ────────────────── -->
+  <div id="step1" class="step-panel" style="display:none">
+
+    <div class="panel">
+      <div class="panel-head"><div><h2>📏 Antropometria e Sinais Vitais</h2></div><span class="chip chip-teal">O — Objetivo</span></div>
+      <div class="meta">
+        <div class="field"><label>Peso (kg)</label><input id="f-peso" type="number" step=".1" placeholder="0.0" oninput="updateVitals();calcIMC()"></div>
+        <div class="field"><label>Estatura (cm)</label><input id="f-alt" type="number" step=".1" placeholder="0.0" oninput="updateVitals();calcIMC()"></div>
+        <div class="field"><label>PC (cm)</label><input id="f-pc" type="number" step=".1" placeholder="Perímetro cefálico"></div>
+        <div class="field"><label>IMC (kg/m²)</label><input id="f-imc" type="text" readonly placeholder="—"></div>
+      </div>
+      <div class="meta" style="margin-top:10px">
+        <div class="field"><label>Temperatura (°C)</label><input id="f-temp" type="number" step=".1" placeholder="36.5" oninput="updateVitals()"></div>
+        <div class="field"><label>SpO₂ (%)</label><input id="f-spo2" type="number" placeholder="98" oninput="updateVitals()"></div>
+        <div class="field"><label>FC (bpm)</label><input id="f-fc" type="number" placeholder="Freq. cardíaca"></div>
+        <div class="field"><label>FR (irpm)</label><input id="f-fr" type="number" placeholder="Freq. respiratória"></div>
+      </div>
+      <div class="meta-2" style="margin-top:10px">
+        <div class="field"><label>PA (mmHg)</label><input id="f-pa" type="text" placeholder="Ex.: 100/60"></div>
+        <div class="field"><label>Glicemia capilar (mg/dL)</label><input id="f-gli" type="number" placeholder="—"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>🧒 Estado Geral e Aspecto</h2></div>
+      <div class="meta-3">
+        <div class="field"><label>Estado geral</label><select id="f-eg"><option value="">—</option><option>Bom estado geral (BEG)</option><option>Regular estado geral (REG)</option><option>Mau estado geral (MEG)</option></select></div>
+        <div class="field"><label>Hidratação</label><select id="f-hidr"><option value="">—</option><option>Hidratado</option><option>Desidratação leve</option><option>Desidratação moderada</option><option>Desidratação grave</option></select></div>
+        <div class="field"><label>Coloração</label><select id="f-cor"><option value="">—</option><option>Corado (C)</option><option>Descorado +/4+</option><option>Descorado ++/4+</option><option>Ictérico</option><option>Cianótico</option></select></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Complemento (ativo, reativo, eupneico…)</label><textarea id="f-eg-obs" placeholder="Ex.: Criança ativa, reativa, eupneica, acianótica, anictérica, hidratada…" style="min-height:64px"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>🔬 Exame por Sistemas</h2></div>
+      <div class="exam-grid">
+        <div class="exam-box"><div class="exam-box-title">🫁 Aparelho Respiratório</div><textarea id="ex-resp" placeholder="Expansibilidade, MV, ruídos adventícios, esforço, tiragem…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">❤️ Aparelho Cardiovascular</div><textarea id="ex-cv" placeholder="Bulhas, ritmo, sopros, TEC, pulsos…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">🫃 Abdome</div><textarea id="ex-abd" placeholder="Inspeção, palpação (fígado, baço), ausculta, percussão, RHA…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">🧠 Neurológico</div><textarea id="ex-neuro" placeholder="Consciência, fontanela, reflexos, tônus, meningismo…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">👂 ORL / Cabeça e Pescoço</div><textarea id="ex-orl" placeholder="Orofaringe, amígdalas, tirante, linfonodos, otoscopia…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">🦴 Pele / Musculoesquelético</div><textarea id="ex-pele" placeholder="Lesões, exantemas, turgor, edemas, articulações…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">🔵 Genitourinário</div><textarea id="ex-geni" placeholder="Genitália externa, Tanner, diurese…"></textarea></div>
+        <div class="exam-box"><div class="exam-box-title">👁️ Olhos / Visão</div><textarea id="ex-olho" placeholder="Conjuntivas, reflexo de Hirschberg, acuidade…"></textarea></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="secondary" onclick="goStep(0)">← Anterior</button>
+      <button class="primary" onclick="goStep(2)">Próximo: Diagnóstico →</button>
+    </div>
+  </div>
+
+  <!-- ────────────────── STEP 2: DIAGNÓSTICO ────────────────── -->
+  <div id="step2" class="step-panel" style="display:none">
+
+    <div class="panel">
+      <div class="panel-head"><div><h2>🎯 Hipóteses Diagnósticas / CID-10</h2></div><span class="chip chip-amber">A — Avaliação</span></div>
       <div id="cid-list"></div>
-      <button class="btn-add" onclick="addCID()">+ Adicionar diagnóstico / CID</button>
+      <button class="add-btn" onclick="addCID()" style="margin-top:4px">+ Adicionar diagnóstico / CID</button>
+    </div>
 
-      <!-- RACIOCÍNIO CLÍNICO -->
-      <div class="section-heading" style="margin-top:24px;"><span class="icon">🧩</span> Raciocínio Clínico</div>
-      <div class="field-group">
-        <label class="field-label">Impressão diagnóstica e correlação clínico-laboratorial</label>
-        <textarea id="raciocinio" placeholder="Descreva a integração dos dados subjetivos, objetivos e exames complementares para embasar o diagnóstico. Ex: Quadro clínico compatível com tonsilite bacteriana aguda, confirmada por exsudato purulento em amígdalas e Rapid Strep positivo..." style="min-height:120px;"></textarea>
-      </div>
+    <div class="panel">
+      <div class="panel-head"><h2>🧩 Raciocínio Clínico</h2></div>
+      <div class="field"><label>Impressão diagnóstica e correlação clínico-laboratorial</label><textarea id="f-rac" placeholder="Descreva a integração dos dados subjetivos, objetivos e exames para embasar o diagnóstico…" style="min-height:110px"></textarea></div>
+    </div>
 
-      <!-- EXAMES COMPLEMENTARES -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">🔭</span> Exames Complementares</div>
-      <div class="field-group">
-        <label class="field-label">Resultados de exames (laboratoriais, imagem, outros)</label>
-        <textarea id="exames" placeholder="Ex: Hemograma: leucocitose (15.000) com desvio à esquerda. PCR: 4,8. US abdome: normal. Rx tórax: sem consolidações..." style="min-height:90px;"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Exames solicitados nesta consulta</label>
-        <textarea id="exames-solicitados" placeholder="Lista de exames pedidos, com justificativa se pertinente." style="min-height:60px;"></textarea>
-      </div>
-
-      <!-- CLASSIFICAÇÃO DE RISCO -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">⚠️</span> Classificação de Risco e Gravidade</div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">Gravidade do quadro</label>
-          <select id="gravidade" onchange="updateGravidade()">
-            <option value="">— Selecionar —</option>
-            <option value="leve">Leve — manejo ambulatorial</option>
-            <option value="moderado">Moderado — observação/retorno breve</option>
-            <option value="grave">Grave — internação indicada</option>
-            <option value="critico">Crítico — UTI / emergência</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Tipo de consulta</label>
-          <select id="tipo-consulta">
-            <option value="">—</option>
-            <option>Consulta de rotina / puericultura</option>
-            <option>Consulta aguda / intercorrência</option>
-            <option>Retorno</option>
-            <option>Primeira consulta</option>
-          </select>
-        </div>
-      </div>
-      <div id="gravidade-alert" style="display:none;" class="rx-block" style="background:var(--danger-light);border-color:var(--danger);">
-        <div class="rx-title" style="color:var(--danger);">⚠️ Atenção</div>
-        <span id="gravidade-msg"></span>
+    <div class="panel">
+      <div class="panel-head"><h2>🔭 Exames Complementares</h2></div>
+      <div class="meta-2">
+        <div class="field"><label>Resultados disponíveis</label><textarea id="f-exres" placeholder="Ex.: Hemograma: leucocitose 15.000 com desvio à esquerda. PCR: 4,8…" style="min-height:80px"></textarea></div>
+        <div class="field"><label>Exames solicitados nesta consulta</label><textarea id="f-exsol" placeholder="Lista de exames pedidos com justificativa…" style="min-height:80px"></textarea></div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════
-         PAINEL 4 — CONDUTA (SOAP: P)
-    ════════════════════════════════════ -->
-    <div class="panel" id="panel-conduta">
-      <div class="soap-badge">
-        <div class="soap-letter soap-p">P</div>
-        <div style="font-size:11px;color:var(--slate-mid);display:flex;align-items:center;padding-left:6px;">
-          Plano — tratamento, orientações e seguimento
-        </div>
+    <div class="panel">
+      <div class="panel-head"><h2>⚠️ Classificação de Risco e Gravidade</h2></div>
+      <div class="meta-2">
+        <div class="field"><label>Gravidade do quadro</label><select id="f-grav" onchange="updateGrav()"><option value="">— Selecionar —</option><option value="leve">Leve — manejo ambulatorial</option><option value="moderado">Moderado — observação / retorno breve</option><option value="grave">Grave — internação indicada</option><option value="critico">Crítico — UTI / emergência</option></select></div>
+        <div class="field"><label>Tipo de consulta</label><select id="f-tcons"><option value="">—</option><option>Consulta de rotina / puericultura</option><option>Consulta aguda / intercorrência</option><option>Retorno</option><option>Primeira consulta</option></select></div>
       </div>
-
-      <!-- PRESCRIÇÃO -->
-      <div class="section-heading"><span class="icon">💊</span> Prescrição Medicamentosa</div>
-      <div class="rx-block">
-        <div class="rx-title">📋 Medicamentos prescritos</div>
-        <div id="rx-list"></div>
-        <button class="btn-add" onclick="addRx()" style="margin-top:8px;">+ Adicionar medicamento</button>
-      </div>
-
-      <!-- NÃO FARMACOLÓGICO -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">🌿</span> Medidas Não Farmacológicas</div>
-      <div class="field-group">
-        <label class="field-label">Recomendações gerais (repouso, hidratação, alimentação, higiene...)</label>
-        <textarea id="nao-farm" placeholder="Ex: Repouso relativo. Hidratação oral com soluções isotônicas. Higiene nasal com SF 0,9%. Evitar ambientes com fumaça..." style="min-height:80px;"></textarea>
-      </div>
-
-      <!-- ORIENTAÇÕES À FAMÍLIA -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">👪</span> Orientações à Família</div>
-      <div class="field-group">
-        <label class="field-label">Sinais de alarme — retornar imediatamente se:</label>
-        <div class="check-group" style="margin-bottom:10px;">
-          <label class="check-item"><input type="checkbox" class="alarme" value="febre_alta"> Febre > 39°C persistente</label>
-          <label class="check-item"><input type="checkbox" class="alarme" value="dispneia"> Dificuldade respiratória</label>
-          <label class="check-item"><input type="checkbox" class="alarme" value="letargia"> Sonolência excessiva / irritabilidade intensa</label>
-          <label class="check-item"><input type="checkbox" class="alarme" value="alimentacao"> Recusa alimentar</label>
-          <label class="check-item"><input type="checkbox" class="alarme" value="vomitos"> Vômitos persistentes</label>
-          <label class="check-item"><input type="checkbox" class="alarme" value="convulsao"> Convulsão</label>
-          <label class="check-item"><input type="checkbox" class="alarme" value="piora"> Piora geral do quadro</label>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Outras orientações à família / escola / creche</label>
-        <textarea id="orientacoes" placeholder="Afastamento escolar, dieta, cuidados domiciliares, higiene..." style="min-height:80px;"></textarea>
-      </div>
-
-      <!-- RETORNO E ENCAMINHAMENTOS -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">📅</span> Retorno e Encaminhamentos</div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">Retorno previsto</label>
-          <input type="date" id="retorno"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Prazo / condição de retorno</label>
-          <input type="text" id="retorno-cond" placeholder="Ex: Em 7 dias ou antes se piora"/>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Encaminhamentos (especialidades, CAPS, CRAS, outros)</label>
-        <textarea id="encaminhamentos" placeholder="Ex: Encaminhamento para Pneumologia pediátrica. Referência ao serviço de saúde mental infanto-juvenil..." style="min-height:70px;"></textarea>
-      </div>
-
-      <!-- EVOLUÇÃO LIVRE -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">📝</span> Evolução / Notas Adicionais</div>
-      <div class="field-group">
-        <label class="field-label">Registro livre do médico</label>
-        <textarea id="evolucao-livre" placeholder="Observações, intercorrências durante o atendimento, notas para o próximo profissional..." style="min-height:90px;"></textarea>
-      </div>
-
-      <!-- ASSINATURA -->
-      <div class="section-heading" style="margin-top:20px;"><span class="icon">✍️</span> Assinatura e Identificação do Médico</div>
-      <div class="grid-2">
-        <div class="field-group">
-          <label class="field-label">CRM</label>
-          <input type="text" id="crm" placeholder="Ex: 123456 / SP"/>
-        </div>
-        <div class="field-group">
-          <label class="field-label">RQE (se especialista)</label>
-          <input type="text" id="rqe" placeholder="Ex: 12345"/>
-        </div>
-      </div>
-      <div class="signature-area">
-        ✍️ Assinatura digital / carimbo do médico<br/>
-        <small>O prontuário será salvo com data, hora e identificação do profissional.</small>
-      </div>
+      <div id="grav-alert" class="grav-alert"></div>
     </div>
 
-    <!-- PANEL FOOTER -->
-    <div class="panel-footer">
-      <div class="save-status">
-        <div class="status-dot" id="status-dot"></div>
-        <span id="status-text">Não salvo</span>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn-nav secondary" id="btn-prev" onclick="navPanel(-1)" style="display:none;">← Anterior</button>
-        <button class="btn-nav" id="btn-next" onclick="navPanel(1)">Próximo →</button>
-        <button class="btn-nav" id="btn-finalizar" onclick="salvarProntuario()" style="display:none;background:var(--teal);">✅ Finalizar Consulta</button>
-      </div>
+    <div class="actions">
+      <button class="secondary" onclick="goStep(1)">← Anterior</button>
+      <button class="primary" onclick="goStep(3)">Próximo: Conduta →</button>
     </div>
   </div>
 
-</div>
+  <!-- ────────────────── STEP 3: CONDUTA ────────────────── -->
+  <div id="step3" class="step-panel" style="display:none">
 
-<!-- LOADING OVERLAY -->
-<div id="loading-overlay">
-  <div class="spinner"></div>
-</div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>💊 Prescrição Medicamentosa</h2></div><span class="chip chip-purple">P — Plano</span></div>
+      <div id="rx-list"></div>
+      <button class="add-btn" onclick="addRx()" style="margin-top:4px">+ Adicionar medicamento</button>
+    </div>
 
-<!-- TOAST -->
+    <div class="panel">
+      <div class="panel-head"><h2>🌿 Medidas Não Farmacológicas</h2></div>
+      <div class="field"><label>Recomendações gerais (repouso, hidratação, dieta, higiene…)</label><textarea id="f-nfar" placeholder="Ex.: Repouso relativo. Hidratação oral. Higiene nasal com SF 0,9%…" style="min-height:80px"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>👪 Orientações à Família</h2></div>
+      <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Sinais de alarme — retornar imediatamente se:</div>
+      <div class="pill-group">
+        <label class="pill"><input type="checkbox" class="alarm" value="febre"> Febre &gt; 39°C persistente</label>
+        <label class="pill"><input type="checkbox" class="alarm" value="dispneia"> Dificuldade respiratória</label>
+        <label class="pill"><input type="checkbox" class="alarm" value="letargia"> Sonolência / irritabilidade intensa</label>
+        <label class="pill"><input type="checkbox" class="alarm" value="aliment"> Recusa alimentar</label>
+        <label class="pill"><input type="checkbox" class="alarm" value="vomitos"> Vômitos persistentes</label>
+        <label class="pill"><input type="checkbox" class="alarm" value="convulsao"> Convulsão</label>
+        <label class="pill"><input type="checkbox" class="alarm" value="piora"> Piora geral do quadro</label>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Outras orientações (escola, creche, cuidados domiciliares…)</label><textarea id="f-orient" placeholder="Afastamento escolar, dieta especial, medidas de higiene…" style="min-height:72px"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>📅 Retorno e Encaminhamentos</h2></div>
+      <div class="meta-2">
+        <div class="field"><label>Data de retorno prevista</label><input id="f-ret" type="date"></div>
+        <div class="field"><label>Condição de retorno</label><input id="f-retcond" type="text" placeholder="Ex.: Em 7 dias ou antes se piora"></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Encaminhamentos (especialidades, CAPS, CRAS…)</label><textarea id="f-encam" placeholder="Ex.: Encaminhamento para Pneumologia pediátrica…" style="min-height:64px"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>📝 Evolução / Notas Adicionais</h2></div>
+      <div class="field"><label>Registro livre do médico</label><textarea id="f-evol" placeholder="Observações, intercorrências, notas para o próximo atendimento…" style="min-height:80px"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>✍️ Assinatura</h2></div>
+      <div class="meta-2">
+        <div class="field"><label>CRM</label><input id="f-crm" type="text" placeholder="Ex.: 123456 / SP"></div>
+        <div class="field"><label>RQE (se especialista)</label><input id="f-rqe" type="text" placeholder="Ex.: 45678"></div>
+      </div>
+      <div class="sign-area">✍️ Assinatura digital / carimbo do médico<br><span style="font-size:11.5px">O prontuário será salvo com data, hora e identificação do profissional.</span></div>
+    </div>
+
+    <div class="save-status"><span class="dot" id="s-dot"></span><span id="s-text">Não salvo</span></div>
+
+    <div class="actions">
+      <button class="secondary" onclick="goStep(2)">← Anterior</button>
+      <button class="primary" onclick="salvarProntuario()">✅ Finalizar e Salvar Consulta</button>
+      <button class="secondary" onclick="novaConsulta()">Nova Consulta</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════ PACIENTES ══════════════════════════════ -->
+<section id="pacientes" class="page">
+
+  <div class="panel">
+    <div class="panel-head">
+      <div><h2>Portal do Paciente</h2><p class="sub">Acompanhe o histórico de consultas da criança e acesse orientações médicas.</p></div>
+      <span class="chip chip-teal">Em breve</span>
+    </div>
+    <p class="lead">Esta área está em desenvolvimento. Em breve as famílias poderão:</p>
+    <ul class="bullets" style="margin-top:10px">
+      <li>Visualizar o resumo das consultas realizadas.</li>
+      <li>Acompanhar as curvas de crescimento (peso, altura, IMC e PC).</li>
+      <li>Consultar orientações pós-consulta e sinais de alarme.</li>
+      <li>Verificar o calendário vacinal e datas de retorno.</li>
+      <li>Solicitar agendamentos online.</li>
+    </ul>
+    <div class="meta-3" style="margin-top:18px">
+      <div class="field"><label>Buscar paciente</label><input type="text" placeholder="Nome ou data de nascimento…" disabled></div>
+      <div class="field"><label>Período</label><input type="date" disabled></div>
+      <div class="field"><label>Médico</label><select disabled><option>Todos</option></select></div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
 <div id="toast"></div>
 
 <script>
-  // ── CONFIGURAÇÃO DO GOOGLE SHEETS ──
-  // Substitua pela URL do seu Google Apps Script Web App
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID_AQUI/exec';
+// ══════════════════════════════════════════════════════
+// CONFIGURAÇÃO — GOOGLE SHEETS (Apps Script Web App)
+// Substitua pela URL do seu Web App publicado (/exec)
+// ══════════════════════════════════════════════════════
+const SHEETS_URL = 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT';
 
-  // ── CONTROLE DE PAINÉIS ──
-  const panels = ['anamnese','exame','diagnostico','conduta'];
-  let currentPanel = 0;
-  const progressSteps = [25, 50, 75, 100];
+// ── Credenciais (simples — adicione quantas quiser)
+const USERS = {
+  '123456SP': 'pediatria2025',
+  'admin':    'pedia123',
+};
 
-  function showPanel(id, tabEl) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + id).classList.add('active');
-    if (tabEl) tabEl.classList.add('active');
-    currentPanel = panels.indexOf(id);
-    updateNav();
-    document.getElementById('progress-fill').style.width = progressSteps[currentPanel] + '%';
+// ─── NAVEGAÇÃO ENTRE PÁGINAS ───────────────────────────────
+let loggedIn = false;
+
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function goMedicos(btn){
+  if(loggedIn){
+    showPage('medicos',btn);
+  } else {
+    showPage('login',btn);
   }
+}
 
-  function navPanel(dir) {
-    const next = currentPanel + dir;
-    if (next < 0 || next >= panels.length) return;
-    const tabs = document.querySelectorAll('.s-tab');
-    showPanel(panels[next], tabs[next]);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+// ─── LOGIN ────────────────────────────────────────────────
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  if(USERS[u] && USERS[u]===p){
+    loggedIn=true;
+    err.style.display='none';
+    showPage('medicos',document.querySelectorAll('.tab')[1]);
+    document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10);
+    updateKPIs();
+  } else {
+    err.style.display='block';
   }
+}
 
-  function updateNav() {
-    document.getElementById('btn-prev').style.display = currentPanel > 0 ? '' : 'none';
-    document.getElementById('btn-next').style.display = currentPanel < panels.length - 1 ? '' : 'none';
-    document.getElementById('btn-finalizar').style.display = currentPanel === panels.length - 1 ? '' : 'none';
+// ─── KPIs INICIAIS ────────────────────────────────────────
+function updateKPIs(){
+  const data = JSON.parse(localStorage.getItem('pedia_consultas')||'[]');
+  document.getElementById('k-total').textContent = data.length || '0';
+}
+updateKPIs();
+
+// ─── PATIENT CARD ─────────────────────────────────────────
+function updatePatientCard(){
+  const nome = document.getElementById('f-nome').value || 'Novo Paciente';
+  const sexo = document.getElementById('f-sexo').value;
+  const idade = document.getElementById('f-idade').value;
+  const alerg = document.getElementById('f-alerg').value;
+  document.getElementById('pat-name').textContent = nome;
+  document.getElementById('pat-avatar').textContent = sexo==='Feminino'?'👧':sexo==='Masculino'?'👦':'👤';
+  let meta = [];
+  if(idade) meta.push(idade);
+  if(sexo) meta.push(sexo);
+  if(alerg && alerg.toUpperCase()!=='NAIDA') meta.push('⚠️ Alergia registrada');
+  document.getElementById('pat-meta').textContent = meta.join(' · ') || '—';
+}
+
+function calcIdade(){
+  const v=document.getElementById('f-dnasc').value;
+  if(!v){return;}
+  const nasc=new Date(v), hoje=new Date();
+  const meses=(hoje.getFullYear()-nasc.getFullYear())*12+(hoje.getMonth()-nasc.getMonth());
+  let txt='';
+  if(meses<1){const d=Math.floor((hoje-nasc)/86400000);txt=`${d} dia${d!==1?'s':''}`;}
+  else if(meses<24){txt=`${meses} mês${meses!==1?'es':''}`;}
+  else{const a=Math.floor(meses/12),m=meses%12;txt=`${a} ano${a!==1?'s':''}${m?` e ${m} mês`:''}`;}
+  document.getElementById('f-idade').value=txt;
+  updatePatientCard();
+}
+
+function updateVitals(){
+  const p=document.getElementById('f-peso').value||'—';
+  const a=document.getElementById('f-alt').value||'—';
+  const t=parseFloat(document.getElementById('f-temp').value);
+  const s=parseFloat(document.getElementById('f-spo2').value);
+  document.getElementById('v-peso').textContent=p;
+  document.getElementById('v-alt').textContent=a;
+  document.getElementById('v-temp').textContent=isNaN(t)?'—':t;
+  document.getElementById('v-spo2').textContent=isNaN(s)?'—':s;
+  document.getElementById('v-temp-box').classList.toggle('alert-v',!isNaN(t)&&t>=38);
+  document.getElementById('v-spo2-box').classList.toggle('alert-v',!isNaN(s)&&s<95);
+}
+
+function calcIMC(){
+  const p=parseFloat(document.getElementById('f-peso').value);
+  const a=parseFloat(document.getElementById('f-alt').value)/100;
+  document.getElementById('f-imc').value=(p&&a)?( p/(a*a)).toFixed(2):'';
+}
+
+// ─── PROGRESS STEPS ───────────────────────────────────────
+let currentStep=0;
+const progWidths=['25%','50%','75%','100%'];
+
+function goStep(n){
+  document.getElementById('step'+currentStep).style.display='none';
+  document.getElementById('stp'+currentStep).classList.remove('active');
+  if(n>currentStep) document.getElementById('stp'+currentStep).classList.add('done');
+  currentStep=n;
+  document.getElementById('step'+n).style.display='block';
+  document.getElementById('stp'+n).classList.add('active');
+  document.getElementById('stp'+n).classList.remove('done');
+  document.getElementById('progress-fill').style.width=progWidths[n];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ─── CID ROWS ─────────────────────────────────────────────
+let cidCount=0;
+function addCID(){
+  cidCount++;
+  const id='cid'+cidCount;
+  const div=document.createElement('div');
+  div.className='cid-row'; div.id=id;
+  div.innerHTML=`<div class="field" style="flex:0 0 120px"><label>CID-10</label><input type="text" placeholder="J02.0" id="${id}-cod"></div>
+<div class="field" style="flex:1"><label>Descrição</label><input type="text" placeholder="Descrição do diagnóstico" id="${id}-desc"></div>
+<div class="field" style="flex:0 0 150px"><label>Tipo</label><select id="${id}-tipo"><option>Principal</option><option>Secundário</option><option>Hipótese</option><option>Diferencial</option></select></div>
+<button class="cid-del" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  document.getElementById('cid-list').appendChild(div);
+}
+addCID();
+
+// ─── RX ───────────────────────────────────────────────────
+let rxCount=0;
+function addRx(){
+  rxCount++;
+  const id='rx'+rxCount;
+  const div=document.createElement('div');
+  div.className='rx-item'; div.id=id;
+  div.innerHTML=`<div class="rx-item-header"><span class="rx-item-title">💊 Medicamento ${rxCount}</span><button class="cid-del" onclick="document.getElementById('${id}').remove()">✕ Remover</button></div>
+<div class="meta">
+  <div class="field" style="grid-column:span 2"><label>Medicamento / princípio ativo</label><input type="text" placeholder="Nome genérico ou comercial" id="${id}-nome"></div>
+  <div class="field"><label>Dose</label><input type="text" placeholder="Ex.: 10 mg/kg" id="${id}-dose"></div>
+  <div class="field"><label>Via</label><select id="${id}-via"><option>VO</option><option>EV</option><option>IM</option><option>SC</option><option>Inalatória</option><option>Tópica</option></select></div>
+</div>
+<div class="meta-2" style="margin-top:8px">
+  <div class="field"><label>Frequência</label><input type="text" placeholder="Ex.: 8/8h, 1x/dia" id="${id}-freq"></div>
+  <div class="field"><label>Duração</label><input type="text" placeholder="Ex.: 7 dias" id="${id}-dur"></div>
+</div>`;
+  document.getElementById('rx-list').appendChild(div);
+}
+
+// ─── GRAVIDADE ALERT ──────────────────────────────────────
+function updateGrav(){
+  const v=document.getElementById('f-grav').value;
+  const el=document.getElementById('grav-alert');
+  el.style.display='none'; el.className='grav-alert';
+  if(v==='grave'){el.style.display='block';el.classList.add('grav-grave');el.innerHTML='⚠️ <b>Quadro grave</b> — avaliar necessidade de internação hospitalar.';}
+  else if(v==='critico'){el.style.display='block';el.classList.add('grav-critico');el.innerHTML='🚨 <b>Quadro crítico</b> — acionar equipe de emergência / UTI pediátrica imediatamente.';}
+}
+
+// ─── COLETAR DADOS ────────────────────────────────────────
+function v(id){return (document.getElementById(id)||{}).value||'';}
+function coletarDados(){
+  const cids=[]; document.querySelectorAll('.cid-row').forEach(row=>{
+    const n=row.id; if(!n.startsWith('cid')) return;
+    const num=n.replace('cid','');
+    cids.push({cod:v(n+'-cod'),desc:v(n+'-desc'),tipo:v(n+'-tipo')});
+  });
+  const rxs=[]; document.querySelectorAll('.rx-item').forEach(row=>{
+    const n=row.id;
+    rxs.push({nome:v(n+'-nome'),dose:v(n+'-dose'),via:v(n+'-via'),freq:v(n+'-freq'),dur:v(n+'-dur')});
+  });
+  const alarms=[...document.querySelectorAll('.alarm:checked')].map(c=>c.value);
+  const vacval=(document.querySelector('input[name="vac"]:checked')||{}).value||'';
+  return {
+    timestamp:new Date().toISOString(),
+    // Identificação
+    nome:v('f-nome'),dnasc:v('f-dnasc'),idade:v('f-idade'),sexo:v('f-sexo'),
+    responsavel:v('f-resp'),parentesco:v('f-par'),dt_consulta:v('f-dtcons'),
+    medico:v('f-med'),convenio:v('f-conv'),crm:v('f-crm'),rqe:v('f-rqe'),
+    // Anamnese
+    qp:v('f-qp'),hma:v('f-hma'),antec_perinat:v('f-peri'),dnpm:v('f-dnpm'),
+    doencas_prev:v('f-dprev'),alergias:v('f-alerg'),medicamentos:v('f-meds'),
+    vacinacao:vacval,vac_obs:v('f-vacobs'),aleitamento:v('f-aleit'),alimentacao:v('f-alim'),
+    antec_fam:v('f-afam'),moradia:v('f-mor'),saneamento:v('f-san'),animais:v('f-anim'),escola:v('f-esc'),
+    // Exame físico
+    peso:v('f-peso'),altura:v('f-alt'),pc:v('f-pc'),imc:v('f-imc'),
+    temp:v('f-temp'),spo2:v('f-spo2'),fc:v('f-fc'),fr:v('f-fr'),pa:v('f-pa'),gli:v('f-gli'),
+    eg:v('f-eg'),hidratacao:v('f-hidr'),coloracao:v('f-cor'),eg_obs:v('f-eg-obs'),
+    ex_resp:v('ex-resp'),ex_cv:v('ex-cv'),ex_abd:v('ex-abd'),ex_neuro:v('ex-neuro'),
+    ex_orl:v('ex-orl'),ex_pele:v('ex-pele'),ex_geni:v('ex-geni'),ex_olho:v('ex-olho'),
+    // Diagnóstico
+    cids:JSON.stringify(cids),raciocinio:v('f-rac'),exames_res:v('f-exres'),
+    exames_sol:v('f-exsol'),gravidade:v('f-grav'),tipo_consulta:v('f-tcons'),
+    // Conduta
+    prescricao:JSON.stringify(rxs),med_nfar:v('f-nfar'),alarmes:JSON.stringify(alarms),
+    orientacoes:v('f-orient'),retorno:v('f-ret'),retorno_cond:v('f-retcond'),
+    encaminhamentos:v('f-encam'),evolucao:v('f-evol'),
+  };
+}
+
+// ─── SALVAR LOCAL ─────────────────────────────────────────
+function salvarLocal(dados){
+  const arr=JSON.parse(localStorage.getItem('pedia_consultas')||'[]');
+  arr.push(dados); localStorage.setItem('pedia_consultas',JSON.stringify(arr));
+}
+
+// ─── SALVAR NO SHEETS ─────────────────────────────────────
+async function salvarProntuario(){
+  const dados=coletarDados();
+  if(!dados.nome){toast('Informe o nome do paciente antes de salvar.','err');return;}
+  setStatus('saving','Salvando…');
+  salvarLocal(dados);
+  updateKPIs();
+  if(!SHEETS_URL||SHEETS_URL==='COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT'){
+    setTimeout(()=>{setStatus('saved','Salvo localmente em '+new Date().toLocaleTimeString('pt-BR'));toast('Prontuário salvo localmente! (Google Sheets não configurado)','info');},600);
+    return;
   }
-
-  // ── DISPLAY DINÂMICO ──
-  function updateDisplay() {
-    const nome = document.getElementById('nome').value || 'Novo Paciente';
-    const sexo = document.getElementById('sexo').value;
-    document.getElementById('display-name').textContent = nome;
-    document.getElementById('patient-avatar').textContent = sexo === 'Feminino' ? '👧' : sexo === 'Masculino' ? '👦' : '👤';
-    const tags = document.getElementById('patient-tags');
-    const idade = document.getElementById('idade').value;
-    tags.innerHTML = '';
-    if (idade) tags.innerHTML += `<span class="tag">${idade}</span>`;
-    if (sexo) tags.innerHTML += `<span class="tag">${sexo}</span>`;
-    const alergia = document.getElementById('alergias').value;
-    if (alergia && alergia.toUpperCase() !== 'NAIDA') tags.innerHTML += `<span class="tag alert">⚠️ Alergia</span>`;
+  try{
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});
+    setStatus('saved','Salvo em '+new Date().toLocaleTimeString('pt-BR'));
+    toast('Prontuário enviado ao Google Sheets! ✅','ok');
+  }catch(e){
+    setStatus('','Salvo localmente. Falha no envio ao Sheets.');
+    toast('Salvo localmente. Verifique a URL do Google Script.','err');
   }
+}
 
-  function updateVitals() {
-    const v = (id) => document.getElementById(id).value || '—';
-    document.getElementById('v-peso').textContent = v('peso');
-    document.getElementById('v-altura').textContent = v('altura');
-    document.getElementById('v-temp').textContent = v('temp');
-    document.getElementById('v-spo2').textContent = v('spo2');
-    const temp = parseFloat(document.getElementById('temp').value);
-    const spo2 = parseFloat(document.getElementById('spo2').value);
-    document.getElementById('v-temp').parentElement.classList.toggle('alert', temp >= 38);
-    document.getElementById('v-spo2').parentElement.classList.toggle('alert', spo2 < 95);
-  }
+function setStatus(cls,txt){
+  const dot=document.getElementById('s-dot');
+  dot.className='dot'+(cls?' '+cls:'');
+  document.getElementById('s-text').textContent=txt;
+}
 
-  function calcularIdade() {
-    const dnasc = document.getElementById('dnasc').value;
-    if (!dnasc) return;
-    const nasc = new Date(dnasc);
-    const hoje = new Date();
-    const meses = (hoje.getFullYear() - nasc.getFullYear()) * 12 + (hoje.getMonth() - nasc.getMonth());
-    let texto = '';
-    if (meses < 1) {
-      const dias = Math.floor((hoje - nasc) / 86400000);
-      texto = `${dias} dia${dias !== 1 ? 's' : ''}`;
-    } else if (meses < 24) {
-      texto = `${meses} mese${meses !== 1 ? 's' : ''}`;
-    } else {
-      const anos = Math.floor(meses / 12);
-      const m = meses % 12;
-      texto = `${anos} ano${anos !== 1 ? 's' : ''}${m ? ` e ${m} mês` : ''}`;
-    }
-    document.getElementById('idade').value = texto;
-    updateDisplay();
-  }
+// ─── NOVA CONSULTA ────────────────────────────────────────
+function novaConsulta(){
+  if(!confirm('Deseja iniciar uma nova consulta? Os dados atuais não salvos serão perdidos.'))return;
+  document.querySelectorAll('#medicos input:not([readonly]),#medicos textarea,#medicos select').forEach(el=>{el.value='';});
+  document.querySelectorAll('.alarm').forEach(c=>c.checked=false);
+  document.querySelectorAll('input[name="vac"]').forEach(r=>r.checked=false);
+  document.getElementById('cid-list').innerHTML=''; cidCount=0; addCID();
+  document.getElementById('rx-list').innerHTML=''; rxCount=0;
+  document.getElementById('grav-alert').style.display='none';
+  setStatus('','Não salvo');
+  updatePatientCard(); updateVitals();
+  document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10);
+  goStep(0);
+  toast('Nova consulta iniciada.','info');
+}
 
-  function calcIMC() {
-    const peso = parseFloat(document.getElementById('peso').value);
-    const alt = parseFloat(document.getElementById('altura').value) / 100;
-    if (peso && alt) {
-      document.getElementById('imc').value = (peso / (alt * alt)).toFixed(2);
-    }
-  }
+// ─── TOAST ────────────────────────────────────────────────
+function toast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show '+type;
+  setTimeout(()=>t.className='',3800);
+}
 
-  // ── CID LIST ──
-  let cidCount = 0;
-  function addCID() {
-    cidCount++;
-    const div = document.createElement('div');
-    div.className = 'cid-row';
-    div.id = 'cid-row-' + cidCount;
-    div.innerHTML = `
-      <input type="text" placeholder="Código CID-10 (ex: J02.0)" style="max-width:160px;" class="cid-code" id="cid-code-${cidCount}"/>
-      <input type="text" placeholder="Descrição do diagnóstico" class="cid-desc" id="cid-desc-${cidCount}"/>
-      <select id="cid-type-${cidCount}" style="max-width:180px;">
-        <option value="principal">Diagnóstico principal</option>
-        <option value="secundario">Secundário</option>
-        <option value="hipotese">Hipótese</option>
-        <option value="diferencial">Diferencial</option>
-      </select>
-      <button class="btn-remove" onclick="document.getElementById('cid-row-${cidCount}').remove()">✕</button>`;
-    document.getElementById('cid-list').appendChild(div);
-  }
-  addCID(); // inicia com 1
-
-  // ── RX LIST ──
-  let rxCount = 0;
-  function addRx() {
-    rxCount++;
-    const div = document.createElement('div');
-    div.style.cssText = 'background:white;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;';
-    div.id = 'rx-' + rxCount;
-    div.innerHTML = `
-      <div class="grid-4" style="margin-bottom:8px;">
-        <div class="field-group" style="margin:0;grid-column:span 2;">
-          <label class="field-label">Medicamento</label>
-          <input type="text" placeholder="Nome / Princípio ativo" id="rx-nome-${rxCount}"/>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label class="field-label">Dose</label>
-          <input type="text" placeholder="Ex: 10 mg/kg" id="rx-dose-${rxCount}"/>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label class="field-label">Via</label>
-          <select id="rx-via-${rxCount}">
-            <option>VO</option><option>EV</option><option>IM</option>
-            <option>SC</option><option>Inalatória</option><option>Tópica</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid-3">
-        <div class="field-group" style="margin:0;">
-          <label class="field-label">Frequência</label>
-          <input type="text" placeholder="Ex: 8/8h, 1x/dia" id="rx-freq-${rxCount}"/>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label class="field-label">Duração</label>
-          <input type="text" placeholder="Ex: 7 dias" id="rx-dur-${rxCount}"/>
-        </div>
-        <div style="display:flex;align-items:flex-end;">
-          <button class="btn-remove" onclick="document.getElementById('rx-${rxCount}').remove()" style="width:100%;margin:0;">✕ Remover</button>
-        </div>
-      </div>`;
-    document.getElementById('rx-list').appendChild(div);
-  }
-
-  // ── GRAVIDADE ──
-  function updateGravidade() {
-    const val = document.getElementById('gravidade').value;
-    const alert = document.getElementById('gravidade-alert');
-    const msg = document.getElementById('gravidade-msg');
-    const msgs = {
-      grave: '⚠️ Quadro grave — avaliar necessidade de internação hospitalar.',
-      critico: '🚨 Quadro crítico — acionar equipe de emergência / UTI pediátrica imediatamente.'
-    };
-    if (msgs[val]) { alert.style.display = ''; msg.textContent = msgs[val]; }
-    else alert.style.display = 'none';
-  }
-
-  // ── COLETA DE DADOS ──
-  function coletarDados() {
-    const cids = [];
-    document.querySelectorAll('.cid-row').forEach((row, i) => {
-      const n = row.id.replace('cid-row-','');
-      cids.push({
-        codigo: document.getElementById('cid-code-'+n)?.value || '',
-        descricao: document.getElementById('cid-desc-'+n)?.value || '',
-        tipo: document.getElementById('cid-type-'+n)?.value || ''
-      });
-    });
-    const rxs = [];
-    document.querySelectorAll('[id^="rx-nome-"]').forEach(el => {
-      const n = el.id.replace('rx-nome-','');
-      if (document.getElementById('rx-'+n)) {
-        rxs.push({
-          nome: el.value,
-          dose: document.getElementById('rx-dose-'+n)?.value || '',
-          via: document.getElementById('rx-via-'+n)?.value || '',
-          freq: document.getElementById('rx-freq-'+n)?.value || '',
-          duracao: document.getElementById('rx-dur-'+n)?.value || ''
-        });
-      }
-    });
-    const alarmes = Array.from(document.querySelectorAll('.alarme:checked')).map(c => c.value);
-
-    const v = id => document.getElementById(id)?.value || '';
-    return {
-      timestamp: new Date().toISOString(),
-      // Identificação
-      nome: v('nome'), dnasc: v('dnasc'), idade: v('idade'),
-      sexo: v('sexo'), responsavel: v('responsavel'), parentesco: v('parentesco'),
-      data_consulta: v('data-consulta'), convenio: v('convenio'), medico: v('medico'),
-      crm: v('crm'), rqe: v('rqe'),
-      // Anamnese
-      queixa_principal: v('qp'), hma: v('hma'),
-      antec_perinatais: v('perinatais'), dnpm: v('dnpm'),
-      doencas_previas: v('doencas-previas'), alergias: v('alergias'),
-      medicamentos_uso: v('medicamentos-uso'),
-      vacinas: document.querySelector('input[name="vacinas"]:checked')?.value || '',
-      vacinas_obs: v('vacinas-obs'), aleitamento: v('aleitamento'),
-      alimentacao: v('alimentacao'), antec_familiares: v('antec-familiares'),
-      moradia: v('moradia'), saneamento: v('saneamento'),
-      animais: v('animais'), escola: v('escola'),
-      // Exame físico
-      peso: v('peso'), altura: v('altura'), pc: v('pc'), imc: v('imc'),
-      temp: v('temp'), spo2: v('spo2'), fc: v('fc'), fr: v('fr'),
-      pa: v('pa'), glicemia: v('glicemia'),
-      eg: v('eg'), hidratacao: v('hidratacao'), coloracao: v('coloracao'), eg_obs: v('eg-obs'),
-      ex_resp: v('ex-resp'), ex_cv: v('ex-cv'), ex_abd: v('ex-abd'),
-      ex_neuro: v('ex-neuro'), ex_orl: v('ex-orl'), ex_pele: v('ex-pele'),
-      ex_genito: v('ex-genito'), ex_olhos: v('ex-olhos'),
-      // Diagnóstico
-      cids: JSON.stringify(cids),
-      raciocinio: v('raciocinio'),
-      exames: v('exames'), exames_solicitados: v('exames-solicitados'),
-      gravidade: v('gravidade'), tipo_consulta: v('tipo-consulta'),
-      // Conduta
-      prescricao: JSON.stringify(rxs),
-      medidas_nao_farm: v('nao-farm'), alarmes: JSON.stringify(alarmes),
-      orientacoes: v('orientacoes'), retorno: v('retorno'),
-      retorno_cond: v('retorno-cond'), encaminhamentos: v('encaminhamentos'),
-      evolucao_livre: v('evolucao-livre')
-    };
-  }
-
-  // ── SALVAR NO GOOGLE SHEETS ──
-  async function salvarProntuario() {
-    const dados = coletarDados();
-    if (!dados.nome) { showToast('Informe o nome do paciente antes de salvar.', 'error'); return; }
-
-    document.getElementById('loading-overlay').classList.add('active');
-    document.getElementById('status-dot').className = 'status-dot saving';
-    document.getElementById('status-text').textContent = 'Salvando…';
-
-    try {
-      const resp = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
-      });
-      // no-cors retorna opaque; assumimos sucesso se não houve erro de rede
-      document.getElementById('status-dot').className = 'status-dot saved';
-      document.getElementById('status-text').textContent = 'Salvo em ' + new Date().toLocaleTimeString('pt-BR');
-      const btn = document.getElementById('btn-main-save');
-      btn.classList.add('saved');
-      btn.textContent = '✅ Salvo!';
-      setTimeout(() => { btn.classList.remove('saved'); btn.innerHTML = '💾 Salvar Prontuário'; }, 3000);
-      showToast('Prontuário salvo com sucesso!', 'success');
-    } catch (e) {
-      document.getElementById('status-dot').className = 'status-dot';
-      document.getElementById('status-text').textContent = 'Erro ao salvar';
-      showToast('Erro ao conectar com o servidor. Verifique a URL do Google Script.', 'error');
-    } finally {
-      document.getElementById('loading-overlay').classList.remove('active');
-    }
-  }
-
-  // ── TOAST ──
-  function showToast(msg, type = '') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'show ' + type;
-    setTimeout(() => t.className = '', 3800);
-  }
-
-  // ── INIT ──
-  document.getElementById('data-consulta').value = new Date().toISOString().slice(0,10);
-  updateNav();
+// ─── INIT ─────────────────────────────────────────────────
+document.getElementById('f-dtcons') && (document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10));
 </script>
 </body>
 </html>
