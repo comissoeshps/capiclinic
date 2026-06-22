@@ -389,30 +389,104 @@ button.export{background:var(--teal);color:white}
   <div id="msub-panel-0">
 
     <!-- CABEÇALHO DO PROFISSIONAL -->
-    <div id="med-profile-card" style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-      <div id="med-photo-wrap" style="width:72px;height:72px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--soft);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer" onclick="document.getElementById('med-photo-input').click()" title="Clique para alterar foto">
-        <span id="med-photo-emoji">👨‍⚕️</span>
-        <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
-      </div>
-      <input type="file" id="med-photo-input" accept="image/*" style="display:none" onchange="loadMedPhoto(this)">
-      <div style="flex:1;min-width:180px">
-        <div id="med-profile-name" style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em"></div>
-        <div id="med-profile-crm" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
-        <div id="med-profile-esp" style="margin-top:6px"></div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div style="display:flex;flex-direction:column;gap:6px;min-width:200px">
+    <div id="med-profile-card" style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px">
+
+      <!-- ── MODO VISUALIZAÇÃO ── -->
+      <div id="med-view-mode" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+
+        <!-- foto -->
+        <div style="position:relative;flex-shrink:0">
+          <div id="med-photo-wrap" style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:38px">
+            <span id="med-photo-emoji">👨‍⚕️</span>
+            <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+          </div>
+        </div>
+
+        <!-- nome + crm + especialidade (fixos, não editáveis) -->
+        <div style="flex:1;min-width:160px">
+          <div id="med-profile-name" style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em"></div>
+          <div id="med-profile-crm" style="font-size:12px;color:var(--muted);margin-top:3px"></div>
+          <div id="med-profile-esp" style="margin-top:7px"></div>
+        </div>
+
+        <!-- dados de contato (somente leitura no modo view) -->
+        <div style="display:flex;flex-direction:column;gap:7px;min-width:200px">
           <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
-            <span style="font-size:14px">📞</span>
-            <input id="med-tel" type="text" placeholder="Telefone / WhatsApp" style="border:0;border-bottom:1px solid var(--line);outline:none;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:transparent;width:180px" onchange="saveMedProfile()">
+            <span style="font-size:15px;flex-shrink:0">📞</span>
+            <span id="view-tel" style="color:var(--muted);font-style:italic">Não informado</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
-            <span style="font-size:14px">✉️</span>
-            <input id="med-email" type="text" placeholder="E-mail profissional" style="border:0;border-bottom:1px solid var(--line);outline:none;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:transparent;width:180px" onchange="saveMedProfile()">
+            <span style="font-size:15px;flex-shrink:0">✉️</span>
+            <span id="view-email" style="color:var(--muted);font-style:italic">Não informado</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
-            <span style="font-size:14px">📍</span>
-            <input id="med-addr" type="text" placeholder="Endereço do consultório" style="border:0;border-bottom:1px solid var(--line);outline:none;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:transparent;width:180px" onchange="saveMedProfile()">
+            <span style="font-size:15px;flex-shrink:0">📍</span>
+            <span id="view-addr" style="color:var(--muted);font-style:italic">Não informado</span>
+          </div>
+        </div>
+
+        <!-- botão editar -->
+        <button onclick="toggleMedEdit(true)" style="margin-left:auto;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:800;color:var(--navy);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;white-space:nowrap">
+          ✏️ Editar perfil
+        </button>
+      </div>
+
+      <!-- ── MODO EDIÇÃO ── -->
+      <div id="med-edit-mode" style="display:none">
+
+        <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+
+          <!-- foto com clique para trocar -->
+          <div style="flex-shrink:0;text-align:center">
+            <div id="med-photo-wrap-edit" onclick="document.getElementById('med-photo-input').click()"
+              style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px dashed var(--blue);display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;position:relative">
+              <span id="med-photo-emoji-edit">👨‍⚕️</span>
+              <img id="med-photo-img-edit" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+              <div style="position:absolute;inset:0;background:rgba(31,111,235,.15);display:flex;align-items:center;justify-content:center;border-radius:50%">
+                <span style="font-size:18px">📷</span>
+              </div>
+            </div>
+            <div style="font-size:10.5px;color:var(--blue);font-weight:700;margin-top:5px;cursor:pointer" onclick="document.getElementById('med-photo-input').click()">Alterar foto</div>
+            <input type="file" id="med-photo-input" accept="image/*" style="display:none" onchange="loadMedPhoto(this)">
+          </div>
+
+          <!-- campos editáveis -->
+          <div style="flex:1;min-width:220px">
+
+            <!-- nome e CRM — somente leitura mesmo no modo edição -->
+            <div style="background:var(--soft);border-radius:10px;padding:10px 14px;margin-bottom:12px">
+              <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:4px">Nome e CRM — não editáveis</div>
+              <div id="med-edit-name-label" style="font-size:15px;font-weight:800;color:var(--navy)"></div>
+              <div id="med-edit-crm-label" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px">
+                <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">📞 Telefone / WhatsApp</label>
+                <input id="med-tel" type="text" placeholder="(00) 90000-0000"
+                  style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
+              </div>
+              <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px">
+                <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">✉️ E-mail profissional</label>
+                <input id="med-email" type="text" placeholder="seuemail@clinica.com"
+                  style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
+              </div>
+            </div>
+
+            <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin-bottom:14px">
+              <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">📍 Endereço do consultório</label>
+              <input id="med-addr" type="text" placeholder="Rua, número, bairro, cidade"
+                style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <button onclick="saveMedProfileAndClose()" style="background:linear-gradient(135deg,var(--green),#0f6b3a);color:white;border:0;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+                ✅ Salvar alterações
+              </button>
+              <button onclick="toggleMedEdit(false)" style="background:white;color:var(--navy);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -730,7 +804,7 @@ button.export{background:var(--teal);color:white}
         <span style="font-size:32px">👨‍👩‍👧</span>
       </div>
       <div class="login-title">Área do Paciente</div>
-      <div class="login-sub">Login: nome da criança + iniciais. Senha: capikids123</div>
+      <div class="login-sub">Acesse com seu usuário e senha fornecidos pela clínica.</div>
       <div id="loginPacErr" class="login-err">Usuário ou senha incorretos.</div>
       <div class="login-field"><label>Usuário</label><input id="lpUser" type="text" placeholder="Ex.: JoaoPSO" autocomplete="username"></div>
       <div class="login-field"><label>Senha</label><input id="lpPass" type="password" placeholder="capikids123" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLoginPac()"></div>
@@ -875,8 +949,12 @@ const MED_NAMES = {
   '345678': 'Dr. Lucas Tavares (CRM 345678)',
 };
 
-// Paciente: usuario=NomePrimeiro+iniciais, senha=capikids123
-const PAC_PASS = 'capikids123';
+// Pacientes cadastrados: { usuario: { senha, nomeExibido } }
+const PAC_USERS = {
+  'gabrielcm': { senha: '123capikids', nome: 'Gabriel Cruvinel Macor' }, 'julianocar': { senha: '123capikids', nome: 'Juliano César Alves Reis' },
+  // Padrão genérico: qualquer usuário com senha capikids123 também entra
+};
+const PAC_PASS_PADRAO = 'capikids123';
 
 // ══ ESTADO ══
 let loggedMed = false, medCRM = '', loggedPac = false, pacName = '';
@@ -923,12 +1001,16 @@ function doLoginPac() {
   const u = document.getElementById('lpUser').value.trim();
   const p = document.getElementById('lpPass').value;
   const err = document.getElementById('loginPacErr');
-  if (p === PAC_PASS && u.length > 0) {
-    loggedPac = true; pacName = u; err.style.display = 'none';
-    document.getElementById('pac-logged-name').textContent = u;
+  const cadastrado = PAC_USERS[u];
+  const senhaValida = cadastrado ? cadastrado.senha === p : p === PAC_PASS_PADRAO;
+  if (u.length > 0 && senhaValida) {
+    loggedPac = true;
+    pacName = cadastrado ? cadastrado.nome : u;
+    err.style.display = 'none';
+    document.getElementById('pac-logged-name').textContent = pacName;
     showPage('pacientes', document.getElementById('tab-pac'));
     loadPacData(); initGrowthChartPac();
-    toast('Bem-vindo, ' + u + '!', 'ok');
+    toast('Bem-vindo, ' + pacName + '!', 'ok');
   } else { err.style.display = 'block'; }
 }
 
@@ -1388,42 +1470,88 @@ const MED_PROFILES = {
 
 function renderMedProfile(crm) {
   const p = MED_PROFILES[crm] || {};
-  if (document.getElementById('med-profile-name')) {
-    document.getElementById('med-profile-name').textContent = p.nome || '—';
-    document.getElementById('med-profile-crm').textContent = p.crm || '—';
-    document.getElementById('med-profile-esp').innerHTML = `<span style="background:#E8F7EF;color:var(--green);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800">${p.esp||''}</span>`;
-    const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+crm)||'{}');
-    if (saved.tel) document.getElementById('med-tel').value = saved.tel;
-    if (saved.email) document.getElementById('med-email').value = saved.email;
-    if (saved.addr) document.getElementById('med-addr').value = saved.addr;
-    if (saved.photo) {
-      document.getElementById('med-photo-emoji').style.display='none';
-      const img=document.getElementById('med-photo-img');
-      img.src=saved.photo; img.style.display='block';
-    }
-  }
+  // Fixos (view)
+  const setT = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=v||''; };
+  setT('med-profile-name', p.nome);
+  setT('med-profile-crm',  p.crm);
+  if (document.getElementById('med-profile-esp'))
+    document.getElementById('med-profile-esp').innerHTML =
+      `<span style="background:#E8F7EF;color:var(--green);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800">${p.esp||''}</span>`;
+  // Fixos (edit — somente leitura)
+  setT('med-edit-name-label', p.nome);
+  setT('med-edit-crm-label',  p.crm);
+
+  // Carregar dados salvos
+  const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+crm)||'{}');
+  const tel   = saved.tel   || '';
+  const email = saved.email || '';
+  const addr  = saved.addr  || '';
+  // Preencher campos de edição
+  if (document.getElementById('med-tel'))   document.getElementById('med-tel').value   = tel;
+  if (document.getElementById('med-email')) document.getElementById('med-email').value = email;
+  if (document.getElementById('med-addr'))  document.getElementById('med-addr').value  = addr;
+  // Atualizar spans de visualização
+  updateViewSpans(tel, email, addr);
+  // Foto
+  if (saved.photo) applyPhoto(saved.photo);
 }
 
-function saveMedProfile() {
-  const data = {
-    tel: document.getElementById('med-tel').value,
-    email: document.getElementById('med-email').value,
-    addr: document.getElementById('med-addr').value,
+function updateViewSpans(tel, email, addr) {
+  const muted = 'color:var(--muted);font-style:italic';
+  const ok    = 'color:var(--ink);font-style:normal';
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val || 'Não informado';
+    el.style.cssText = val ? ok : muted;
   };
-  const existing = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
-  localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify({...existing,...data}));
+  set('view-tel',   tel);
+  set('view-email', email);
+  set('view-addr',  addr);
+}
+
+function toggleMedEdit(on) {
+  document.getElementById('med-view-mode').style.display = on ? 'none'  : 'flex';
+  document.getElementById('med-edit-mode').style.display = on ? 'block' : 'none';
+}
+
+function saveMedProfileAndClose() {
+  const tel   = (document.getElementById('med-tel')  ||{}).value||'';
+  const email = (document.getElementById('med-email')||{}).value||'';
+  const addr  = (document.getElementById('med-addr') ||{}).value||'';
+  const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
+  localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify({...saved, tel, email, addr}));
+  updateViewSpans(tel, email, addr);
+  toggleMedEdit(false);
+  toast('Perfil atualizado com sucesso! ✅', 'ok');
+}
+
+// Mantida para compatibilidade com chamadas anteriores
+function saveMedProfile() { saveMedProfileAndClose(); }
+
+function applyPhoto(src) {
+  // modo view
+  const emoji = document.getElementById('med-photo-emoji');
+  const img   = document.getElementById('med-photo-img');
+  if (emoji) emoji.style.display = 'none';
+  if (img)   { img.src = src; img.style.display = 'block'; }
+  // modo edição
+  const emojiE = document.getElementById('med-photo-emoji-edit');
+  const imgE   = document.getElementById('med-photo-img-edit');
+  if (emojiE) emojiE.style.display = 'none';
+  if (imgE)   { imgE.src = src; imgE.style.display = 'block'; }
 }
 
 function loadMedPhoto(input) {
   const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    document.getElementById('med-photo-emoji').style.display='none';
-    const img = document.getElementById('med-photo-img');
-    img.src=e.target.result; img.style.display='block';
+    const src = e.target.result;
+    applyPhoto(src);
     const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
-    saved.photo = e.target.result;
+    saved.photo = src;
     localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify(saved));
+    toast('Foto atualizada! ✅', 'ok');
   };
   reader.readAsDataURL(file);
 }
