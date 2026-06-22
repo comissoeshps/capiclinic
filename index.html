@@ -397,7 +397,7 @@ button.export{background:var(--teal);color:white}
       </div>
       <div class="field">
         <label>Telefone / WhatsApp</label>
-        <input id="ct-tel" type="text" placeholder="(00) 90000-0000">
+        <input id="ct-tel" type="text" placeholder="(00) 90000-0000" maxlength="16" oninput="maskPhone(this)">
       </div>
     </div>
     <div class="field" style="margin-bottom:16px">
@@ -479,114 +479,113 @@ button.export{background:var(--teal);color:white}
     </div>
   </div>
 
-  <!-- ─── SUB 0: NOVA CONSULTA ─── -->
-  <div id="msub-panel-0">
+  <!-- ══ CABEÇALHO DO PROFISSIONAL — visível em todas as abas ══ -->
+  <div id="med-profile-card" style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px">
 
-    <!-- CABEÇALHO DO PROFISSIONAL -->
-    <div id="med-profile-card" style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px">
+    <!-- ── MODO VISUALIZAÇÃO ── -->
+    <div id="med-view-mode" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
 
-      <!-- ── MODO VISUALIZAÇÃO ── -->
-      <div id="med-view-mode" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-
-        <!-- foto -->
-        <div style="position:relative;flex-shrink:0">
-          <div id="med-photo-wrap" style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:38px">
-            <span id="med-photo-emoji">👨‍⚕️</span>
-            <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
-          </div>
+      <!-- foto -->
+      <div style="position:relative;flex-shrink:0">
+        <div id="med-photo-wrap" style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:38px">
+          <span id="med-photo-emoji">👨‍⚕️</span>
+          <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
         </div>
-
-        <!-- nome + crm + especialidade (fixos, não editáveis) -->
-        <div style="flex:1;min-width:160px">
-          <div id="med-profile-name" style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em"></div>
-          <div id="med-profile-crm" style="font-size:12px;color:var(--muted);margin-top:3px"></div>
-          <div id="med-profile-esp" style="margin-top:7px"></div>
-        </div>
-
-        <!-- dados de contato (somente leitura no modo view) -->
-        <div style="display:flex;flex-direction:column;gap:7px;min-width:200px">
-          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
-            <span style="font-size:15px;flex-shrink:0">📞</span>
-            <span id="view-tel" style="color:var(--muted);font-style:italic">Não informado</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
-            <span style="font-size:15px;flex-shrink:0">✉️</span>
-            <span id="view-email" style="color:var(--muted);font-style:italic">Não informado</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
-            <span style="font-size:15px;flex-shrink:0">📍</span>
-            <span id="view-addr" style="color:var(--muted);font-style:italic">Não informado</span>
-          </div>
-        </div>
-
-        <!-- botão editar -->
-        <button onclick="toggleMedEdit(true)" style="margin-left:auto;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:800;color:var(--navy);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;white-space:nowrap">
-          ✏️ Editar perfil
-        </button>
       </div>
 
-      <!-- ── MODO EDIÇÃO ── -->
-      <div id="med-edit-mode" style="display:none">
+      <!-- nome + crm + especialidade (fixos, não editáveis) -->
+      <div style="flex:1;min-width:160px">
+        <div id="med-profile-name" style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em"></div>
+        <div id="med-profile-crm" style="font-size:12px;color:var(--muted);margin-top:3px"></div>
+        <div id="med-profile-esp" style="margin-top:7px"></div>
+      </div>
 
-        <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+      <!-- dados de contato (somente leitura no modo view) -->
+      <div style="display:flex;flex-direction:column;gap:7px;min-width:200px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
+          <span style="font-size:15px;flex-shrink:0">📞</span>
+          <span id="view-tel" style="color:var(--muted);font-style:italic">Não informado</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
+          <span style="font-size:15px;flex-shrink:0">✉️</span>
+          <span id="view-email" style="color:var(--muted);font-style:italic">Não informado</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink)">
+          <span style="font-size:15px;flex-shrink:0">📍</span>
+          <span id="view-addr" style="color:var(--muted);font-style:italic">Não informado</span>
+        </div>
+      </div>
 
-          <!-- foto com clique para trocar -->
-          <div style="flex-shrink:0;text-align:center">
-            <div id="med-photo-wrap-edit" onclick="document.getElementById('med-photo-input').click()"
-              style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px dashed var(--blue);display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;position:relative">
-              <span id="med-photo-emoji-edit">👨‍⚕️</span>
-              <img id="med-photo-img-edit" src="" style="display:none;width:100%;height:100%;object-fit:cover">
-              <div style="position:absolute;inset:0;background:rgba(31,111,235,.15);display:flex;align-items:center;justify-content:center;border-radius:50%">
-                <span style="font-size:18px">📷</span>
-              </div>
+      <!-- botão editar -->
+      <button onclick="toggleMedEdit(true)" style="margin-left:auto;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:800;color:var(--navy);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;white-space:nowrap">
+        ✏️ Editar perfil
+      </button>
+    </div>
+
+    <!-- ── MODO EDIÇÃO ── -->
+    <div id="med-edit-mode" style="display:none">
+
+      <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+
+        <!-- foto com clique para trocar -->
+        <div style="flex-shrink:0;text-align:center">
+          <div id="med-photo-wrap-edit" onclick="document.getElementById('med-photo-input').click()"
+            style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px dashed var(--blue);display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;position:relative">
+            <span id="med-photo-emoji-edit">👨‍⚕️</span>
+            <img id="med-photo-img-edit" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+            <div style="position:absolute;inset:0;background:rgba(31,111,235,.15);display:flex;align-items:center;justify-content:center;border-radius:50%">
+              <span style="font-size:18px">📷</span>
             </div>
-            <div style="font-size:10.5px;color:var(--blue);font-weight:700;margin-top:5px;cursor:pointer" onclick="document.getElementById('med-photo-input').click()">Alterar foto</div>
-            <input type="file" id="med-photo-input" accept="image/*" style="display:none" onchange="loadMedPhoto(this)">
+          </div>
+          <div style="font-size:10.5px;color:var(--blue);font-weight:700;margin-top:5px;cursor:pointer" onclick="document.getElementById('med-photo-input').click()">Alterar foto</div>
+          <input type="file" id="med-photo-input" accept="image/*" style="display:none" onchange="loadMedPhoto(this)">
+        </div>
+
+        <!-- campos editáveis -->
+        <div style="flex:1;min-width:220px">
+
+          <!-- nome e CRM — somente leitura mesmo no modo edição -->
+          <div style="background:var(--soft);border-radius:10px;padding:10px 14px;margin-bottom:12px">
+            <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:4px">Nome e CRM — não editáveis</div>
+            <div id="med-edit-name-label" style="font-size:15px;font-weight:800;color:var(--navy)"></div>
+            <div id="med-edit-crm-label" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
           </div>
 
-          <!-- campos editáveis -->
-          <div style="flex:1;min-width:220px">
-
-            <!-- nome e CRM — somente leitura mesmo no modo edição -->
-            <div style="background:var(--soft);border-radius:10px;padding:10px 14px;margin-bottom:12px">
-              <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:4px">Nome e CRM — não editáveis</div>
-              <div id="med-edit-name-label" style="font-size:15px;font-weight:800;color:var(--navy)"></div>
-              <div id="med-edit-crm-label" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-              <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px">
-                <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">📞 Telefone / WhatsApp</label>
-                <input id="med-tel" type="text" placeholder="(00) 90000-0000"
-                  style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
-              </div>
-              <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px">
-                <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">✉️ E-mail profissional</label>
-                <input id="med-email" type="text" placeholder="seuemail@clinica.com"
-                  style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
-              </div>
-            </div>
-
-            <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin-bottom:14px">
-              <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">📍 Endereço do consultório</label>
-              <input id="med-addr" type="text" placeholder="Rua, número, bairro, cidade"
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px">
+              <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">📞 Telefone / WhatsApp</label>
+              <input id="med-tel" type="text" placeholder="(00) 90000-0000" maxlength="16"
+                oninput="maskPhone(this)"
                 style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
             </div>
-
-            <div style="display:flex;gap:10px">
-              <button onclick="saveMedProfileAndClose()" style="background:linear-gradient(135deg,var(--green),#0f6b3a);color:white;border:0;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
-                ✅ Salvar alterações
-              </button>
-              <button onclick="toggleMedEdit(false)" style="background:white;color:var(--navy);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
-                Cancelar
-              </button>
+            <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px">
+              <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">✉️ E-mail profissional</label>
+              <input id="med-email" type="text" placeholder="seuemail@clinica.com"
+                style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
             </div>
+          </div>
+
+          <div style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin-bottom:14px">
+            <label style="display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">📍 Endereço do consultório</label>
+            <input id="med-addr" type="text" placeholder="Rua, número, bairro, cidade"
+              style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink)">
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <button onclick="saveMedProfileAndClose()" style="background:linear-gradient(135deg,var(--green),#0f6b3a);color:white;border:0;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+              ✅ Salvar alterações
+            </button>
+            <button onclick="toggleMedEdit(false)" style="background:white;color:var(--navy);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+              Cancelar
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- BUSCAR PACIENTE EXISTENTE -->
+  <!-- ─── SUB 0: NOVA CONSULTA ─── -->
+  <div id="msub-panel-0">
     <div style="background:rgba(23,138,74,.07);border:1px solid rgba(23,138,74,.2);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:800;color:var(--green)">🔍 Paciente com histórico?</span>
       <input id="busca-paciente" type="text" placeholder="Digite o nome para buscar…" style="flex:1;min-width:180px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white" oninput="buscaPaciente(this.value)">
@@ -2797,6 +2796,31 @@ function removerAssinatura() {
   document.getElementById('sign-pending').style.display = 'block';
   document.getElementById('sign-done').style.display = 'none';
   document.getElementById('sign-code').value = '';
+}
+
+// ═══════════════════════════ MÁSCARA DE TELEFONE ═══════════════════════════
+// Formato: (xx) xxxxx-xxxx  — aceita celular (11 dígitos) e fixo (10 dígitos)
+function maskPhone(el) {
+  // Extrai apenas os dígitos digitados
+  let d = el.value.replace(/\D/g, '');
+  // Limita a 11 dígitos (DDD + 9 dígitos)
+  if (d.length > 11) d = d.slice(0, 11);
+  // Aplica a máscara progressivamente
+  let masked = '';
+  if (d.length === 0) {
+    masked = '';
+  } else if (d.length <= 2) {
+    masked = '(' + d;
+  } else if (d.length <= 6) {
+    masked = '(' + d.slice(0,2) + ') ' + d.slice(2);
+  } else if (d.length <= 10) {
+    // Fixo: (xx) xxxx-xxxx
+    masked = '(' + d.slice(0,2) + ') ' + d.slice(2,6) + '-' + d.slice(6);
+  } else {
+    // Celular: (xx) xxxxx-xxxx
+    masked = '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
+  }
+  el.value = masked;
 }
 
 // ═══════════════════════════ FALE CONOSCO ═══════════════════════════
