@@ -1590,6 +1590,7 @@ function activateChat() {
   loadChatLocal();
   if (chatMsgs.length) renderChatMsgs();
 }
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
@@ -2574,6 +2575,8 @@ document.addEventListener('click', e => {
   if (!e.target.closest('#f-exsol') && !e.target.closest('#exame-sug'))
     { const b=document.getElementById('exame-sug'); if(b) b.style.display='none'; }
 });
+
+function showCIDSug(id, q) {
   const box = document.getElementById(id+'-sug');
   const results = searchCID(q);
   if (!results.length) { box.style.display='none'; return; }
