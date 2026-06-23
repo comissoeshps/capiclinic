@@ -189,10 +189,14 @@ button.export{background:var(--teal);color:white}
 .slot-free{background:#E8F7EF;color:var(--green);border-color:#A9E0BE}
 .slot-free:hover{background:#d0efde}
 .slot-busy{background:var(--soft);color:var(--muted);border-color:var(--line);cursor:default}
+/* ── CHAT IA SUGESTÕES ── */
+.ia-sug-btn{background:white;border:1px solid #A9E0BE;color:var(--green);border-radius:20px;padding:4px 12px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.12s}
+.ia-sug-btn:hover{background:#E8F7EF}
+@keyframes iatyping{from{opacity:.3;transform:translateY(0)}to{opacity:1;transform:translateY(-4px)}}
 /* ── RESPONSIVE ── */
 @media(max-width:1080px){.doc-grid,.meta,.file-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:680px){.doc-grid,.meta,.meta-3,.meta-2,.exam-grid,.file-grid{grid-template-columns:1fr}.vitals-row{margin-left:0}.home-capy{display:none}}
-@media(max-width:760px){.hero{padding:0 12px}.hero-inner{padding:8px 0;gap:6px 0}.logo-area{width:100%;margin-right:0}.tabs{width:100%;flex:1 1 100%;height:46px}.tab{padding:0 12px;font-size:12px}main{padding:14px 10px}.panel{padding:14px;border-radius:14px}.home-hero{padding:28px 20px}.home-hero h2{font-size:20px}}
+@media(max-width:760px){.hero{padding:0 12px}.hero-inner{padding:8px 0;gap:6px 0}.logo-area{width:100%;margin-right:0}.tabs{width:100%;flex:1 1 100%;height:46px}.tab{padding:0 12px;font-size:12px}main{padding:14px 10px}.panel{padding:14px;border-radius:14px}.home-hero{padding:28px 20px}.home-hero h2{font-size:20px}#contato>div{grid-template-columns:1fr!important}}
 </style>
 </head>
 <body>
@@ -417,51 +421,169 @@ button.export{background:var(--teal);color:white}
 <!-- ════════════════════ FALE CONOSCO ════════════════════ -->
 <section id="contato" class="page">
 
-  <div class="panel" style="max-width:680px;margin:0 auto">
-    <div class="panel-head">
-      <div>
-        <h2>✉️ Fale Conosco</h2>
-        <p class="sub">Envie sua mensagem e retornaremos em breve.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:1100px;margin:0 auto">
+
+    <!-- ── FORMULÁRIO ── -->
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>✉️ Fale Conosco</h2>
+          <p class="sub">Envie sua mensagem e retornaremos em breve.</p>
+        </div>
+        <span class="chip chip-teal">CapiKids</span>
       </div>
-      <span class="chip chip-teal">CapiKids</span>
-    </div>
 
-    <!-- Campos do formulário -->
-    <div class="field" style="margin-bottom:12px">
-      <label>Nome completo *</label>
-      <input id="ct-nome" type="text" placeholder="Seu nome">
-    </div>
-    <div class="meta-2" style="margin-bottom:12px">
-      <div class="field">
-        <label>E-mail</label>
-        <input id="ct-email" type="email" placeholder="seuemail@exemplo.com">
+      <div class="field" style="margin-bottom:12px">
+        <label>Nome completo *</label>
+        <input id="ct-nome" type="text" placeholder="Seu nome">
       </div>
-      <div class="field">
-        <label>Telefone / WhatsApp</label>
-        <input id="ct-tel" type="text" placeholder="(00) 90000-0000" maxlength="16" oninput="maskPhone(this)">
+      <div class="meta-2" style="margin-bottom:12px">
+        <div class="field">
+          <label>E-mail</label>
+          <input id="ct-email" type="email" placeholder="seuemail@exemplo.com">
+        </div>
+        <div class="field">
+          <label>Telefone / WhatsApp</label>
+          <input id="ct-tel" type="text" placeholder="(00) 90000-0000" maxlength="16" oninput="maskPhone(this)">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:16px">
+        <label>Mensagem *</label>
+        <textarea id="ct-msg" placeholder="Escreva sua dúvida, sugestão ou solicitação…" style="min-height:120px"></textarea>
+      </div>
+
+      <div id="ct-err" style="display:none;background:#FDEEEE;color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:12px"></div>
+      <div id="ct-ok"  style="display:none;background:#E8F7EF;color:var(--green);border-radius:10px;padding:14px 18px;font-size:13.5px;font-weight:700;margin-bottom:12px;text-align:center">
+        ✅ Mensagem enviada com sucesso! Retornaremos em breve.
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="primary" onclick="enviarContato()" id="ct-btn">📨 Enviar mensagem</button>
+        <button class="secondary" onclick="limparContato()">Limpar</button>
+      </div>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:20px;flex-wrap:wrap">
+        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">📍 Endereço da clínica a preencher</div>
+        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">📞 Telefone a preencher</div>
+        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">✉️ contato@capikids.com.br</div>
       </div>
     </div>
-    <div class="field" style="margin-bottom:16px">
-      <label>Mensagem *</label>
-      <textarea id="ct-msg" placeholder="Escreva sua dúvida, sugestão ou solicitação…" style="min-height:120px"></textarea>
+
+    <!-- ── CHAT IA ── -->
+    <div style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;height:580px">
+
+      <!-- header do chat IA -->
+      <div style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;padding:16px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0">
+        <!-- Avatar: capivara com headphone -->
+        <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.15);flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" width="52" height="56">
+            <!-- corpo jaleco -->
+            <ellipse cx="60" cy="105" rx="38" ry="28" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
+            <path d="M42 82 Q60 92 78 82 L80 133 L40 133 Z" fill="#efefef" stroke="#ddd" stroke-width="1"/>
+            <!-- lapela -->
+            <path d="M60 92 L52 82 L60 88 L68 82 Z" fill="#ccc"/>
+            <!-- botão jaleco -->
+            <circle cx="60" cy="108" r="2.5" fill="#ddd"/>
+            <!-- bolso -->
+            <rect x="66" y="100" width="12" height="9" rx="2.5" fill="#e0e0e0" stroke="#ccc" stroke-width="1"/>
+            <rect x="69" y="103" width="6" height="1.5" rx=".7" fill="#E54B4B"/>
+            <rect x="71.5" y="101" width="1.5" height="4" rx=".7" fill="#E54B4B"/>
+            <!-- corpo capivara -->
+            <ellipse cx="60" cy="70" rx="30" ry="24" fill="#C68642"/>
+            <!-- barriga mais clara -->
+            <ellipse cx="60" cy="76" rx="18" ry="14" fill="#D4956A"/>
+            <!-- cabeça -->
+            <ellipse cx="60" cy="38" rx="26" ry="22" fill="#C68642"/>
+            <!-- focinho longo típico capivara -->
+            <ellipse cx="60" cy="48" rx="14" ry="9" fill="#A0652A"/>
+            <!-- sorriso -->
+            <path d="M52 52 Q60 58 68 52" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- narinas -->
+            <ellipse cx="55.5" cy="47" rx="2" ry="1.5" fill="#7A3B10"/>
+            <ellipse cx="64.5" cy="47" rx="2" ry="1.5" fill="#7A3B10"/>
+            <!-- olhos expressivos -->
+            <circle cx="48" cy="34" r="5" fill="#1a0d00"/>
+            <circle cx="72" cy="34" r="5" fill="#1a0d00"/>
+            <circle cx="49.5" cy="32.5" r="2" fill="white"/>
+            <circle cx="73.5" cy="32.5" r="2" fill="white"/>
+            <!-- sobrancelha amigável -->
+            <path d="M44 29 Q48 27 52 29" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M68 29 Q72 27 76 29" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- orelhas arredondadas -->
+            <ellipse cx="36" cy="20" rx="8" ry="6" fill="#A0652A"/>
+            <ellipse cx="36" cy="20" rx="5" ry="4" fill="#C68642"/>
+            <ellipse cx="84" cy="20" rx="8" ry="6" fill="#A0652A"/>
+            <ellipse cx="84" cy="20" rx="5" ry="4" fill="#C68642"/>
+            <!-- HEADPHONE -->
+            <!-- arco superior -->
+            <path d="M30 28 Q30 8 60 8 Q90 8 90 28" fill="none" stroke="#2C3E6B" stroke-width="5" stroke-linecap="round"/>
+            <!-- almofada esquerda -->
+            <rect x="22" y="26" width="14" height="18" rx="7" fill="#2C3E6B"/>
+            <rect x="25" y="29" width="8" height="12" rx="4" fill="#4A6FA5"/>
+            <!-- almofada direita -->
+            <rect x="84" y="26" width="14" height="18" rx="7" fill="#2C3E6B"/>
+            <rect x="87" y="29" width="8" height="12" rx="4" fill="#4A6FA5"/>
+            <!-- haste microfone (lado esquerdo) -->
+            <path d="M29 42 Q22 52 24 62" fill="none" stroke="#2C3E6B" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- microfone bolinha -->
+            <circle cx="24" cy="64" r="4" fill="#1F6FEB"/>
+            <circle cx="24" cy="64" r="2.5" fill="#4A8FE8"/>
+            <!-- estetoscópio (teal) -->
+            <path d="M46 58 Q36 65 36 76 Q36 86 44 88" fill="none" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M74 58 Q84 65 84 76 Q84 86 76 88" fill="none" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round"/>
+            <ellipse cx="60" cy="88" rx="9" ry="6" fill="#0D9488"/>
+            <circle cx="60" cy="88" r="5" fill="#16A3B8"/>
+            <circle cx="46" cy="57.5" r="3.5" fill="#0D9488"/>
+            <circle cx="74" cy="57.5" r="3.5" fill="#0D9488"/>
+            <!-- patas dianteiras -->
+            <ellipse cx="36" cy="92" rx="9" ry="7" fill="#A0652A"/>
+            <ellipse cx="84" cy="92" rx="9" ry="7" fill="#A0652A"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:900">Capi — Atendente Virtual</div>
+          <div style="font-size:11px;opacity:.8;display:flex;align-items:center;gap:5px">
+            <span style="width:7px;height:7px;border-radius:50%;background:#7EFFA0;display:inline-block"></span>
+            Online agora · CapiKids
+          </div>
+        </div>
+        <div style="font-size:11px;opacity:.7;text-align:right">🤖 IA</div>
+      </div>
+
+      <!-- mensagens -->
+      <div id="ia-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#F8FBF8">
+        <!-- mensagem inicial da Capi -->
+        <div style="display:flex;align-items:flex-end;gap:8px">
+          <div style="width:32px;height:32px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🦫</div>
+          <div style="background:white;border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:10px 14px;max-width:78%;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+            <div style="font-size:12.5px;line-height:1.55;color:var(--ink)">Olá! 👋 Eu sou a <b>Capi</b>, atendente virtual da CapiKids! Posso ajudar com dúvidas sobre agendamentos, serviços, localização e muito mais. O que posso fazer por você hoje?</div>
+            <div style="font-size:9.5px;color:var(--muted);margin-top:5px;text-align:right" id="ia-init-time"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- sugestões rápidas -->
+      <div id="ia-suggestions" style="padding:8px 12px;background:#F0FAF5;border-top:1px solid #C8EDD9;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0">
+        <span style="font-size:10.5px;color:var(--muted);font-weight:700;align-self:center">Sugestões:</span>
+        <button onclick="sendIAMsg('Como agendar uma consulta?')" class="ia-sug-btn">📅 Agendar consulta</button>
+        <button onclick="sendIAMsg('Quais os médicos disponíveis?')" class="ia-sug-btn">👨‍⚕️ Médicos</button>
+        <button onclick="sendIAMsg('Quais convênios são aceitos?')" class="ia-sug-btn">💳 Convênios</button>
+        <button onclick="sendIAMsg('Como funciona a área do paciente?')" class="ia-sug-btn">👨‍👩‍👧 Portal família</button>
+      </div>
+
+      <!-- input -->
+      <div style="border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:white">
+        <div style="flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px">
+          <textarea id="ia-input" placeholder="Digite sua pergunta…" rows="1"
+            style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.4;max-height:80px;color:var(--ink)"
+            oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendIAMsg()}"></textarea>
+        </div>
+        <button onclick="sendIAMsg()" title="Enviar"
+          style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;border:none;border-radius:10px;width:40px;height:40px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">➤</button>
+      </div>
     </div>
 
-    <!-- Feedback -->
-    <div id="ct-err"  style="display:none;background:#FDEEEE;color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:12px"></div>
-    <div id="ct-ok"   style="display:none;background:#E8F7EF;color:var(--green);border-radius:10px;padding:14px 18px;font-size:13.5px;font-weight:700;margin-bottom:12px;text-align:center">
-      ✅ Mensagem enviada com sucesso! Retornaremos em breve.
-    </div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="primary" onclick="enviarContato()" id="ct-btn">📨 Enviar mensagem</button>
-      <button class="secondary" onclick="limparContato()">Limpar</button>
-    </div>
-
-    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:24px;flex-wrap:wrap">
-      <div style="font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px">📍 Endereço da clínica a preencher</div>
-      <div style="font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px">📞 Telefone a preencher</div>
-      <div style="font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px">✉️ contato@capikids.com.br</div>
-    </div>
   </div>
 
 </section>
@@ -3223,6 +3345,106 @@ function limparContato() {
   });
   document.getElementById('ct-err').style.display = 'none';
   document.getElementById('ct-ok').style.display  = 'none';
+}
+
+// ═══════════════════════════ CHAT IA (Capi — Atendente Virtual) ═══════════════════════════
+let iaMsgs = []; // histórico de mensagens para contexto da IA
+
+// Inicializa o horário da mensagem de boas-vindas
+(function(){ const el=document.getElementById('ia-init-time'); if(el) el.textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); })();
+
+function addIAMsg(texto, proprio, isLoading) {
+  const box = document.getElementById('ia-messages');
+  const id  = 'ia-msg-'+Date.now()+Math.random();
+  const ts  = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+  if (proprio) {
+    box.insertAdjacentHTML('beforeend', `
+      <div id="${id}" style="display:flex;justify-content:flex-end">
+        <div style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;border-radius:14px 14px 4px 14px;padding:10px 14px;max-width:78%;box-shadow:0 1px 4px rgba(0,0,0,.1)">
+          <div style="font-size:12.5px;line-height:1.55">${texto}</div>
+          <div style="font-size:9.5px;opacity:.7;margin-top:5px;text-align:right">${ts}</div>
+        </div>
+      </div>`);
+  } else {
+    const conteudo = isLoading
+      ? `<div style="display:flex;gap:4px;align-items:center;padding:4px 0">
+           <span style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:iatyping .8s infinite alternate"></span>
+           <span style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:iatyping .8s .2s infinite alternate"></span>
+           <span style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:iatyping .8s .4s infinite alternate"></span>
+         </div>`
+      : `<div style="font-size:12.5px;line-height:1.6;color:var(--ink)">${texto}</div>
+         <div style="font-size:9.5px;color:var(--muted);margin-top:5px;text-align:right">${ts}</div>`;
+    box.insertAdjacentHTML('beforeend', `
+      <div id="${id}" style="display:flex;align-items:flex-end;gap:8px">
+        <div style="width:32px;height:32px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🦫</div>
+        <div style="background:white;border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:10px 14px;max-width:78%;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          ${conteudo}
+        </div>
+      </div>`);
+  }
+  box.scrollTop = box.scrollHeight;
+  return id;
+}
+
+async function sendIAMsg(textoFixo) {
+  const inp = document.getElementById('ia-input');
+  const texto = textoFixo || (inp ? inp.value.trim() : '');
+  if (!texto) return;
+  if (inp) { inp.value = ''; inp.style.height = 'auto'; }
+
+  // Esconder sugestões após primeira mensagem
+  const sugs = document.getElementById('ia-suggestions');
+  if (sugs) sugs.style.display = 'none';
+
+  // Mostrar mensagem do usuário
+  addIAMsg(texto, true);
+
+  // Adicionar ao histórico
+  iaMsgs.push({ role: 'user', content: texto });
+
+  // Mostrar indicador de digitação
+  const loadId = addIAMsg('', false, true);
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: `Você é a Capi, a simpática atendente virtual da CapiKids — uma plataforma de atendimento pediátrico virtual (CapiClinic). Seu avatar é uma capivara pediatra com jaleco branco e headphone de atendente. Seu tom é acolhedor, alegre, profissional e levemente lúdico, combinando com o tema infantil.
+
+Você pode ajudar com:
+- Informações sobre a plataforma CapiKids e o CapiClinic
+- Agendamento de consultas (o paciente deve acessar a Área do Paciente para agendar)
+- Médicos disponíveis: Dr. Gabriel Cruvinel Macor (CRM-SP 239138, Pediatria Geral e Administrador) e Dr. Juliano César Alves Reis (CRM-SP 239598, Pediatria Geral)
+- Funcionamento da Área do Médico e Área do Paciente
+- Informações sobre puericultura, vacinação, crescimento infantil (de forma educativa e sem substituir a consulta médica)
+- Encaminhar o usuário para o formulário de contato se precisar falar com a equipe humana
+
+Importante: Você NÃO dá diagnósticos nem prescrições médicas. Para questões médicas específicas, sempre encaminhe ao médico. Responda de forma concisa (2-4 parágrafos no máximo). Use emojis com moderação para manter o tom amigável.`,
+        messages: iaMsgs,
+      })
+    });
+
+    const data = await resp.json();
+    const respTexto = data.content?.[0]?.text || 'Desculpe, não consegui processar sua mensagem. Tente novamente!';
+
+    // Remover loading e mostrar resposta
+    document.getElementById(loadId)?.remove();
+    addIAMsg(respTexto.replace(/\n/g, '<br>'), false);
+
+    // Adicionar resposta ao histórico
+    iaMsgs.push({ role: 'assistant', content: respTexto });
+
+    // Manter histórico em até 20 mensagens
+    if (iaMsgs.length > 20) iaMsgs = iaMsgs.slice(-20);
+
+  } catch(e) {
+    document.getElementById(loadId)?.remove();
+    addIAMsg('Ops! 😅 Estou com dificuldades técnicas no momento. Por favor, use o formulário ao lado ou tente novamente em instantes.', false);
+  }
 }
 
 // ═══════════════════════════ UTILS ═══════════════════════════
