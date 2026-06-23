@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CapiKids — Clínica Pediátrica</title>
+<title>CapiKids — Clínica Pediátrica Virtual</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦫</text></svg>">
 <style>
@@ -249,7 +249,7 @@ button.export{background:var(--teal);color:white}
     </svg>
     <div>
       <div class="logo-name"><span class="c1">C</span><span class="c2">a</span><span class="c3">p</span><span class="c4">i</span><span class="c5">K</span><span class="c6">i</span><span class="c7">d</span><span class="c8">s</span></div>
-      <p style="font-size:10px;color:var(--muted);font-weight:600;margin-top:1px">Clínica Pediátrica</p>
+      <p style="font-size:10px;color:var(--muted);font-weight:600;margin-top:1px">Clínica Pediátrica Virtual · CapiClinic</p>
     </div>
   </div>
   <nav class="tabs">
@@ -268,41 +268,82 @@ button.export{background:var(--teal);color:white}
 
   <div class="panel">
     <div class="panel-head">
-      <div><h2>Sobre a CapiKids</h2></div>
-      <span class="chip chip-blue">Puericultura · Pediatria Clínica</span>
+      <div><h2>🦫 Bem-vindo à CapiKids</h2></div>
+      <span class="chip chip-blue">CapiClinic · Clínica Pediátrica Virtual</span>
     </div>
-    <p class="lead">Sistema integrado de gestão de consultas pediátricas com prontuário eletrônico estruturado segundo o método SOAP, referenciado pelas diretrizes da SBP, AAP e pelos padrões JCI de segurança do paciente. Curvas de crescimento segundo a OMS.</p>
-    <ul class="bullets" style="margin-top:12px">
-      <li>Anamnese completa com HMA, antecedentes pessoais, familiares e socioeconômicos.</li>
-      <li>Exame físico por sistemas com alertas automáticos de sinais vitais.</li>
-      <li>Gráfico de crescimento pediátrico (OMS) com histórico evolutivo do paciente.</li>
-      <li>Área do paciente: prescrições, orientações, curva de crescimento e agendamentos.</li>
-      <li>Agenda médica integrada — famílias agendam diretamente pelo portal.</li>
-    </ul>
+    <p class="lead">A <b>CapiKids</b> é uma plataforma de atendimento pediátrico virtual — o <b>CapiClinic</b> — acessível, prática e intuitiva, pensada tanto para os médicos quanto para as famílias. Com um toque lúdico e temático de capivaras, a plataforma torna o cuidado com as crianças mais leve e humanizado.</p>
+    <div class="meta-3" style="margin-top:16px">
+      <div class="field">
+        <label>🩺 Para os Médicos</label>
+        <div style="font-size:13px;line-height:1.6">Prontuário eletrônico SOAP, curvas de crescimento OMS, agenda integrada, CID-10 com autocomplete, assinatura digital e chat interno entre profissionais.</div>
+      </div>
+      <div class="field">
+        <label>👨‍👩‍👧 Para as Famílias</label>
+        <div style="font-size:13px;line-height:1.6">Acompanhe exames, curvas de crescimento, calendário vacinal, prescrições e orientações médicas. Agende consultas diretamente pelo portal.</div>
+      </div>
+      <div class="field">
+        <label>🤝 Cuidado Horizontal</label>
+        <div style="font-size:13px;line-height:1.6">A comunicação e interação médico-paciente é fortalecida pela transparência de informações e pelo acesso compartilhado ao histórico clínico da criança.</div>
+      </div>
+    </div>
   </div>
 
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;margin-top:4px">
     <span style="font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Nossa equipe médica</span>
     <a href="#" onclick="showPage('equipe',null);document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));return false;"
       style="font-size:12.5px;font-weight:700;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:4px">
       Ver todos os profissionais →
     </a>
   </div>
-  <div class="doc-grid" style="grid-template-columns:repeat(1,1fr);max-width:340px">
+  <div class="doc-grid" style="grid-template-columns:repeat(2,1fr);max-width:680px">
     <div class="doc-card">
-      <div class="doc-avatar">👨‍⚕️</div>
+      <!-- capivara de jaleco SVG inline miniatura -->
+      <div class="doc-avatar" style="background:transparent;font-size:0">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="52" height="52">
+          <ellipse cx="40" cy="58" rx="22" ry="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+          <path d="M30 45 L40 50 L50 45 L50 72 L30 72 Z" fill="#e8e8e8" stroke="#ccc" stroke-width=".8"/>
+          <rect x="43" y="56" width="8" height="7" rx="2" fill="#d0d0d0"/>
+          <rect x="45.5" y="58" width="3" height="1" rx=".5" fill="#E54B4B"/>
+          <rect x="46.5" y="57" width="1" height="3" rx=".5" fill="#E54B4B"/>
+          <ellipse cx="40" cy="38" rx="17" ry="14" fill="#8B4513"/>
+          <ellipse cx="40" cy="22" rx="14" ry="11" fill="#8B4513"/>
+          <ellipse cx="40" cy="27" rx="8" ry="5" fill="#7A3B10"/>
+          <circle cx="34.5" cy="20" r="2.5" fill="#2c1a08"/><circle cx="45.5" cy="20" r="2.5" fill="#2c1a08"/>
+          <circle cx="35" cy="19.5" r=".9" fill="white"/><circle cx="46" cy="19.5" r=".9" fill="white"/>
+          <ellipse cx="28" cy="16" rx="4" ry="3" fill="#7A3B10"/><ellipse cx="52" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+          <path d="M33 30 Q27 35 28 42 Q28 48 33 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M47 30 Q53 35 52 42 Q52 48 47 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+          <ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#2C3E6B"/>
+          <circle cx="40" cy="48" r="2.5" fill="#3A5099"/>
+        </svg>
+      </div>
       <div class="doc-name">Dr. Gabriel Cruvinel Macor</div>
       <div class="doc-crm">CRM-SP 239138 · Administrador</div>
       <span class="doc-esp">Pediatria Geral · Administração</span>
     </div>
-  </div>
-
-  <div class="panel" style="margin-top:16px">
-    <div class="panel-head"><h2>Proposta de valor</h2></div>
-    <div class="meta-3">
-      <div class="field"><label>🩺 Para o Médico</label><div style="font-size:13px">Prontuário digital ágil com curvas de crescimento OMS, agenda integrada e histórico completo dos pacientes.</div></div>
-      <div class="field"><label>👨‍👩‍👧 Para as Famílias</label><div style="font-size:13px">Acesso ao histórico, prescrições, orientações, curva de crescimento da criança e agendamento online.</div></div>
-      <div class="field"><label>📊 Para a Clínica</label><div style="font-size:13px">Dados estruturados, agenda organizada, arquivos compartilhados e gestão eficiente do cuidado pediátrico.</div></div>
+    <div class="doc-card">
+      <div class="doc-avatar" style="background:transparent;font-size:0">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="52" height="52">
+          <ellipse cx="40" cy="58" rx="22" ry="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+          <path d="M30 45 L40 50 L50 45 L50 72 L30 72 Z" fill="#e8e8e8" stroke="#ccc" stroke-width=".8"/>
+          <rect x="43" y="56" width="8" height="7" rx="2" fill="#d0d0d0"/>
+          <rect x="45.5" y="58" width="3" height="1" rx=".5" fill="#E54B4B"/>
+          <rect x="46.5" y="57" width="1" height="3" rx=".5" fill="#E54B4B"/>
+          <ellipse cx="40" cy="38" rx="17" ry="14" fill="#8B4513"/>
+          <ellipse cx="40" cy="22" rx="14" ry="11" fill="#8B4513"/>
+          <ellipse cx="40" cy="27" rx="8" ry="5" fill="#7A3B10"/>
+          <circle cx="34.5" cy="20" r="2.5" fill="#2c1a08"/><circle cx="45.5" cy="20" r="2.5" fill="#2c1a08"/>
+          <circle cx="35" cy="19.5" r=".9" fill="white"/><circle cx="46" cy="19.5" r=".9" fill="white"/>
+          <ellipse cx="28" cy="16" rx="4" ry="3" fill="#7A3B10"/><ellipse cx="52" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+          <path d="M33 30 Q27 35 28 42 Q28 48 33 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M47 30 Q53 35 52 42 Q52 48 47 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+          <ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#2C3E6B"/>
+          <circle cx="40" cy="48" r="2.5" fill="#3A5099"/>
+        </svg>
+      </div>
+      <div class="doc-name">Dr. Juliano César Alves Reis</div>
+      <div class="doc-crm">CRM-SP 239598</div>
+      <span class="doc-esp">Pediatria Geral</span>
     </div>
   </div>
 
@@ -488,8 +529,26 @@ button.export{background:var(--teal);color:white}
       <!-- foto -->
       <div style="position:relative;flex-shrink:0">
         <div id="med-photo-wrap" style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:38px">
-          <span id="med-photo-emoji">👨‍⚕️</span>
-          <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+          <svg id="med-photo-emoji" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="72" height="72">
+            <ellipse cx="40" cy="58" rx="22" ry="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+            <path d="M30 45 L40 50 L50 45 L50 72 L30 72 Z" fill="#e8e8e8" stroke="#ccc" stroke-width=".8"/>
+            <rect x="43" y="56" width="8" height="7" rx="2" fill="#d0d0d0"/>
+            <rect x="45.5" y="58" width="3" height="1" rx=".5" fill="#E54B4B"/>
+            <rect x="46.5" y="57" width="1" height="3" rx=".5" fill="#E54B4B"/>
+            <ellipse cx="40" cy="38" rx="17" ry="14" fill="#8B4513"/>
+            <ellipse cx="40" cy="22" rx="14" ry="11" fill="#8B4513"/>
+            <ellipse cx="40" cy="27" rx="8" ry="5" fill="#7A3B10"/>
+            <ellipse cx="37.5" cy="26.5" rx="1.2" ry=".9" fill="#5A2A08"/><ellipse cx="42.5" cy="26.5" rx="1.2" ry=".9" fill="#5A2A08"/>
+            <circle cx="34.5" cy="20" r="2.5" fill="#2c1a08"/><circle cx="45.5" cy="20" r="2.5" fill="#2c1a08"/>
+            <circle cx="35" cy="19.5" r=".9" fill="white"/><circle cx="46" cy="19.5" r=".9" fill="white"/>
+            <ellipse cx="28" cy="16" rx="4" ry="3" fill="#7A3B10"/><ellipse cx="52" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+            <path d="M33 30 Q27 35 28 42 Q28 48 33 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M47 30 Q53 35 52 42 Q52 48 47 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+            <ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#2C3E6B"/>
+            <circle cx="40" cy="48" r="2.5" fill="#3A5099"/>
+            <circle cx="33" cy="29.5" r="2" fill="#2C3E6B"/><circle cx="47" cy="29.5" r="2" fill="#2C3E6B"/>
+          </svg>
+          <img id="med-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
         </div>
       </div>
 
@@ -530,9 +589,25 @@ button.export{background:var(--teal);color:white}
         <!-- foto com clique para trocar -->
         <div style="flex-shrink:0;text-align:center">
           <div id="med-photo-wrap-edit" onclick="document.getElementById('med-photo-input').click()"
-            style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px dashed var(--blue);display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;position:relative">
-            <span id="med-photo-emoji-edit">👨‍⚕️</span>
-            <img id="med-photo-img-edit" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+            style="width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--soft);border:3px dashed var(--blue);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative">
+            <svg id="med-photo-emoji-edit" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="72" height="72">
+              <ellipse cx="40" cy="58" rx="22" ry="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+              <path d="M30 45 L40 50 L50 45 L50 72 L30 72 Z" fill="#e8e8e8" stroke="#ccc" stroke-width=".8"/>
+              <rect x="43" y="56" width="8" height="7" rx="2" fill="#d0d0d0"/>
+              <rect x="45.5" y="58" width="3" height="1" rx=".5" fill="#E54B4B"/>
+              <rect x="46.5" y="57" width="1" height="3" rx=".5" fill="#E54B4B"/>
+              <ellipse cx="40" cy="38" rx="17" ry="14" fill="#8B4513"/>
+              <ellipse cx="40" cy="22" rx="14" ry="11" fill="#8B4513"/>
+              <ellipse cx="40" cy="27" rx="8" ry="5" fill="#7A3B10"/>
+              <circle cx="34.5" cy="20" r="2.5" fill="#2c1a08"/><circle cx="45.5" cy="20" r="2.5" fill="#2c1a08"/>
+              <circle cx="35" cy="19.5" r=".9" fill="white"/><circle cx="46" cy="19.5" r=".9" fill="white"/>
+              <ellipse cx="28" cy="16" rx="4" ry="3" fill="#7A3B10"/><ellipse cx="52" cy="16" rx="4" ry="3" fill="#7A3B10"/>
+              <path d="M33 30 Q27 35 28 42 Q28 48 33 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M47 30 Q53 35 52 42 Q52 48 47 48" fill="none" stroke="#2C3E6B" stroke-width="1.8" stroke-linecap="round"/>
+              <ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#2C3E6B"/>
+              <circle cx="40" cy="48" r="2.5" fill="#3A5099"/>
+            </svg>
+            <img id="med-photo-img-edit" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
             <div style="position:absolute;inset:0;background:rgba(31,111,235,.15);display:flex;align-items:center;justify-content:center;border-radius:50%">
               <span style="font-size:18px">📷</span>
             </div>
@@ -780,7 +855,12 @@ button.export{background:var(--teal);color:white}
         <div class="field"><label>Raciocínio diagnóstico</label><textarea id="f-rac" placeholder="Integração dos dados clínicos e laboratoriais…" style="min-height:100px"></textarea></div>
         <div class="meta-2" style="margin-top:10px">
           <div class="field"><label>Resultados de exames</label><textarea id="f-exres" placeholder="Hemograma, PCR, imagem…"></textarea></div>
-          <div class="field"><label>Exames solicitados</label><textarea id="f-exsol" placeholder="Lista com justificativa…"></textarea></div>
+          <div class="field"><label>Exames solicitados</label>
+            <div style="position:relative">
+              <textarea id="f-exsol" placeholder="Digite para buscar: hemograma, vitamina D, ECG…" style="min-height:80px;width:100%;border:0;outline:0;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;resize:none;line-height:1.5;color:var(--ink)" oninput="showExameSug(this.value)"></textarea>
+              <div id="exame-sug" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);z-index:200;max-height:220px;overflow-y:auto;margin-top:2px"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="panel">
@@ -1122,7 +1202,14 @@ button.export{background:var(--teal);color:white}
     <!-- dados da criança -->
     <div style="flex:1;min-width:160px">
       <div id="pac-hdr-nome" style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em">—</div>
-      <div id="pac-hdr-nasc" style="font-size:12px;color:var(--muted);margin-top:3px">—</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:5px">
+        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px">
+          🎂 <span id="pac-hdr-dnasc-fmt">—</span>
+        </div>
+        <div style="font-size:12px;color:var(--navy);font-weight:700;display:flex;align-items:center;gap:4px">
+          🦫 <span id="pac-hdr-idade-fmt">—</span>
+        </div>
+      </div>
       <div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap">
         <span id="pac-hdr-sexo" style="background:#E0F7F5;color:var(--teal);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800"></span>
         <span id="pac-hdr-conv" style="background:#EAF2FF;color:var(--blue);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800"></span>
@@ -1277,7 +1364,232 @@ button.export{background:var(--teal);color:white}
   </div>
 </div>
 
+<!-- ════════════ CHAT INTERNO (janela flutuante) ════════════ -->
+<div id="chat-btn" onclick="toggleChat()" title="Chat interno"
+  style="display:none;position:fixed;bottom:28px;right:28px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1455C0);color:white;font-size:22px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 18px rgba(31,111,235,.4);z-index:400;border:none;font-family:'DM Sans',sans-serif">
+  💬
+  <div id="chat-badge" style="display:none;position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:#E54B4B;border:2px solid white;font-size:8px;font-weight:900;color:white;align-items:center;justify-content:center">!</div>
+</div>
+
+<div id="chat-window" style="display:none;position:fixed;bottom:90px;right:28px;width:340px;height:460px;background:white;border-radius:18px;box-shadow:0 8px 40px rgba(12,32,58,.18);z-index:401;display:none;flex-direction:column;overflow:hidden;border:1px solid var(--line)">
+  <!-- header do chat -->
+  <div style="background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <span style="font-size:18px">💬</span>
+    <div style="flex:1">
+      <div style="font-size:14px;font-weight:900">Chat Interno</div>
+      <div style="font-size:11px;opacity:.7">CapiClinic · Médicos online</div>
+    </div>
+    <button onclick="toggleChat()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:28px;height:28px;color:white;cursor:pointer;font-size:14px;font-weight:700">✕</button>
+  </div>
+  <!-- lista de médicos online -->
+  <div style="background:var(--soft);border-bottom:1px solid var(--line);padding:8px 12px;display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0" id="chat-online-list">
+    <span style="font-size:11px;color:var(--muted);font-weight:700">Online:</span>
+  </div>
+  <!-- mensagens -->
+  <div id="chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
+    <div style="text-align:center;font-size:11.5px;color:var(--muted);padding:8px">Início do chat — <span id="chat-date"></span></div>
+  </div>
+  <!-- input -->
+  <div style="border-top:1px solid var(--line);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:white">
+    <div style="flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px">
+      <textarea id="chat-input" placeholder="Mensagem…" rows="1"
+        style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.4;max-height:80px"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}"></textarea>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <button onclick="sendChatMsg()" title="Enviar" style="background:var(--blue);color:white;border:none;border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">➤</button>
+      <label title="Enviar arquivo/imagem" style="background:var(--soft);border:1px solid var(--line);border-radius:10px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px">📎<input type="file" accept="image/*,.pdf,.doc,.docx" style="display:none" onchange="sendChatFile(this)"></label>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
+
+<!-- BASE DE EXAMES para autocomplete -->
+<script>
+const EXAMES_DB = [
+  'Hemograma completo','Hemograma com diferencial','Hematócrito','Hemoglobina',
+  'Glicemia de jejum','Glicemia pós-prandial','HbA1c (Hemoglobina glicada)',
+  'Insulina basal','Curva glicêmica',
+  'Colesterol total','HDL','LDL','VLDL','Triglicerídeos','Perfil lipídico completo',
+  'Ureia','Creatinina','Ácido úrico','TFG estimada',
+  'TGO (AST)','TGP (ALT)','Gama-GT','Fosfatase alcalina','Bilirrubinas (total e frações)',
+  'TSH','T4 livre','T3 livre','Anti-TPO','Anti-tireoglobulina',
+  'PCR (Proteína C reativa)','PCR ultrassensível','VHS','Procalcitonina',
+  'Ferritina','Ferro sérico','TIBC','Saturação de transferrina',
+  'Vitamina D (25-OH)','Vitamina B12','Ácido fólico',
+  'Cálcio total','Cálcio iônico','Fósforo','Magnésio','Sódio','Potássio','Cloro',
+  'Gasometria arterial','Gasometria venosa',
+  'Urina rotina (EAS)','Urocultura com antibiograma','Proteinúria 24h','Microalbuminúria',
+  'Fezes — Parasitológico (3 amostras)','Fezes — Rotina','Pesquisa de sangue oculto nas fezes',
+  'Coprocultura',
+  'Swab de orofaringe','Cultura de secreção','Antibiograma',
+  'Hemocultura (2 amostras)','Hemocultura pediátrica',
+  'Sorologia para Dengue (NS1 + IgM/IgG)','Sorologia HIV','Sorologia Hepatite B (HBsAg, Anti-HBs, Anti-HBc)',
+  'Sorologia Hepatite A (Anti-HAV)','Sorologia Hepatite C (Anti-HCV)',
+  'Sorologia para CMV (IgM/IgG)','Sorologia para EBV','Sorologia para Toxoplasmose',
+  'Sorologia para Rubéola','Sorologia para Sarampo',
+  'PCR para Influenza A/B','PCR para SARS-CoV-2','Painel respiratório viral (PCR multiplex)',
+  'Antígeno urinário para Pneumococo','Antígeno urinário para Legionella',
+  'Teste rápido para Streptococcus (TASO / ASLO)','ASLO',
+  'Prova tuberculínica (PPD)','IGRA (QuantiFERON-TB Gold)',
+  'Coagulograma completo','TAP (TP)','TTPA','Fibrinogênio','D-dímero','INR',
+  'Reticulócitos','Esfregaço de sangue periférico','Pesquisa de células LE',
+  'Eletroforese de hemoglobina','Pesquisa de hemoglobina S (falcização)',
+  'IgE total','IgE específica (RAST)','Prick test (teste alérgico cutâneo)',
+  'IgA','IgG','IgM','Subclasses de IgG','CH50','C3','C4',
+  'FAN (ANA)','Anti-DNA nativo','Fator reumatoide','Anti-CCP',
+  'LDH','CPK total','CPK-MB','Troponina I','BNP / NT-proBNP',
+  'Amilase','Lipase',
+  'Cortisol basal','Cortisol pós-estimulo','ACTH','GH','IGF-1','IGFBP-3',
+  'FSH','LH','Estradiol','Testosterona total','DHEA-S','17-OH Progesterona',
+  'Prolactina','PTH intacto',
+  'Teste do pezinho ampliado','Teste da orelhinha (PEATE)','Teste do olhinho (TRV)','Teste do coraçãozinho (oximetria neonatal)',
+  'Radiografia de tórax PA','Radiografia de tórax PA + perfil',
+  'Radiografia de abdome em pé','Radiografia de crânio','Radiografia de bacia',
+  'Radiografia de coluna (seriografia)','Radiografia de ossos longos',
+  'Radiografia de mão e punho (idade óssea)',
+  'Ultrassonografia abdominal total','Ultrassonografia pélvica','Ultrassonografia de vias urinárias',
+  'Ultrassonografia transfontanela','Ultrassonografia de quadril (Pavlik)',
+  'Ultrassonografia de partes moles','Ultrassonografia cervical',
+  'Ultrassonografia de tireoide','Ultrassonografia testicular',
+  'Ecocardiograma transtorácico','Ecocardiograma fetal',
+  'Eletrocardiograma (ECG)','Holter 24h','MAPA 24h',
+  'Tomografia de crânio sem contraste','Tomografia de seios da face',
+  'Tomografia de tórax','Tomografia de abdome e pelve',
+  'Ressonância magnética de crânio','Ressonância magnética de coluna',
+  'Ressonância magnética de joelho','Ressonância magnética de quadril',
+  'Eletroencefalograma (EEG)','Eletroencefalograma com privação de sono',
+  'Potencial evocado auditivo de tronco encefálico (PEATE / BERA)',
+  'Audiometria tonal','Audiometria vocal','Imitanciometria',
+  'Acuidade visual','Fundo de olho','Tonometria','Campimetria',
+  'Espirometria','Pico de fluxo expiratório (Peak flow)',
+  'Teste de broncoprovocação','Teste de reversibilidade com broncodilatador',
+  'Cariótipo (cromossômico)','Array-CGH (microarray)','Exoma clínico',
+  'Pesquisa de síndrome de X-frágil','Teste genético para fibrose cística',
+  'Eletrólitos no suor (Teste do suor — triagem para fibrose cística)',
+  'Endoscopia digestiva alta','Colonoscopia','Retossigmoidoscopia',
+  'pH-metria esofágica 24h','Manometria esofágica',
+  'Biópsia de pele','Biópsia de linfonodo','Punção de medula óssea (mielograma)',
+  'Avaliação neuropsicológica','Avaliação fonoaudiológica','Avaliação psicológica',
+  'Avaliação fisioterapêutica','Avaliação com terapeuta ocupacional',
+  'Teste de triagem de desenvolvimento (Denver II / Bayley)',
+  'Videoencefalograma (vídeo-EEG)','Polissonografia',
+];
+
+function searchExame(q) {
+  if (!q || q.length < 2) return [];
+  const ql = q.toLowerCase();
+  return EXAMES_DB.filter(e => e.toLowerCase().includes(ql)).slice(0, 8);
+}
+
+// ════════════ CHAT INTERNO ════════════
+let chatOpen = false;
+let chatMsgs = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chat-window');
+  const btn = document.getElementById('chat-btn');
+  win.style.display = chatOpen ? 'flex' : 'none';
+  if (chatOpen) {
+    document.getElementById('chat-date').textContent = new Date().toLocaleDateString('pt-BR');
+    renderOnlineList();
+    document.getElementById('chat-input').focus();
+    document.getElementById('chat-badge').style.display = 'none';
+  }
+}
+
+function renderOnlineList() {
+  const list = document.getElementById('chat-online-list');
+  // Simula presença: mostra o médico logado como "online"
+  const online = [MED_NAMES[medCRM]||medCRM];
+  list.innerHTML = '<span style="font-size:11px;color:var(--muted);font-weight:700">Online:</span>' +
+    online.map(n => `<span style="background:#E8F7EF;color:var(--green);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>${n.split('(')[0].trim()}</span>`).join('');
+}
+
+function sendChatMsg() {
+  const inp = document.getElementById('chat-input');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  const msg = {
+    tipo: 'texto', texto: txt,
+    autor: (MED_NAMES[medCRM]||medCRM).split('(')[0].trim(),
+    ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}),
+    proprio: true,
+  };
+  chatMsgs.push(msg);
+  inp.value = ''; inp.style.height = 'auto';
+  renderChatMsgs();
+  saveChatLocal();
+}
+
+function sendChatFile(input) {
+  const file = input.files[0]; if (!file) return;
+  const isImg = file.type.startsWith('image/');
+  const reader = new FileReader();
+  reader.onload = e => {
+    const msg = {
+      tipo: isImg ? 'imagem' : 'arquivo',
+      texto: isImg ? e.target.result : null,
+      nomeArquivo: file.name,
+      autor: (MED_NAMES[medCRM]||medCRM).split('(')[0].trim(),
+      ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}),
+      proprio: true,
+    };
+    chatMsgs.push(msg);
+    renderChatMsgs();
+    saveChatLocal();
+  };
+  if (isImg) reader.readAsDataURL(file);
+  else { reader.readAsText(file); }
+  input.value = '';
+}
+
+function renderChatMsgs() {
+  const box = document.getElementById('chat-messages');
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const header = `<div style="text-align:center;font-size:11.5px;color:var(--muted);padding:8px">Início do chat — ${hoje}</div>`;
+  box.innerHTML = header + chatMsgs.map(m => {
+    const side = m.proprio ? 'flex-end' : 'flex-start';
+    const bg   = m.proprio ? 'linear-gradient(135deg,var(--blue),#1455C0)' : 'var(--soft)';
+    const clr  = m.proprio ? 'white' : 'var(--ink)';
+    let content = '';
+    if (m.tipo === 'imagem') {
+      content = `<img src="${m.texto}" style="max-width:180px;border-radius:8px;display:block">`;
+    } else if (m.tipo === 'arquivo') {
+      content = `<div style="display:flex;align-items:center;gap:6px;font-size:12px">📎 ${m.nomeArquivo}</div>`;
+    } else {
+      content = `<div style="font-size:13px;line-height:1.5">${m.texto}</div>`;
+    }
+    return `<div style="display:flex;justify-content:${side}">
+      <div style="max-width:80%;background:${bg};color:${clr};border-radius:12px;padding:8px 12px">
+        ${!m.proprio?`<div style="font-size:10px;font-weight:800;opacity:.7;margin-bottom:3px">${m.autor}</div>`:''}
+        ${content}
+        <div style="font-size:9px;opacity:.6;text-align:right;margin-top:4px">${m.ts}</div>
+      </div>
+    </div>`;
+  }).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+function saveChatLocal() {
+  localStorage.setItem('capikids_chat_'+medCRM, JSON.stringify(chatMsgs.slice(-100)));
+}
+
+function loadChatLocal() {
+  const raw = localStorage.getItem('capikids_chat_'+medCRM);
+  if (raw) { try { chatMsgs = JSON.parse(raw); } catch{} }
+}
+
+// Ativar botão de chat e carregar mensagens após login médico
+function activateChat() {
+  const btn = document.getElementById('chat-btn');
+  if (btn) { btn.style.display = 'flex'; }
+  loadChatLocal();
+  if (chatMsgs.length) renderChatMsgs();
+}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
@@ -1500,7 +1812,7 @@ function _activateMedSession(u) {
     document.getElementById('f-dtcons').value = new Date().toISOString().slice(0, 10);
   document.getElementById('growth-sexo').value = 'M';
   showPage('medicos', document.getElementById('tab-med'));
-  renderHistorico(); renderMedCal(); updateGrowthChart(); renderMedProfile(u);
+  renderHistorico(); renderMedCal(); updateGrowthChart(); renderMedProfile(u); activateChat();
   attachDraftListeners();
   // Verificar se há rascunho salvo
   const raw = localStorage.getItem(KEY_DRAFT + '_' + u);
@@ -1542,6 +1854,11 @@ function logout(role) {
     }
     clearSession();
     loggedMed = false; medCRM = '';
+    chatOpen = false;
+    const chatBtn = document.getElementById('chat-btn');
+    if (chatBtn) chatBtn.style.display = 'none';
+    const chatWin = document.getElementById('chat-window');
+    if (chatWin) chatWin.style.display = 'none';
     showPage('home', document.querySelectorAll('.tab')[0]);
     document.querySelectorAll('.tab')[0].classList.add('active');
   } else {
@@ -2226,7 +2543,37 @@ function addCID(){
   document.getElementById('cid-list').appendChild(d);
 }
 
-function showCIDSug(id, q) {
+function showExameSug(q) {
+  const box = document.getElementById('exame-sug');
+  // Pega a última linha digitada para sugerir
+  const linhas = q.split('\n');
+  const ultima = linhas[linhas.length-1].trim();
+  const results = searchExame(ultima);
+  if (!results.length || !ultima) { box.style.display='none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = results.map(e =>
+    `<div onclick="selectExame('${e.replace(/'/g,"\\'")}')"
+      style="padding:8px 12px;cursor:pointer;font-size:12.5px;border-bottom:1px solid var(--line)"
+      onmouseover="this.style.background='#EAF2FF'" onmouseout="this.style.background='white'">
+      🔬 ${e}
+    </div>`
+  ).join('');
+}
+
+function selectExame(nome) {
+  const ta = document.getElementById('f-exsol');
+  const linhas = ta.value.split('\n');
+  linhas[linhas.length-1] = '• ' + nome;
+  ta.value = linhas.join('\n') + '\n';
+  document.getElementById('exame-sug').style.display='none';
+  ta.focus();
+}
+
+// Fechar dropdown ao clicar fora
+document.addEventListener('click', e => {
+  if (!e.target.closest('#f-exsol') && !e.target.closest('#exame-sug'))
+    { const b=document.getElementById('exame-sug'); if(b) b.style.display='none'; }
+});
   const box = document.getElementById(id+'-sug');
   const results = searchCID(q);
   if (!results.length) { box.style.display='none'; return; }
@@ -2635,13 +2982,12 @@ function loadPacData(){
     // Nome e dados básicos
     const nomeEl = document.getElementById('pac-hdr-nome');
     if (nomeEl) nomeEl.textContent = last.nome || pacName;
-    // Data de nascimento + idade
-    const dnascEl = document.getElementById('pac-hdr-nasc');
-    if (dnascEl) {
-      let txt = last.dnasc ? 'Nascimento: ' + fmtDate(last.dnasc) : '';
-      if (last.idade) txt += ' · ' + last.idade;
-      dnascEl.textContent = txt || '—';
-    }
+    // Data de nascimento formatada
+    const dnascFmt = document.getElementById('pac-hdr-dnasc-fmt');
+    if (dnascFmt) dnascFmt.textContent = last.dnasc ? fmtDate(last.dnasc) : '—';
+    // Idade
+    const idadeFmt = document.getElementById('pac-hdr-idade-fmt');
+    if (idadeFmt) idadeFmt.textContent = last.idade || '—';
     // Badges sexo e convênio
     const sexoEl = document.getElementById('pac-hdr-sexo');
     if (sexoEl) { sexoEl.textContent = last.sexo||''; sexoEl.style.display = last.sexo?'':'none'; }
