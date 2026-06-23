@@ -421,169 +421,49 @@ button.export{background:var(--teal);color:white}
 <!-- ════════════════════ FALE CONOSCO ════════════════════ -->
 <section id="contato" class="page">
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:1100px;margin:0 auto">
-
-    <!-- ── FORMULÁRIO ── -->
-    <div class="panel">
-      <div class="panel-head">
-        <div>
-          <h2>✉️ Fale Conosco</h2>
-          <p class="sub">Envie sua mensagem e retornaremos em breve.</p>
-        </div>
-        <span class="chip chip-teal">CapiKids</span>
+  <div class="panel" style="max-width:680px;margin:0 auto">
+    <div class="panel-head">
+      <div>
+        <h2>✉️ Fale Conosco</h2>
+        <p class="sub">Envie sua mensagem e retornaremos em breve. Ou clique em 🦫 para falar com a Capi, nossa atendente virtual!</p>
       </div>
-
-      <div class="field" style="margin-bottom:12px">
-        <label>Nome completo *</label>
-        <input id="ct-nome" type="text" placeholder="Seu nome">
-      </div>
-      <div class="meta-2" style="margin-bottom:12px">
-        <div class="field">
-          <label>E-mail</label>
-          <input id="ct-email" type="email" placeholder="seuemail@exemplo.com">
-        </div>
-        <div class="field">
-          <label>Telefone / WhatsApp</label>
-          <input id="ct-tel" type="text" placeholder="(00) 90000-0000" maxlength="16" oninput="maskPhone(this)">
-        </div>
-      </div>
-      <div class="field" style="margin-bottom:16px">
-        <label>Mensagem *</label>
-        <textarea id="ct-msg" placeholder="Escreva sua dúvida, sugestão ou solicitação…" style="min-height:120px"></textarea>
-      </div>
-
-      <div id="ct-err" style="display:none;background:#FDEEEE;color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:12px"></div>
-      <div id="ct-ok"  style="display:none;background:#E8F7EF;color:var(--green);border-radius:10px;padding:14px 18px;font-size:13.5px;font-weight:700;margin-bottom:12px;text-align:center">
-        ✅ Mensagem enviada com sucesso! Retornaremos em breve.
-      </div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="primary" onclick="enviarContato()" id="ct-btn">📨 Enviar mensagem</button>
-        <button class="secondary" onclick="limparContato()">Limpar</button>
-      </div>
-
-      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:20px;flex-wrap:wrap">
-        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">📍 Endereço da clínica a preencher</div>
-        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">📞 Telefone a preencher</div>
-        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">✉️ contato@capikids.com.br</div>
-      </div>
+      <span class="chip chip-teal">CapiKids</span>
     </div>
 
-    <!-- ── CHAT IA ── -->
-    <div style="background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;height:580px">
-
-      <!-- header do chat IA -->
-      <div style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;padding:16px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0">
-        <!-- Avatar: capivara com headphone -->
-        <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.15);flex-shrink:0;display:flex;align-items:center;justify-content:center">
-          <svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" width="52" height="56">
-            <!-- corpo jaleco -->
-            <ellipse cx="60" cy="105" rx="38" ry="28" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
-            <path d="M42 82 Q60 92 78 82 L80 133 L40 133 Z" fill="#efefef" stroke="#ddd" stroke-width="1"/>
-            <!-- lapela -->
-            <path d="M60 92 L52 82 L60 88 L68 82 Z" fill="#ccc"/>
-            <!-- botão jaleco -->
-            <circle cx="60" cy="108" r="2.5" fill="#ddd"/>
-            <!-- bolso -->
-            <rect x="66" y="100" width="12" height="9" rx="2.5" fill="#e0e0e0" stroke="#ccc" stroke-width="1"/>
-            <rect x="69" y="103" width="6" height="1.5" rx=".7" fill="#E54B4B"/>
-            <rect x="71.5" y="101" width="1.5" height="4" rx=".7" fill="#E54B4B"/>
-            <!-- corpo capivara -->
-            <ellipse cx="60" cy="70" rx="30" ry="24" fill="#C68642"/>
-            <!-- barriga mais clara -->
-            <ellipse cx="60" cy="76" rx="18" ry="14" fill="#D4956A"/>
-            <!-- cabeça -->
-            <ellipse cx="60" cy="38" rx="26" ry="22" fill="#C68642"/>
-            <!-- focinho longo típico capivara -->
-            <ellipse cx="60" cy="48" rx="14" ry="9" fill="#A0652A"/>
-            <!-- sorriso -->
-            <path d="M52 52 Q60 58 68 52" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
-            <!-- narinas -->
-            <ellipse cx="55.5" cy="47" rx="2" ry="1.5" fill="#7A3B10"/>
-            <ellipse cx="64.5" cy="47" rx="2" ry="1.5" fill="#7A3B10"/>
-            <!-- olhos expressivos -->
-            <circle cx="48" cy="34" r="5" fill="#1a0d00"/>
-            <circle cx="72" cy="34" r="5" fill="#1a0d00"/>
-            <circle cx="49.5" cy="32.5" r="2" fill="white"/>
-            <circle cx="73.5" cy="32.5" r="2" fill="white"/>
-            <!-- sobrancelha amigável -->
-            <path d="M44 29 Q48 27 52 29" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M68 29 Q72 27 76 29" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
-            <!-- orelhas arredondadas -->
-            <ellipse cx="36" cy="20" rx="8" ry="6" fill="#A0652A"/>
-            <ellipse cx="36" cy="20" rx="5" ry="4" fill="#C68642"/>
-            <ellipse cx="84" cy="20" rx="8" ry="6" fill="#A0652A"/>
-            <ellipse cx="84" cy="20" rx="5" ry="4" fill="#C68642"/>
-            <!-- HEADPHONE -->
-            <!-- arco superior -->
-            <path d="M30 28 Q30 8 60 8 Q90 8 90 28" fill="none" stroke="#2C3E6B" stroke-width="5" stroke-linecap="round"/>
-            <!-- almofada esquerda -->
-            <rect x="22" y="26" width="14" height="18" rx="7" fill="#2C3E6B"/>
-            <rect x="25" y="29" width="8" height="12" rx="4" fill="#4A6FA5"/>
-            <!-- almofada direita -->
-            <rect x="84" y="26" width="14" height="18" rx="7" fill="#2C3E6B"/>
-            <rect x="87" y="29" width="8" height="12" rx="4" fill="#4A6FA5"/>
-            <!-- haste microfone (lado esquerdo) -->
-            <path d="M29 42 Q22 52 24 62" fill="none" stroke="#2C3E6B" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- microfone bolinha -->
-            <circle cx="24" cy="64" r="4" fill="#1F6FEB"/>
-            <circle cx="24" cy="64" r="2.5" fill="#4A8FE8"/>
-            <!-- estetoscópio (teal) -->
-            <path d="M46 58 Q36 65 36 76 Q36 86 44 88" fill="none" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M74 58 Q84 65 84 76 Q84 86 76 88" fill="none" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round"/>
-            <ellipse cx="60" cy="88" rx="9" ry="6" fill="#0D9488"/>
-            <circle cx="60" cy="88" r="5" fill="#16A3B8"/>
-            <circle cx="46" cy="57.5" r="3.5" fill="#0D9488"/>
-            <circle cx="74" cy="57.5" r="3.5" fill="#0D9488"/>
-            <!-- patas dianteiras -->
-            <ellipse cx="36" cy="92" rx="9" ry="7" fill="#A0652A"/>
-            <ellipse cx="84" cy="92" rx="9" ry="7" fill="#A0652A"/>
-          </svg>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:900">Capi — Atendente Virtual</div>
-          <div style="font-size:11px;opacity:.8;display:flex;align-items:center;gap:5px">
-            <span style="width:7px;height:7px;border-radius:50%;background:#7EFFA0;display:inline-block"></span>
-            Online agora · CapiKids
-          </div>
-        </div>
-        <div style="font-size:11px;opacity:.7;text-align:right">🤖 IA</div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Nome completo *</label>
+      <input id="ct-nome" type="text" placeholder="Seu nome">
+    </div>
+    <div class="meta-2" style="margin-bottom:12px">
+      <div class="field">
+        <label>E-mail</label>
+        <input id="ct-email" type="email" placeholder="seuemail@exemplo.com">
       </div>
-
-      <!-- mensagens -->
-      <div id="ia-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#F8FBF8">
-        <!-- mensagem inicial da Capi -->
-        <div style="display:flex;align-items:flex-end;gap:8px">
-          <div style="width:32px;height:32px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🦫</div>
-          <div style="background:white;border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:10px 14px;max-width:78%;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-            <div style="font-size:12.5px;line-height:1.55;color:var(--ink)">Olá! 👋 Eu sou a <b>Capi</b>, atendente virtual da CapiKids! Posso ajudar com dúvidas sobre agendamentos, serviços, localização e muito mais. O que posso fazer por você hoje?</div>
-            <div style="font-size:9.5px;color:var(--muted);margin-top:5px;text-align:right" id="ia-init-time"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- sugestões rápidas -->
-      <div id="ia-suggestions" style="padding:8px 12px;background:#F0FAF5;border-top:1px solid #C8EDD9;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0">
-        <span style="font-size:10.5px;color:var(--muted);font-weight:700;align-self:center">Sugestões:</span>
-        <button onclick="sendIAMsg('Como agendar uma consulta?')" class="ia-sug-btn">📅 Agendar consulta</button>
-        <button onclick="sendIAMsg('Quais os médicos disponíveis?')" class="ia-sug-btn">👨‍⚕️ Médicos</button>
-        <button onclick="sendIAMsg('Quais convênios são aceitos?')" class="ia-sug-btn">💳 Convênios</button>
-        <button onclick="sendIAMsg('Como funciona a área do paciente?')" class="ia-sug-btn">👨‍👩‍👧 Portal família</button>
-      </div>
-
-      <!-- input -->
-      <div style="border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:white">
-        <div style="flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px">
-          <textarea id="ia-input" placeholder="Digite sua pergunta…" rows="1"
-            style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.4;max-height:80px;color:var(--ink)"
-            oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
-            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendIAMsg()}"></textarea>
-        </div>
-        <button onclick="sendIAMsg()" title="Enviar"
-          style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;border:none;border-radius:10px;width:40px;height:40px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">➤</button>
+      <div class="field">
+        <label>Telefone / WhatsApp</label>
+        <input id="ct-tel" type="text" placeholder="(00) 90000-0000" maxlength="16" oninput="maskPhone(this)">
       </div>
     </div>
+    <div class="field" style="margin-bottom:16px">
+      <label>Mensagem *</label>
+      <textarea id="ct-msg" placeholder="Escreva sua dúvida, sugestão ou solicitação…" style="min-height:120px"></textarea>
+    </div>
 
+    <div id="ct-err" style="display:none;background:#FDEEEE;color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:12px"></div>
+    <div id="ct-ok"  style="display:none;background:#E8F7EF;color:var(--green);border-radius:10px;padding:14px 18px;font-size:13.5px;font-weight:700;margin-bottom:12px;text-align:center">
+      ✅ Mensagem enviada com sucesso! Retornaremos em breve.
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="primary" onclick="enviarContato()" id="ct-btn">📨 Enviar mensagem</button>
+      <button class="secondary" onclick="limparContato()">Limpar</button>
+    </div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:20px;flex-wrap:wrap">
+      <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">📍 Endereço da clínica a preencher</div>
+      <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">📞 Telefone a preencher</div>
+      <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">✉️ contato@capikids.com.br</div>
+    </div>
   </div>
 
 </section>
@@ -1526,6 +1406,89 @@ button.export{background:var(--teal);color:white}
   </div>
 </div>
 
+<!-- ════════════ CAPI — Atendente Virtual IA (janela flutuante) ════════════ -->
+<!-- botão flutuante Capi — visível em Fale Conosco -->
+<button id="capi-btn" onclick="toggleCapiChat()" title="Falar com a Capi"
+  style="display:none;position:fixed;bottom:28px;right:28px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#0D9488,#178A4A);border:none;cursor:pointer;box-shadow:0 4px 18px rgba(13,148,136,.45);z-index:400;padding:0;overflow:hidden;align-items:center;justify-content:center">
+  <svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" width="58" height="58">
+    <ellipse cx="60" cy="105" rx="38" ry="28" fill="#f5f5f5"/>
+    <path d="M42 82 Q60 92 78 82 L80 133 L40 133 Z" fill="#efefef"/>
+    <ellipse cx="60" cy="70" rx="30" ry="24" fill="#C68642"/>
+    <ellipse cx="60" cy="38" rx="26" ry="22" fill="#C68642"/>
+    <ellipse cx="60" cy="48" rx="14" ry="9" fill="#A0652A"/>
+    <path d="M52 52 Q60 58 68 52" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="48" cy="34" r="5" fill="#1a0d00"/><circle cx="72" cy="34" r="5" fill="#1a0d00"/>
+    <circle cx="49.5" cy="32.5" r="2" fill="white"/><circle cx="73.5" cy="32.5" r="2" fill="white"/>
+    <ellipse cx="36" cy="20" rx="8" ry="6" fill="#A0652A"/><ellipse cx="84" cy="20" rx="8" ry="6" fill="#A0652A"/>
+    <path d="M30 28 Q30 8 60 8 Q90 8 90 28" fill="none" stroke="#1a2a4a" stroke-width="5" stroke-linecap="round"/>
+    <rect x="22" y="26" width="14" height="18" rx="7" fill="#1a2a4a"/>
+    <rect x="84" y="26" width="14" height="18" rx="7" fill="#1a2a4a"/>
+    <path d="M29 42 Q22 52 24 62" fill="none" stroke="#1a2a4a" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="24" cy="64" r="4" fill="#1F6FEB"/>
+  </svg>
+</button>
+
+<!-- janela do chat Capi -->
+<div id="capi-window" style="display:none;position:fixed;bottom:96px;right:28px;width:340px;height:480px;background:white;border-radius:18px;box-shadow:0 8px 40px rgba(12,32,58,.18);z-index:401;flex-direction:column;overflow:hidden;border:1px solid var(--line)">
+  <!-- header -->
+  <div style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div style="width:38px;height:38px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
+        <ellipse cx="60" cy="70" rx="30" ry="24" fill="#C68642"/>
+        <ellipse cx="60" cy="38" rx="26" ry="22" fill="#C68642"/>
+        <ellipse cx="60" cy="48" rx="14" ry="9" fill="#A0652A"/>
+        <path d="M52 52 Q60 58 68 52" fill="none" stroke="#7A3B10" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="48" cy="34" r="5" fill="#1a0d00"/><circle cx="72" cy="34" r="5" fill="#1a0d00"/>
+        <circle cx="49.5" cy="32.5" r="2" fill="white"/><circle cx="73.5" cy="32.5" r="2" fill="white"/>
+        <ellipse cx="36" cy="20" rx="8" ry="6" fill="#A0652A"/><ellipse cx="84" cy="20" rx="8" ry="6" fill="#A0652A"/>
+        <path d="M30 28 Q30 8 60 8 Q90 8 90 28" fill="none" stroke="#1a2a4a" stroke-width="5" stroke-linecap="round"/>
+        <rect x="22" y="26" width="14" height="18" rx="7" fill="#1a2a4a"/>
+        <rect x="84" y="26" width="14" height="18" rx="7" fill="#1a2a4a"/>
+        <path d="M29 42 Q22 52 24 62" fill="none" stroke="#1a2a4a" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="24" cy="64" r="4" fill="#1F6FEB"/>
+      </svg>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:14px;font-weight:900">Capi — Atendente Virtual</div>
+      <div style="font-size:11px;opacity:.8;display:flex;align-items:center;gap:5px">
+        <span style="width:7px;height:7px;border-radius:50%;background:#7EFFA0;display:inline-block"></span>
+        Online · CapiKids IA
+      </div>
+    </div>
+    <button onclick="toggleCapiChat()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:28px;height:28px;color:white;cursor:pointer;font-size:14px;font-weight:700">✕</button>
+  </div>
+
+  <!-- mensagens -->
+  <div id="ia-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#F0FAF8">
+    <div style="display:flex;align-items:flex-end;gap:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🦫</div>
+      <div style="background:white;border:1px solid var(--line);border-radius:12px 12px 12px 4px;padding:9px 13px;max-width:82%;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <div style="font-size:12.5px;line-height:1.55;color:var(--ink)">Olá! 👋 Eu sou a <b>Capi</b>, atendente virtual da CapiKids! Posso ajudar com agendamentos, dúvidas sobre os serviços e muito mais. Como posso te ajudar?</div>
+        <div style="font-size:9.5px;color:var(--muted);margin-top:4px;text-align:right" id="ia-init-time"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- sugestões rápidas -->
+  <div id="ia-suggestions" style="padding:7px 10px;background:#E8F5F2;border-top:1px solid #C8EDD9;display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0">
+    <button onclick="sendIAMsg('Como agendar uma consulta?')" class="ia-sug-btn">📅 Agendar</button>
+    <button onclick="sendIAMsg('Quais os médicos disponíveis?')" class="ia-sug-btn">👨‍⚕️ Médicos</button>
+    <button onclick="sendIAMsg('Quais convênios são aceitos?')" class="ia-sug-btn">💳 Convênios</button>
+    <button onclick="sendIAMsg('Como funciona o portal da família?')" class="ia-sug-btn">👨‍👩‍👧 Portal</button>
+  </div>
+
+  <!-- input -->
+  <div style="border-top:1px solid var(--line);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:white">
+    <div style="flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px">
+      <textarea id="ia-input" placeholder="Digite sua pergunta…" rows="1"
+        style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.4;max-height:80px;color:var(--ink)"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendIAMsg()}"></textarea>
+    </div>
+    <button onclick="sendIAMsg()" style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;border:none;border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">➤</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- BASE DE EXAMES para autocomplete -->
@@ -1905,6 +1868,16 @@ function showPage(id, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (btn) btn.classList.add('active');
+  // Botão Capi: visível apenas em Fale Conosco
+  const capiBtn = document.getElementById('capi-btn');
+  const capiWin = document.getElementById('capi-window');
+  if (capiBtn) capiBtn.style.display = (id === 'contato') ? 'flex' : 'none';
+  if (id !== 'contato' && capiWin) capiWin.style.display = 'none';
+  // Inicializar horário da Capi ao abrir
+  if (id === 'contato') {
+    const el = document.getElementById('ia-init-time');
+    if (el && !el.textContent) el.textContent = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  }
 }
 function goMedico(btn) {
   if (loggedMed) { showPage('medicos', btn); renderHistorico(); }
@@ -3349,9 +3322,21 @@ function limparContato() {
 
 // ═══════════════════════════ CHAT IA (Capi — Atendente Virtual) ═══════════════════════════
 let iaMsgs = []; // histórico de mensagens para contexto da IA
+let capiOpen = false;
 
-// Inicializa o horário da mensagem de boas-vindas
-(function(){ const el=document.getElementById('ia-init-time'); if(el) el.textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); })();
+function toggleCapiChat() {
+  capiOpen = !capiOpen;
+  const win = document.getElementById('capi-window');
+  if (win) win.style.display = capiOpen ? 'flex' : 'none';
+  if (capiOpen) {
+    const el = document.getElementById('ia-init-time');
+    if (el && !el.textContent) el.textContent = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const inp = document.getElementById('ia-input');
+    if (inp) inp.focus();
+    const box = document.getElementById('ia-messages');
+    if (box) box.scrollTop = box.scrollHeight;
+  }
+}
 
 function addIAMsg(texto, proprio, isLoading) {
   const box = document.getElementById('ia-messages');
