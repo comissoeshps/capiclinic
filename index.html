@@ -1661,13 +1661,13 @@ button.export{background:var(--teal);color:white}
 
   <!-- ─── PSUB 4: CAPIVARA VIRTUAL ─── -->
   <div id="psub-panel-4" style="display:none">
-    <div class="panel" style="overflow:hidden">
+    <div class="panel" style="overflow:visible">
       <div class="panel-head">
         <div><h2>🦫 Capivara Virtual</h2><p class="sub">O avatar da saúde da criança — um reflexo do seu bem-estar</p></div>
         <span class="chip chip-green" id="capy-status-chip">Calculando…</span>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start">
 
         <!-- Coluna esquerda: avatar animado -->
         <div style="text-align:center">
@@ -2910,22 +2910,14 @@ function showPacSub(n) {
   });
   currentPacSub = n;
   if (n===1) initGrowthChartPac();
-  if (n===4) renderCapivara();
+  if (n===4) renderCapivara(); // async — não precisa await aqui
 }
 
 // ═══════════════════════════ CAPIVARA VIRTUAL ═══════════════════════════
-function renderCapivara() {
-  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
-  // Busca flexível: qualquer parte do nome do login bate com o nome do paciente
-  const term = pacName.toLowerCase().trim();
-  // Tenta match direto, depois por palavras individuais
-  let mine = arr.filter(c => c.nome && c.nome.toLowerCase().includes(term));
-  if (!mine.length) {
-    // Tenta com palavras do login (ex: "gabrielcm" → "gabriel")
-    const palavras = term.replace(/[^a-záéíóúãõâêîôûç]/gi,' ').split(/\s+/).filter(p=>p.length>=3);
-    mine = arr.filter(c => c.nome && palavras.some(p => c.nome.toLowerCase().includes(p)));
-  }
-  mine.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+async function renderCapivara() {
+  // Garantir que o painel está visível
+  const painel = document.getElementById('psub-panel-4');
+  if (painel) painel.style.display = 'block';
 
   const semDados  = document.getElementById('capy-sem-dados');
   const indWrap   = document.getElementById('capy-indicadores');
@@ -2937,10 +2929,41 @@ function renderCapivara() {
 
   if (nomePacEl) nomePacEl.textContent = pacName;
 
-  // Sempre mostrar o avatar — estado muda conforme dados
+  // Sempre mostrar avatar e pontuação
   if (avatarWrap) avatarWrap.style.display = 'inline-block';
   if (pontWrap)   pontWrap.style.display   = 'inline-block';
   if (indWrap)    indWrap.style.display    = 'flex';
+
+  // ── Buscar consultas ──
+  let mine = [];
+
+  // 1. Se tem pacId (login novo via ID), buscar direto no Firebase
+  if (pacId) {
+    const fbData = await DB.get('consultas/' + pacId);
+    if (fbData) mine = Object.values(fbData);
+  }
+
+  // 2. Fallback: busca por nome no localStorage
+  if (!mine.length) {
+    const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+    const term = pacName.toLowerCase().trim();
+
+    // Match direto pelo nome
+    mine = arr.filter(c => c.nome && c.nome.toLowerCase().includes(term));
+
+    // Se não achou, tenta por palavras (ex: "Juliano César" → "juliano")
+    if (!mine.length) {
+      const palavras = term.split(/\s+/).filter(p => p.length >= 3);
+      mine = arr.filter(c => c.nome && palavras.some(p => c.nome.toLowerCase().includes(p)));
+    }
+
+    // Se ainda não achou e tem pacId, filtra por pacId
+    if (!mine.length && pacId) {
+      mine = arr.filter(c => c.pacId === pacId);
+    }
+  }
+
+  mine.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   if (!mine.length) {
     // Sem consultas: mostrar capivara animada com mensagem amigável
