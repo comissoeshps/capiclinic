@@ -598,8 +598,12 @@ button.export{background:var(--teal);color:white}
 
   <!-- Sub-tabs médico -->
   <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-    <button class="step-btn active" id="msub0" onclick="showMedSub(0)">📋 Nova Consulta</button>
-    <button class="step-btn" id="msub-ret" onclick="showMedSub('ret')">🔄 Retorno</button>
+    <!-- Aba Atendimento (agrupa Nova Consulta + Retorno) -->
+    <div style="position:relative">
+      <button class="step-btn active" id="msub-atend" onclick="showMedSub('atend')">🩺 Atendimento</button>
+    </div>
+    <button class="step-btn" id="msub-tele" onclick="showMedSub('tele')">📹 Tele-atendimento</button>
+    <button class="step-btn" id="msub-pacs" onclick="showMedSub('pacs')">👥 Meus Pacientes</button>
     <button class="step-btn" id="msub1" onclick="showMedSub(1)">📁 Histórico</button>
     <button class="step-btn" id="msub2" onclick="showMedSub(2)">📅 Agenda</button>
     <button class="step-btn" id="msub3" onclick="showMedSub(3)">📤 Arquivos</button>
@@ -747,6 +751,14 @@ button.export{background:var(--teal);color:white}
       </div>
     </div>
   </div>
+
+  <!-- ─── SUB ATENDIMENTO (Nova Consulta + Retorno) ─── -->
+  <div id="msub-panel-atend">
+    <!-- Sub-tabs internas de atendimento -->
+    <div style="display:flex;gap:6px;margin-bottom:14px;border-bottom:2px solid var(--line);padding-bottom:10px">
+      <button class="step-btn active" id="atend-sub0" onclick="showAtendSub(0)">📋 Nova Consulta</button>
+      <button class="step-btn" id="atend-sub1" onclick="showAtendSub(1)">🔄 Retorno / Puericultura</button>
+    </div>
 
   <!-- ─── SUB 0: NOVA CONSULTA ─── -->
   <div id="msub-panel-0">
@@ -1208,6 +1220,59 @@ button.export{background:var(--teal);color:white}
     </div>
   </div>
 
+  </div><!-- fim msub-panel-atend -->
+
+  <!-- ─── SUB TELE-ATENDIMENTO ─── -->
+  <div id="msub-panel-tele" style="display:none">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>📹 Tele-atendimento</h2>
+          <p class="sub">Plataforma de consultas online — em breve</p>
+        </div>
+        <span class="chip chip-purple">Em configuração</span>
+      </div>
+      <div style="text-align:center;padding:48px 20px">
+        <div style="font-size:64px;margin-bottom:16px">📹</div>
+        <div style="font-size:18px;font-weight:900;color:var(--navy);margin-bottom:10px">Tele-atendimento CapiKids</div>
+        <p style="font-size:13.5px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.7">
+          A plataforma de videoatendimento online será integrada aqui em breve. Consultas, discussões de casos e retornos à distância — tudo dentro do CapiClinic.
+        </p>
+        <div style="background:var(--soft);border:1.5px dashed var(--line);border-radius:14px;padding:20px;max-width:400px;margin:0 auto">
+          <div style="font-size:12.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plataforma a definir</div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.6">A URL ou integração da ferramenta de vídeo será configurada pelo administrador. Possíveis opções: <b>Whereby, Google Meet, Jitsi Meet, Daily.co</b>.</div>
+        </div>
+        <div style="margin-top:20px;font-size:12px;color:var(--muted)">Para configurar, informe a plataforma escolhida ao administrador da CapiKids.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SUB MEUS PACIENTES ─── -->
+  <div id="msub-panel-pacs" style="display:none">
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>👥 Meus Pacientes</h2><p class="sub">Pacientes acompanhados por você</p></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="pacs-busca" type="text" placeholder="🔍 Buscar paciente…"
+            style="border:1px solid var(--line);border-radius:10px;padding:7px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;width:200px"
+            oninput="renderMeusPacientes(this.value)">
+        </div>
+      </div>
+      <div id="pacs-lista"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Paciente selecionado em Meus Pacientes -->
+  <div class="modal-bg" id="modal-pac-det">
+    <div class="modal" style="max-width:780px">
+      <div class="modal-head">
+        <h2 id="modal-pac-det-title">Paciente</h2>
+        <button class="modal-close" onclick="document.getElementById('modal-pac-det').classList.remove('open')">✕</button>
+      </div>
+      <div id="modal-pac-det-body"></div>
+    </div>
+  </div>
+
   <!-- ─── SUB 1: HISTÓRICO ─── -->
   <div id="msub-panel-1" style="display:none">
     <div class="panel">
@@ -1460,35 +1525,44 @@ button.export{background:var(--teal);color:white}
   <div id="chat-badge" style="display:none;position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:#E54B4B;border:2px solid white;font-size:8px;font-weight:900;color:white;align-items:center;justify-content:center">!</div>
 </div>
 
-<div id="chat-window" style="display:none;position:fixed;bottom:90px;right:28px;width:340px;height:460px;background:white;border-radius:18px;box-shadow:0 8px 40px rgba(12,32,58,.18);z-index:401;display:none;flex-direction:column;overflow:hidden;border:1px solid var(--line)">
-  <!-- header do chat -->
-  <div style="background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+<div id="chat-window" style="display:none;position:fixed;bottom:90px;right:28px;width:360px;height:500px;background:white;border-radius:18px;box-shadow:0 8px 40px rgba(12,32,58,.18);z-index:401;flex-direction:column;overflow:hidden;border:1px solid var(--line)">
+  <!-- header -->
+  <div style="background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;padding:12px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
     <span style="font-size:18px">💬</span>
     <div style="flex:1">
-      <div style="font-size:14px;font-weight:900">Chat Interno</div>
-      <div style="font-size:11px;opacity:.7">CapiClinic · Médicos online</div>
+      <div style="font-size:14px;font-weight:900">Mensagens</div>
+      <div style="font-size:11px;opacity:.7" id="chat-dest-label">Selecione um colega</div>
     </div>
     <button onclick="toggleChat()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:28px;height:28px;color:white;cursor:pointer;font-size:14px;font-weight:700">✕</button>
   </div>
-  <!-- lista de médicos online -->
-  <div style="background:var(--soft);border-bottom:1px solid var(--line);padding:8px 12px;display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0" id="chat-online-list">
-    <span style="font-size:11px;color:var(--muted);font-weight:700">Online:</span>
+
+  <!-- lista de conversas / selecionar destinatário -->
+  <div id="chat-select-panel" style="flex:1;overflow-y:auto;padding:10px">
+    <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Colegas médicos</div>
+    <div id="chat-contacts-list"></div>
   </div>
-  <!-- mensagens -->
-  <div id="chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
-    <div style="text-align:center;font-size:11.5px;color:var(--muted);padding:8px">Início do chat — <span id="chat-date"></span></div>
-  </div>
-  <!-- input -->
-  <div style="border-top:1px solid var(--line);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:white">
-    <div style="flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px">
-      <textarea id="chat-input" placeholder="Mensagem…" rows="1"
-        style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.4;max-height:80px"
-        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}"></textarea>
+
+  <!-- conversa direta -->
+  <div id="chat-conv-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+    <div style="padding:8px 12px;background:var(--soft);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <button onclick="voltarChatContatos()" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--blue);padding:0;font-weight:700;font-family:'DM Sans',sans-serif">← Voltar</button>
+      <div style="flex:1;font-size:13px;font-weight:800;color:var(--navy)" id="chat-conv-title">—</div>
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--green)" title="Online"></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:4px">
-      <button onclick="sendChatMsg()" title="Enviar" style="background:var(--blue);color:white;border:none;border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">➤</button>
-      <label title="Enviar arquivo/imagem" style="background:var(--soft);border:1px solid var(--line);border-radius:10px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px">📎<input type="file" accept="image/*,.pdf,.doc,.docx" style="display:none" onchange="sendChatFile(this)"></label>
+    <div id="chat-messages" style="flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px;background:#F8FAFF">
+      <div style="text-align:center;font-size:11px;color:var(--muted);padding:8px" id="chat-conv-start"></div>
+    </div>
+    <div style="border-top:1px solid var(--line);padding:8px 10px;display:flex;gap:7px;align-items:flex-end;flex-shrink:0;background:white">
+      <div style="flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:7px 11px">
+        <textarea id="chat-input" placeholder="Mensagem…" rows="1"
+          style="width:100%;border:0;outline:0;background:transparent;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.4;max-height:80px"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}"></textarea>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <button onclick="sendChatMsg()" style="background:var(--blue);color:white;border:none;border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">➤</button>
+        <label style="background:var(--soft);border:1px solid var(--line);border-radius:10px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px">📎<input type="file" accept="image/*,.pdf,.doc,.docx" style="display:none" onchange="sendChatFile(this)"></label>
+      </div>
     </div>
   </div>
 </div>
@@ -1630,7 +1704,12 @@ function searchExame(q) {
 
 // ════════════ CHAT INTERNO ════════════
 let chatOpen = false;
-let chatMsgs = [];
+let chatDest = null; // CRM do destinatário atual
+let allChatMsgs = {}; // { 'crm1-crm2': [...msgs] }
+
+function chatKey(crmA, crmB) {
+  return [crmA, crmB].sort().join('-');
+}
 
 function toggleChat() {
   chatOpen = !chatOpen;
@@ -1638,101 +1717,140 @@ function toggleChat() {
   const btn = document.getElementById('chat-btn');
   win.style.display = chatOpen ? 'flex' : 'none';
   if (chatOpen) {
-    document.getElementById('chat-date').textContent = new Date().toLocaleDateString('pt-BR');
-    renderOnlineList();
-    document.getElementById('chat-input').focus();
+    renderChatContatos();
     document.getElementById('chat-badge').style.display = 'none';
   }
 }
 
-function renderOnlineList() {
-  const list = document.getElementById('chat-online-list');
-  // Simula presença: mostra o médico logado como "online"
-  const online = [MED_NAMES[medCRM]||medCRM];
-  list.innerHTML = '<span style="font-size:11px;color:var(--muted);font-weight:700">Online:</span>' +
-    online.map(n => `<span style="background:#E8F7EF;color:var(--green);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>${n.split('(')[0].trim()}</span>`).join('');
+function renderChatContatos() {
+  document.getElementById('chat-select-panel').style.display = 'block';
+  document.getElementById('chat-conv-panel').style.display = 'none';
+  const outros = Object.entries(MED_NAMES).filter(([crm]) => crm !== medCRM);
+  const el = document.getElementById('chat-contacts-list');
+  el.innerHTML = outros.map(([crm, nome]) => {
+    const key = chatKey(medCRM, crm);
+    const msgs = (allChatMsgs[key]||[]);
+    const last = msgs[msgs.length-1];
+    const naoLidas = msgs.filter(m=>m.de!==medCRM&&!m.lida).length;
+    const nomeShort = nome.split('(')[0].trim();
+    return `<div onclick="abrirConversa('${crm}')"
+      style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;margin-bottom:4px;transition:.12s"
+      onmouseover="this.style.background='var(--soft)'" onmouseout="this.style.background='transparent'">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#EAF2FF,#B5D4F4);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">👨‍⚕️</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:800;color:var(--navy)">${nomeShort}</div>
+        <div style="font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${last?last.texto.slice(0,40)+'…':'Nenhuma mensagem ainda'}</div>
+      </div>
+      ${naoLidas?`<div style="background:var(--blue);color:white;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center">${naoLidas}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function abrirConversa(crm) {
+  chatDest = crm;
+  const nomeShort = (MED_NAMES[crm]||crm).split('(')[0].trim();
+  document.getElementById('chat-select-panel').style.display = 'none';
+  const conv = document.getElementById('chat-conv-panel');
+  conv.style.display = 'flex';
+  document.getElementById('chat-conv-title').textContent = nomeShort;
+  document.getElementById('chat-dest-label').textContent = 'Com '+nomeShort;
+  // Marcar como lidas
+  const key = chatKey(medCRM, crm);
+  (allChatMsgs[key]||[]).forEach(m=>{ if(m.de!==medCRM) m.lida=true; });
+  saveChatLocal();
+  renderChatMsgs();
+  document.getElementById('chat-input').focus();
+}
+
+function voltarChatContatos() {
+  chatDest = null;
+  document.getElementById('chat-conv-panel').style.display = 'none';
+  document.getElementById('chat-select-panel').style.display = 'block';
+  document.getElementById('chat-dest-label').textContent = 'Selecione um colega';
+  renderChatContatos();
 }
 
 function sendChatMsg() {
+  if (!chatDest) return;
   const inp = document.getElementById('chat-input');
   const txt = inp.value.trim();
   if (!txt) return;
-  const msg = {
-    tipo: 'texto', texto: txt,
-    autor: (MED_NAMES[medCRM]||medCRM).split('(')[0].trim(),
-    ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}),
-    proprio: true,
-  };
-  chatMsgs.push(msg);
-  inp.value = ''; inp.style.height = 'auto';
+  const key = chatKey(medCRM, chatDest);
+  if (!allChatMsgs[key]) allChatMsgs[key] = [];
+  allChatMsgs[key].push({
+    tipo:'texto', texto:txt, de:medCRM,
+    ts:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    lida:false,
+  });
+  inp.value=''; inp.style.height='auto';
   renderChatMsgs();
   saveChatLocal();
 }
 
 function sendChatFile(input) {
-  const file = input.files[0]; if (!file) return;
+  if (!chatDest) return;
+  const file = input.files[0]; if(!file) return;
   const isImg = file.type.startsWith('image/');
   const reader = new FileReader();
   reader.onload = e => {
-    const msg = {
-      tipo: isImg ? 'imagem' : 'arquivo',
-      texto: isImg ? e.target.result : null,
-      nomeArquivo: file.name,
-      autor: (MED_NAMES[medCRM]||medCRM).split('(')[0].trim(),
-      ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}),
-      proprio: true,
-    };
-    chatMsgs.push(msg);
-    renderChatMsgs();
-    saveChatLocal();
+    const key = chatKey(medCRM, chatDest);
+    if (!allChatMsgs[key]) allChatMsgs[key]=[];
+    allChatMsgs[key].push({
+      tipo:isImg?'imagem':'arquivo',
+      texto:isImg?e.target.result:null,
+      nomeArquivo:file.name, de:medCRM,
+      ts:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+      lida:false,
+    });
+    renderChatMsgs(); saveChatLocal();
   };
-  if (isImg) reader.readAsDataURL(file);
-  else { reader.readAsText(file); }
-  input.value = '';
+  if(isImg) reader.readAsDataURL(file); else reader.readAsText(file);
+  input.value='';
 }
 
 function renderChatMsgs() {
+  if (!chatDest) return;
+  const key = chatKey(medCRM, chatDest);
+  const msgs = allChatMsgs[key]||[];
   const box = document.getElementById('chat-messages');
-  const hoje = new Date().toLocaleDateString('pt-BR');
-  const header = `<div style="text-align:center;font-size:11.5px;color:var(--muted);padding:8px">Início do chat — ${hoje}</div>`;
-  box.innerHTML = header + chatMsgs.map(m => {
-    const side = m.proprio ? 'flex-end' : 'flex-start';
-    const bg   = m.proprio ? 'linear-gradient(135deg,var(--blue),#1455C0)' : 'var(--soft)';
-    const clr  = m.proprio ? 'white' : 'var(--ink)';
-    let content = '';
-    if (m.tipo === 'imagem') {
-      content = `<img src="${m.texto}" style="max-width:180px;border-radius:8px;display:block">`;
-    } else if (m.tipo === 'arquivo') {
-      content = `<div style="display:flex;align-items:center;gap:6px;font-size:12px">📎 ${m.nomeArquivo}</div>`;
-    } else {
-      content = `<div style="font-size:13px;line-height:1.5">${m.texto}</div>`;
-    }
-    return `<div style="display:flex;justify-content:${side}">
-      <div style="max-width:80%;background:${bg};color:${clr};border-radius:12px;padding:8px 12px">
-        ${!m.proprio?`<div style="font-size:10px;font-weight:800;opacity:.7;margin-bottom:3px">${m.autor}</div>`:''}
-        ${content}
-        <div style="font-size:9px;opacity:.6;text-align:right;margin-top:4px">${m.ts}</div>
-      </div>
+  const startEl = document.getElementById('chat-conv-start');
+  if(startEl) startEl.textContent = 'Início da conversa — '+new Date().toLocaleDateString('pt-BR');
+  const resto = box.querySelectorAll('.chat-msg-item');
+  resto.forEach(e=>e.remove());
+  msgs.forEach(m=>{
+    const proprio = m.de===medCRM;
+    const div = document.createElement('div');
+    div.className='chat-msg-item';
+    div.style.cssText=`display:flex;justify-content:${proprio?'flex-end':'flex-start'}`;
+    let content='';
+    if(m.tipo==='imagem') content=`<img src="${m.texto}" style="max-width:180px;border-radius:8px;display:block">`;
+    else if(m.tipo==='arquivo') content=`<div style="display:flex;align-items:center;gap:6px;font-size:12px">📎 ${m.nomeArquivo}</div>`;
+    else content=`<div style="font-size:13px;line-height:1.5">${m.texto}</div>`;
+    const bg = proprio?'linear-gradient(135deg,var(--blue),#1455C0)':'white';
+    const clr= proprio?'white':'var(--ink)';
+    const bord= proprio?'':'border:1px solid var(--line);';
+    div.innerHTML=`<div style="max-width:80%;background:${bg};color:${clr};${bord}border-radius:12px;padding:8px 12px;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      ${content}
+      <div style="font-size:9px;opacity:.6;text-align:right;margin-top:4px">${m.ts}${m.lida&&proprio?' ✓✓':''}</div>
     </div>`;
-  }).join('');
+    box.appendChild(div);
+  });
   box.scrollTop = box.scrollHeight;
 }
 
 function saveChatLocal() {
-  localStorage.setItem('capikids_chat_'+medCRM, JSON.stringify(chatMsgs.slice(-100)));
+  localStorage.setItem('capikids_chat_'+medCRM, JSON.stringify(allChatMsgs));
 }
 
 function loadChatLocal() {
   const raw = localStorage.getItem('capikids_chat_'+medCRM);
-  if (raw) { try { chatMsgs = JSON.parse(raw); } catch{} }
+  if(raw) { try{ allChatMsgs=JSON.parse(raw); }catch{} }
 }
 
-// Ativar botão de chat e carregar mensagens após login médico
 function activateChat() {
-  const btn = document.getElementById('chat-btn');
-  if (btn) { btn.style.display = 'flex'; }
+  const btn=document.getElementById('chat-btn');
+  if(btn) btn.style.display='flex';
   loadChatLocal();
-  if (chatMsgs.length) renderChatMsgs();
 }
 </script>
 
@@ -2024,21 +2142,155 @@ function logout(role) {
 }
 
 // ═══════════════════════════ SUB-ABAS ═══════════════════════════
+const MED_SUBS = ['atend','tele','pacs',0,1,2,3];
+
 function showMedSub(n) {
-  const numericos = [0,1,2,3];
-  numericos.forEach(i => {
-    document.getElementById('msub-panel-'+i).style.display = i===n ? 'block' : 'none';
-    document.getElementById('msub'+i).classList.toggle('active', i===n);
-    document.getElementById('msub'+i).classList.remove('done');
+  MED_SUBS.forEach(i => {
+    const panel = document.getElementById('msub-panel-'+i);
+    const btn   = document.getElementById('msub'+(i==='atend'?'-atend':i==='tele'?'-tele':i==='pacs'?'-pacs':i));
+    if (panel) panel.style.display = (i===n) ? 'block' : 'none';
+    if (btn)   btn.classList.toggle('active', i===n);
   });
-  // Aba retorno
-  document.getElementById('msub-panel-ret').style.display = n==='ret' ? 'block' : 'none';
-  document.getElementById('msub-ret').classList.toggle('active', n==='ret');
   currentMedSub = n;
   if (n===1) renderHistorico();
   if (n===2) renderMedCal();
   if (n===3) renderArquivosMed();
-  if (n==='ret') renderRetornoPacientes();
+  if (n==='pacs') renderMeusPacientes('');
+}
+
+let currentAtendSub = 0;
+function showAtendSub(n) {
+  [0,'ret'].forEach(i => {
+    const panel = document.getElementById('msub-panel-'+(i===0?'0':'ret'));
+    const btn   = document.getElementById('atend-sub'+(i===0?'0':'1'));
+    if (panel) panel.style.display = (i===n || (n===1&&i==='ret') || (n==='ret'&&i==='ret')) ? 'block' : 'none';
+    if (btn)   btn.classList.toggle('active', (n===0&&i===0)||(n===1&&i==='ret')||(n==='ret'&&i==='ret'));
+  });
+  currentAtendSub = n;
+}
+
+// ═══════════════════════════ MEUS PACIENTES ═══════════════════════════
+function renderMeusPacientes(filtro) {
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  // Agrupar por nome, filtrar pelo médico logado
+  const mapa = {};
+  arr.filter(c => !c.medCRM || c.medCRM === medCRM).forEach(c => {
+    if (!c.nome) return;
+    if (!mapa[c.nome] || new Date(c.timestamp) > new Date(mapa[c.nome].ultima.timestamp)) {
+      if (!mapa[c.nome]) mapa[c.nome] = { consultas: [], ultima: null };
+      mapa[c.nome].ultima = c;
+    }
+    mapa[c.nome].consultas = (mapa[c.nome].consultas||[]);
+    mapa[c.nome].consultas.push(c);
+  });
+  const pacientes = Object.entries(mapa)
+    .filter(([nome]) => !filtro || nome.toLowerCase().includes(filtro.toLowerCase()))
+    .sort(([a],[b]) => a.localeCompare(b));
+
+  const el = document.getElementById('pacs-lista');
+  if (!el) return;
+  if (!pacientes.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:24px 0;text-align:center">Nenhum paciente encontrado.</div>';
+    return;
+  }
+  el.innerHTML = pacientes.map(([nome, dados]) => {
+    const ult = dados.ultima;
+    const nconsultas = (dados.consultas||[]).length;
+    const cids = tryParse(ult.cids,[]).map(x=>x.cod+' '+x.desc).join(', ')||'—';
+    const idade = ult.idade||'—';
+    const sexo  = ult.sexo||'';
+    const alerg = ult.alergias&&ult.alergias.toUpperCase()!=='NAIDA'&&ult.alergias.trim();
+    return `<div style="border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;background:white;display:flex;align-items:center;gap:14px;flex-wrap:wrap;cursor:pointer;transition:.12s" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'" onclick="abrirPacDet('${nome.replace(/'/g,"\\'")}')">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#EAF2FF,#B5D4F4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${sexo==='Feminino'?'👧':sexo==='Masculino'?'👦':'👤'}</div>
+      <div style="flex:1;min-width:140px">
+        <div style="font-size:15px;font-weight:900;color:var(--navy)">${nome}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">${idade}${sexo?' · '+sexo:''} ${alerg?'· <span style="color:var(--red);font-weight:700">⚠️ Alergia</span>':''}</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);min-width:140px">
+        <div style="color:var(--navy);font-weight:700">Última: ${fmtDate(ult.dt_consulta||ult.timestamp)}</div>
+        <div style="margin-top:3px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${cids}</div>
+      </div>
+      <div style="background:var(--soft);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap">${nconsultas} consulta${nconsultas!==1?'s':''}</div>
+      <div style="font-size:12px;color:var(--blue);font-weight:700">Ver detalhes →</div>
+    </div>`;
+  }).join('');
+}
+
+function abrirPacDet(nome) {
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  const hist = arr.filter(c=>c.nome===nome).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  if (!hist.length) return;
+  const ult = hist[0];
+  const cids = tryParse(ult.cids,[]).map(x=>x.cod+' '+x.desc).join(', ')||'—';
+  const rxs  = tryParse(ult.prescricao,[]);
+
+  document.getElementById('modal-pac-det-title').textContent = nome;
+  document.getElementById('modal-pac-det-body').innerHTML = `
+    <!-- Cabeçalho do paciente -->
+    <div style="background:linear-gradient(135deg,#0B1F3A,#143B68);color:white;border-radius:14px;padding:16px 20px;margin-bottom:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px">${ult.sexo==='Feminino'?'👧':ult.sexo==='Masculino'?'👦':'👤'}</div>
+      <div style="flex:1">
+        <div style="font-size:17px;font-weight:900">${nome}</div>
+        <div style="font-size:12px;opacity:.75;margin-top:3px">${ult.idade||'—'} · ${ult.sexo||'—'} · ${ult.convenio||'—'}</div>
+      </div>
+      <div style="font-size:12px;opacity:.75">Responsável: <b style="color:white">${ult.responsavel||'—'}</b></div>
+      ${ult.alergias&&ult.alergias.toUpperCase()!=='NAIDA'?`<div style="background:rgba(199,54,47,.35);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700">⚠️ ${ult.alergias}</div>`:''}
+    </div>
+
+    <!-- Ações rápidas -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <button onclick="iniciarConsultaPac('${nome.replace(/'/g,"\\'")}');document.getElementById('modal-pac-det').classList.remove('open')"
+        style="background:linear-gradient(135deg,var(--blue),#1455C0);color:white;border:none;border-radius:10px;padding:9px 16px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+        📋 Nova Consulta
+      </button>
+      <button onclick="iniciarRetornoPac('${nome.replace(/'/g,"\\'")}');document.getElementById('modal-pac-det').classList.remove('open')"
+        style="background:linear-gradient(135deg,#0D9488,#178A4A);color:white;border:none;border-radius:10px;padding:9px 16px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+        🔄 Registrar Retorno
+      </button>
+    </div>
+
+    <!-- Última consulta -->
+    <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Última consulta — ${fmtDate(ult.dt_consulta||ult.timestamp)}</div>
+    <div class="meta-3" style="margin-bottom:12px">
+      <div class="field"><label>Diagnóstico</label><input type="text" readonly value="${cids}"></div>
+      <div class="field"><label>Peso</label><input type="text" readonly value="${ult.peso?ult.peso+' kg':'—'}"></div>
+      <div class="field"><label>Altura</label><input type="text" readonly value="${ult.altura?ult.altura+' cm':'—'}"></div>
+    </div>
+    ${rxs.length?`<div class="field" style="margin-bottom:12px"><label>Prescrição</label><textarea readonly style="min-height:52px">${rxs.map(r=>r.nome+' '+r.dose+' '+r.via+' '+r.freq+' / '+r.dur).join('\n')}</textarea></div>`:''}
+    ${ult.orientacoes?`<div class="field" style="margin-bottom:12px"><label>Orientações</label><textarea readonly style="min-height:52px">${ult.orientacoes}</textarea></div>`:''}
+    ${ult.retorno?`<div style="background:#E8F7EF;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:12px;border:1px solid #A9E0BE">📅 <b>Retorno:</b> ${fmtDate(ult.retorno)} — ${ult.retorno_cond||''}</div>`:''}
+
+    <!-- Histórico de consultas -->
+    <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Todas as consultas (${hist.length})</div>
+    ${hist.map((c,i)=>{
+      const cd = tryParse(c.cids,[]).map(x=>x.cod+' '+x.desc).join(', ')||'—';
+      return `<div style="border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:7px;background:white;font-size:12.5px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+          <div>
+            <span style="font-weight:800;color:var(--navy)">${fmtDate(c.dt_consulta||c.timestamp)}</span>
+            <span style="color:var(--muted);margin-left:8px">${c.peso?c.peso+' kg':'—'} · ${c.altura?c.altura+' cm':'—'}</span>
+          </div>
+          <span class="chip chip-amber" style="font-size:10px;padding:3px 8px">${c.tipo_registro==='retorno'?'Retorno':'Consulta'}</span>
+        </div>
+        <div style="color:var(--muted);margin-top:4px;font-size:11.5px">${cd}</div>
+      </div>`;
+    }).join('')}
+
+    <div class="actions" style="margin-top:12px">
+      <button class="secondary" onclick="document.getElementById('modal-pac-det').classList.remove('open')">Fechar</button>
+    </div>`;
+  document.getElementById('modal-pac-det').classList.add('open');
+}
+
+function iniciarConsultaPac(nome) {
+  preencherPacienteExistente(nome);
+  showMedSub('atend');
+  showAtendSub(0);
+}
+function iniciarRetornoPac(nome) {
+  showMedSub('atend');
+  showAtendSub(1);
+  setTimeout(()=>selecionarRetorno(nome), 100);
 }
 
 // ═══════════════════════════ RETORNO / PUERICULTURA ═══════════════════════════
@@ -3473,11 +3725,14 @@ function addIAMsg(texto, proprio, isLoading) {
          <div style="font-size:9.5px;color:var(--muted);margin-top:5px;text-align:right">${ts}</div>`;
     box.insertAdjacentHTML('beforeend', `
       <div id="${id}" style="display:flex;align-items:flex-end;gap:8px">
-        <div style="width:32px;height:32px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🦫</div>
+        <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#0D9488">
+          <img src="${document.querySelector('#capi-window img')?.src||''}" style="width:32px;height:32px;object-fit:cover;object-position:center top" onerror="this.style.display='none';this.parentNode.innerHTML='🦫'">
+        </div>
         <div style="background:white;border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:10px 14px;max-width:78%;box-shadow:0 1px 4px rgba(0,0,0,.06)">
           ${conteudo}
         </div>
       </div>`);
+
   }
   box.scrollTop = box.scrollHeight;
   return id;
@@ -3489,57 +3744,57 @@ async function sendIAMsg(textoFixo) {
   if (!texto) return;
   if (inp) { inp.value = ''; inp.style.height = 'auto'; }
 
-  // Esconder sugestões após primeira mensagem
   const sugs = document.getElementById('ia-suggestions');
   if (sugs) sugs.style.display = 'none';
 
-  // Mostrar mensagem do usuário
   addIAMsg(texto, true);
-
-  // Adicionar ao histórico
   iaMsgs.push({ role: 'user', content: texto });
-
-  // Mostrar indicador de digitação
   const loadId = addIAMsg('', false, true);
 
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1000,
-        system: `Você é a Capi, a simpática atendente virtual da CapiKids — uma plataforma de atendimento pediátrico virtual (CapiClinic). Seu avatar é uma capivara pediatra com jaleco branco e headphone de atendente. Seu tom é acolhedor, alegre, profissional e levemente lúdico, combinando com o tema infantil.
+        system: `Você é a Capi, a simpática atendente virtual da CapiKids — plataforma de atendimento pediátrico virtual (CapiClinic). Seu avatar é uma capivara pediatra com jaleco e headphone de atendente. Seu tom é acolhedor, alegre, profissional e levemente lúdico.
 
 Você pode ajudar com:
-- Informações sobre a plataforma CapiKids e o CapiClinic
-- Agendamento de consultas (o paciente deve acessar a Área do Paciente para agendar)
-- Médicos disponíveis: Dr. Gabriel Cruvinel Macor (CRM-SP 239138, Pediatria Geral e Administrador) e Dr. Juliano César Alves Reis (CRM-SP 239598, Pediatria Geral)
-- Funcionamento da Área do Médico e Área do Paciente
-- Informações sobre puericultura, vacinação, crescimento infantil (de forma educativa e sem substituir a consulta médica)
-- Encaminhar o usuário para o formulário de contato se precisar falar com a equipe humana
+- Informações sobre a plataforma CapiKids / CapiClinic
+- Agendamento de consultas (orientar a acessar a Área do Paciente)
+- Médicos: Dr. Gabriel Cruvinel Macor (CRM-SP 239138, Pediatria Geral / Administrador) e Dr. Juliano César Alves Reis (CRM-SP 239598, Pediatria Geral)
+- Funcionamento da Área do Médico e do Paciente
+- Informações educativas sobre puericultura, vacinação e crescimento infantil (sem substituir consulta médica)
+- Como se associar à CapiKids (médicos interessados)
 
-Importante: Você NÃO dá diagnósticos nem prescrições médicas. Para questões médicas específicas, sempre encaminhe ao médico. Responda de forma concisa (2-4 parágrafos no máximo). Use emojis com moderação para manter o tom amigável.`,
+Importante: Não dê diagnósticos nem prescrições. Para questões médicas específicas, encaminhe ao médico. Seja conciso (máx. 3 parágrafos). Use emojis com moderação.`,
         messages: iaMsgs,
-      })
+      }),
     });
 
+    if (!resp.ok) {
+      const errData = await resp.json().catch(()=>({}));
+      throw new Error(errData?.error?.message || 'HTTP '+resp.status);
+    }
+
     const data = await resp.json();
-    const respTexto = data.content?.[0]?.text || 'Desculpe, não consegui processar sua mensagem. Tente novamente!';
+    const respTexto = data.content?.[0]?.text || 'Não consegui processar. Tente novamente!';
 
-    // Remover loading e mostrar resposta
     document.getElementById(loadId)?.remove();
-    addIAMsg(respTexto.replace(/\n/g, '<br>'), false);
+    addIAMsg(respTexto.replace(/\n/g,'<br>'), false);
 
-    // Adicionar resposta ao histórico
     iaMsgs.push({ role: 'assistant', content: respTexto });
-
-    // Manter histórico em até 20 mensagens
     if (iaMsgs.length > 20) iaMsgs = iaMsgs.slice(-20);
 
   } catch(e) {
+    console.error('Capi IA error:', e);
     document.getElementById(loadId)?.remove();
-    addIAMsg('Ops! 😅 Estou com dificuldades técnicas no momento. Por favor, use o formulário ao lado ou tente novamente em instantes.', false);
+    addIAMsg('Hmm, parece que tive um problema técnico 😕. Pode tentar novamente? Se o problema persistir, use o formulário de contato ao lado.', false);
   }
 }
 
