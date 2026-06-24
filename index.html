@@ -1647,10 +1647,9 @@ button.export{background:var(--teal);color:white}
         <div id="capy-pendencias-lista" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
 
-      <!-- Mensagem quando sem dados -->
-      <div id="capy-sem-dados" style="display:none;text-align:center;padding:32px 20px;color:var(--muted)">
-        <div style="font-size:48px;margin-bottom:12px">🦫</div>
-        <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px">Nenhuma consulta registrada ainda</div>
+      <!-- Mensagem quando sem dados — aparece abaixo do avatar -->
+      <div id="capy-sem-dados" style="display:none;text-align:center;margin-top:16px;padding:20px;background:var(--soft);border-radius:14px;color:var(--muted)">
+        <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px">Nenhuma consulta registrada ainda</div>
         <div style="font-size:13px">Após a primeira consulta, a Capi refletirá a saúde de <b id="capy-nome-pac"></b> aqui.</div>
       </div>
     </div>
@@ -2782,24 +2781,55 @@ function showPacSub(n) {
 // ═══════════════════════════ CAPIVARA VIRTUAL ═══════════════════════════
 function renderCapivara() {
   const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
-  const term = pacName.toLowerCase().replace(/[A-Z]/g,'').trim();
-  const mine = arr.filter(c=>c.nome&&c.nome.toLowerCase().includes(term))
-                  .sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  // Busca flexível: qualquer parte do nome do login bate com o nome do paciente
+  const term = pacName.toLowerCase().trim();
+  // Tenta match direto, depois por palavras individuais
+  let mine = arr.filter(c => c.nome && c.nome.toLowerCase().includes(term));
+  if (!mine.length) {
+    // Tenta com palavras do login (ex: "gabrielcm" → "gabriel")
+    const palavras = term.replace(/[^a-záéíóúãõâêîôûç]/gi,' ').split(/\s+/).filter(p=>p.length>=3);
+    mine = arr.filter(c => c.nome && palavras.some(p => c.nome.toLowerCase().includes(p)));
+  }
+  mine.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
 
-  const semDados = document.getElementById('capy-sem-dados');
-  const indWrap  = document.getElementById('capy-indicadores');
-  const pendWrap = document.getElementById('capy-pendencias-wrap');
-  const pendLista= document.getElementById('capy-pendencias-lista');
-  const nomePacEl= document.getElementById('capy-nome-pac');
+  const semDados  = document.getElementById('capy-sem-dados');
+  const indWrap   = document.getElementById('capy-indicadores');
+  const pendWrap  = document.getElementById('capy-pendencias-wrap');
+  const pendLista = document.getElementById('capy-pendencias-lista');
+  const nomePacEl = document.getElementById('capy-nome-pac');
+  const avatarWrap= document.getElementById('capy-avatar-wrap');
+  const pontWrap  = document.getElementById('capy-pontuacao-wrap');
 
   if (nomePacEl) nomePacEl.textContent = pacName;
 
+  // Sempre mostrar o avatar — estado muda conforme dados
+  if (avatarWrap) avatarWrap.style.display = 'inline-block';
+  if (pontWrap)   pontWrap.style.display   = 'inline-block';
+  if (indWrap)    indWrap.style.display    = 'flex';
+
   if (!mine.length) {
+    // Sem consultas: mostrar capivara animada com mensagem amigável
     if (semDados) semDados.style.display = 'block';
-    ['capy-avatar-wrap','capy-pontuacao-wrap','capy-indicadores','capy-pendencias-wrap']
-      .forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+    if (indWrap)  indWrap.innerHTML = '';
+    if (pendWrap) pendWrap.style.display = 'none';
+
+    // Estado neutro: capivara animada sem filtro
+    const aura   = document.getElementById('capy-aura');
+    const gifEl  = document.getElementById('capy-gif');
+    const chip   = document.getElementById('capy-status-chip');
+    const frase  = document.getElementById('capy-frase');
+    const scoreEl= document.getElementById('capy-score');
+    const barEl  = document.getElementById('capy-score-bar');
+
+    if (aura)    { aura.style.borderColor='#A3C0F7'; aura.style.animation='capyPulse 3s ease-in-out infinite'; aura.style.boxShadow='0 0 24px rgba(31,111,235,.2)'; }
+    if (gifEl)   gifEl.style.filter = 'none';
+    if (chip)    { chip.className='chip chip-blue'; chip.textContent='🦫 Aguardando dados'; }
+    if (frase)   frase.textContent = '"Olá! Sou a Capi de '+pacName+'! Assim que tiver uma consulta registrada, vou mostrar como estou de saúde! 🌟"';
+    if (scoreEl) scoreEl.textContent = '—';
+    if (barEl)   barEl.style.width = '0%';
     return;
   }
+
   if (semDados) semDados.style.display = 'none';
 
   const ult = mine[0];
