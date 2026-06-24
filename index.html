@@ -1703,6 +1703,7 @@ button.export{background:var(--teal);color:white}
         <div id="pac-arq-extra"></div>
       </div>
     </div>
+  </div>
 
   <!-- ─── PSUB 4: CAPIVARA VIRTUAL ─── -->
   <div id="psub-panel-4" style="display:none">
@@ -3080,21 +3081,17 @@ function showPacSub(n) {
   currentPacSub = n;
   if (n===1) initGrowthChartPac();
   if (n===4) {
-    renderCapivara(); // async
-    setTimeout(()=>{ window.scrollTo({top:0,behavior:'smooth'}); },80);
+    renderCapivara();
+    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),80);
   }
-  // Ocultar card de perfil na aba Capivara (dá mais espaço visual)
   const profileCard = document.getElementById('pac-profile-card');
   if (profileCard) profileCard.style.display = n===4 ? 'none' : 'flex';
 }
 
 // ═══════════════════════════ CAPIVARA VIRTUAL ═══════════════════════════
 async function renderCapivara() {
-  // Garantir que o painel está visível
   const painel = document.getElementById('psub-panel-4');
   if (painel) painel.style.display = 'block';
-
-  // Loading visual enquanto busca dados
   const chipLoad = document.getElementById('capy-status-chip');
   if (chipLoad) { chipLoad.className='chip chip-blue'; chipLoad.textContent='⏳ Carregando…'; }
 
