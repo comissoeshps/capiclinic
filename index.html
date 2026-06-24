@@ -189,6 +189,7 @@ button.export{background:var(--teal);color:white}
 .slot-free{background:#E8F7EF;color:var(--green);border-color:#A9E0BE}
 .slot-free:hover{background:#d0efde}
 .slot-busy{background:var(--soft);color:var(--muted);border-color:var(--line);cursor:default}
+@keyframes spin{to{transform:rotate(360deg)}}
 /* ── CAPIVARA VIRTUAL ── */
 @keyframes capyPulse{0%,100%{box-shadow:0 0 24px rgba(23,138,74,.3);border-color:#178A4A}50%{box-shadow:0 0 44px rgba(23,138,74,.6);border-color:#7EFFA0}}
 @keyframes capyPulseWarn{0%,100%{box-shadow:0 0 24px rgba(199,138,20,.3);border-color:#C78A14}50%{box-shadow:0 0 44px rgba(199,138,20,.6);border-color:#FFD980}}
@@ -772,27 +773,9 @@ button.export{background:var(--teal);color:white}
       <div class="panel">
         <div class="panel-head"><div><h2>🪪 Identificação do Paciente</h2></div><span class="chip chip-blue">S — Subjetivo</span></div>
 
-        <!-- ID do paciente -->
-        <div style="background:linear-gradient(135deg,#EAF2FF,#F4F7FC);border:1.5px solid #A3C0F7;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-          <div style="flex:1;min-width:180px">
-            <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:4px">🔑 ID do Paciente</div>
-            <div id="pac-id-display" style="font-size:22px;font-weight:900;color:var(--navy);font-family:'DM Mono',monospace;letter-spacing:.08em">—</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px">Este é o login de acesso à Área da Família</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <button onclick="gerarOuBuscarID()" style="background:var(--blue);color:white;border:none;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
-              🔍 Buscar / Gerar ID
-            </button>
-            <button onclick="copiarID()" id="btn-copiar-id" style="display:none;background:var(--soft);color:var(--navy);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
-              📋 Copiar ID
-            </button>
-          </div>
-          <div id="pac-id-aviso" style="width:100%;display:none;font-size:12px;border-radius:8px;padding:8px 12px;font-weight:700"></div>
-        </div>
-
         <div class="meta">
-          <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Nome da criança" oninput="updatePatCard()"></div>
-          <div class="field"><label>Data de nascimento *</label><input id="f-dnasc" type="date" onchange="calcIdade()"></div>
+          <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Nome da criança" oninput="updatePatCard();triggerAutoID()"></div>
+          <div class="field"><label>Data de nascimento *</label><input id="f-dnasc" type="date" onchange="calcIdade();triggerAutoID()"></div>
           <div class="field"><label>Idade calculada</label><input id="f-idade" type="text" readonly placeholder="—"></div>
           <div class="field"><label>Sexo</label><select id="f-sexo" onchange="updatePatCard()"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
         </div>
@@ -809,8 +792,51 @@ button.export{background:var(--teal);color:white}
           <div class="field"><label>Médico responsável</label><input id="f-med" type="text" placeholder="Nome do médico"></div>
           <div class="field"><label>Convênio / Plano</label><input id="f-conv" type="text" placeholder="Unimed, SUS, Particular…"></div>
         </div>
+
+        <!-- ID gerado automaticamente -->
+        <div id="pac-id-bloco" style="margin-top:16px;border-radius:14px;overflow:hidden;border:1.5px solid var(--line);display:none">
+          <!-- Estado: gerando -->
+          <div id="pac-id-gerando" style="padding:14px 18px;background:var(--soft);display:flex;align-items:center;gap:10px">
+            <div style="width:28px;height:28px;border-radius:50%;border:3px solid var(--blue);border-top-color:transparent;animation:spin .8s linear infinite;flex-shrink:0"></div>
+            <div style="font-size:13px;color:var(--muted)">Verificando cadastro…</div>
+          </div>
+          <!-- Estado: paciente existente -->
+          <div id="pac-id-existente" style="display:none;background:#E8F7EF;padding:14px 18px;display:none;align-items:center;gap:14px;flex-wrap:wrap">
+            <div style="width:36px;height:36px;border-radius:50%;background:#178A4A;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✅</div>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:900;color:#178A4A;margin-bottom:2px">Paciente já cadastrado — dados carregados</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:10px;color:#2a6645">ID:</span>
+                <span id="pac-id-display" style="font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:var(--navy);letter-spacing:.1em">—</span>
+              </div>
+            </div>
+            <button onclick="copiarID()" style="background:white;border:1px solid #A9E0BE;color:#178A4A;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copiar ID</button>
+          </div>
+          <!-- Estado: novo paciente -->
+          <div id="pac-id-novo" style="display:none;background:#EAF2FF;padding:14px 18px;align-items:center;gap:14px;flex-wrap:wrap">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🆕</div>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:900;color:var(--blue);margin-bottom:2px">Novo paciente — ID gerado</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:10px;color:var(--muted)">ID:</span>
+                <span id="pac-id-display-novo" style="font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:var(--navy);letter-spacing:.1em">—</span>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">Senha inicial: <b id="pac-senha-display">—</b> · Entregar ao responsável após a consulta</div>
+            </div>
+            <button onclick="copiarID()" style="background:white;border:1px solid #A3C0F7;color:var(--blue);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copiar ID</button>
+          </div>
+        </div>
       </div>
-      <div class="actions"><button class="primary" onclick="goStep(1)">Próximo: Anamnese →</button></div>
+
+      <div class="actions">
+        <button class="primary" id="btn-proximo-step1" onclick="avancarParaAnamnese()" disabled
+          style="opacity:.4;cursor:not-allowed" title="Preencha nome e data de nascimento para gerar o ID">
+          Próximo: Anamnese →
+        </button>
+        <div id="btn-step1-hint" style="font-size:12px;color:var(--muted);align-self:center;display:none">
+          ⏳ Aguardando geração do ID…
+        </div>
+      </div>
     </div>
 
     <!-- STEP 1: ANAMNESE -->
@@ -3796,48 +3822,95 @@ async function buscarPacienteCadastrado(nome, dnasc) {
   return null;
 }
 
-// Botão "Buscar / Gerar ID"
-async function gerarOuBuscarID() {
+// ═══════════════════════════ ID DO PACIENTE — Geração automática ═══════════════════════════
+
+let _autoIdTimer = null;
+
+function triggerAutoID() {
   const nome  = fv('f-nome').trim();
   const dnasc = fv('f-dnasc').trim();
-  const aviso = document.getElementById('pac-id-aviso');
-  const display = document.getElementById('pac-id-display');
-  const btnCopiar = document.getElementById('btn-copiar-id');
+  const bloco   = document.getElementById('pac-id-bloco');
+  const btnNext = document.getElementById('btn-proximo-step1');
+  const hint    = document.getElementById('btn-step1-hint');
 
-  if (!nome) {
-    aviso.textContent = '⚠️ Preencha o nome do paciente antes de gerar o ID.';
-    aviso.style.background = '#FFF5DF'; aviso.style.color = '#C78A14';
-    aviso.style.display = 'block'; return;
-  }
-
-  // Verificar se já existe
-  const existente = buscarPacienteCadastrado(nome, dnasc);
-  if (existente) {
-    display.textContent = existente.id;
-    aviso.innerHTML = `✅ Paciente já cadastrado. ID: <b>${existente.id}</b> — dados carregados automaticamente.`;
-    aviso.style.background = '#E8F7EF'; aviso.style.color = '#178A4A';
-    aviso.style.display = 'block';
-    btnCopiar.style.display = 'block';
-    // Guardar ID na sessão atual
-    window._pacIdAtual = existente.id;
-    atualizarIDFinal();
-    toast('Paciente já cadastrado — ID: ' + existente.id, 'ok');
+  if (nome.length < 3 || !dnasc) {
+    if (bloco)   bloco.style.display = 'none';
+    if (btnNext) { btnNext.disabled = true; btnNext.style.opacity = '.4'; btnNext.style.cursor = 'not-allowed'; }
+    if (hint)    hint.style.display = 'none';
+    window._pacIdAtual = null;
     return;
   }
 
-  // Gerar novo ID único
-  const pacs = JSON.parse(localStorage.getItem('capikids_pacientes')||'{}');
-  let novoId;
-  do { novoId = gerarNovoID(); } while (pacs[novoId]);
+  if (bloco) bloco.style.display = 'block';
+  showIdEstado('gerando');
+  if (btnNext) { btnNext.disabled = true; btnNext.style.opacity = '.4'; }
+  if (hint)    hint.style.display = 'flex';
 
-  display.textContent = novoId;
-  aviso.innerHTML = `🆕 Novo paciente! ID gerado: <b>${novoId}</b>. Será cadastrado ao finalizar a consulta.`;
-  aviso.style.background = '#EAF2FF'; aviso.style.color = '#1F6FEB';
-  aviso.style.display = 'block';
-  btnCopiar.style.display = 'block';
-  window._pacIdAtual = novoId;
+  clearTimeout(_autoIdTimer);
+  _autoIdTimer = setTimeout(() => autoGerarID(nome, dnasc), 800);
+}
+
+async function autoGerarID(nome, dnasc) {
+  const existente = await buscarPacienteCadastrado(nome, dnasc);
+
+  if (existente) {
+    window._pacIdAtual = existente.id;
+    const display = document.getElementById('pac-id-display');
+    if (display) display.textContent = existente.id;
+    showIdEstado('existente');
+    preencherDadosExistente(existente);
+    toast('Paciente encontrado — ID: ' + existente.id, 'ok');
+  } else {
+    const pacs = await DB.get('pacientes') || {};
+    let novoId;
+    do { novoId = gerarNovoID(); } while (pacs[novoId]);
+    window._pacIdAtual = novoId;
+    const senha = senhaInicial(novoId, dnasc);
+    const dn = document.getElementById('pac-id-display-novo');
+    const ds = document.getElementById('pac-senha-display');
+    if (dn) dn.textContent = novoId;
+    if (ds) ds.textContent = senha;
+    showIdEstado('novo');
+  }
+
+  const btnNext = document.getElementById('btn-proximo-step1');
+  const hint    = document.getElementById('btn-step1-hint');
+  if (btnNext) { btnNext.disabled = false; btnNext.style.opacity = '1'; btnNext.style.cursor = 'pointer'; }
+  if (hint)    hint.style.display = 'none';
   atualizarIDFinal();
 }
+
+function showIdEstado(estado) {
+  ['gerando','existente','novo'].forEach(e => {
+    const el = document.getElementById('pac-id-' + e);
+    if (!el) return;
+    el.style.display = e === estado ? 'flex' : 'none';
+  });
+}
+
+function preencherDadosExistente(p) {
+  const campos = {
+    'f-sexo': p.sexo, 'f-resp': p.responsavel,
+    'f-par': p.parentesco, 'f-conv': p.convenio,
+    'f-tel-resp': p.tel_resp, 'f-email-resp': p.email_resp,
+  };
+  Object.entries(campos).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el && val) el.value = val;
+  });
+  updatePatCard();
+}
+
+function avancarParaAnamnese() {
+  if (!window._pacIdAtual) {
+    toast('Aguarde a geração do ID antes de continuar.', 'err');
+    return;
+  }
+  goStep(1);
+}
+
+// Mantida por compatibilidade (não é mais o gatilho principal)
+function gerarOuBuscarID() { triggerAutoID(); }
 
 function atualizarIDFinal() {
   const el = document.getElementById('pac-id-final');
@@ -3975,15 +4048,14 @@ function novaConsulta(){
   document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10);
   document.getElementById('f-crm').value=medCRM;
   document.getElementById('growth-sexo').value='M';
-  // Resetar bloco de ID
-  const display=document.getElementById('pac-id-display');
-  const aviso=document.getElementById('pac-id-aviso');
-  const btnCop=document.getElementById('btn-copiar-id');
-  const idFinal=document.getElementById('pac-id-final');
-  if(display) display.textContent='—';
-  if(aviso)   aviso.style.display='none';
-  if(btnCop)  btnCop.style.display='none';
-  if(idFinal) idFinal.textContent='—';
+  // Resetar bloco de ID automático
+  window._pacIdAtual = null;
+  const bloco = document.getElementById('pac-id-bloco');
+  if (bloco) bloco.style.display = 'none';
+  const btnNext = document.getElementById('btn-proximo-step1');
+  if (btnNext) { btnNext.disabled = true; btnNext.style.opacity = '.4'; btnNext.style.cursor = 'not-allowed'; }
+  const idFinal = document.getElementById('pac-id-final');
+  if (idFinal) idFinal.textContent = '—';
   updatePatCard();updateVitals();
   goStep(0);toast('Nova consulta iniciada.','info');
 }
