@@ -771,6 +771,25 @@ button.export{background:var(--teal);color:white}
     <div id="step0">
       <div class="panel">
         <div class="panel-head"><div><h2>🪪 Identificação do Paciente</h2></div><span class="chip chip-blue">S — Subjetivo</span></div>
+
+        <!-- ID do paciente -->
+        <div style="background:linear-gradient(135deg,#EAF2FF,#F4F7FC);border:1.5px solid #A3C0F7;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div style="flex:1;min-width:180px">
+            <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:4px">🔑 ID do Paciente</div>
+            <div id="pac-id-display" style="font-size:22px;font-weight:900;color:var(--navy);font-family:'DM Mono',monospace;letter-spacing:.08em">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">Este é o login de acesso à Área da Família</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button onclick="gerarOuBuscarID()" style="background:var(--blue);color:white;border:none;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+              🔍 Buscar / Gerar ID
+            </button>
+            <button onclick="copiarID()" id="btn-copiar-id" style="display:none;background:var(--soft);color:var(--navy);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
+              📋 Copiar ID
+            </button>
+          </div>
+          <div id="pac-id-aviso" style="width:100%;display:none;font-size:12px;border-radius:8px;padding:8px 12px;font-weight:700"></div>
+        </div>
+
         <div class="meta">
           <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Nome da criança" oninput="updatePatCard()"></div>
           <div class="field"><label>Data de nascimento *</label><input id="f-dnasc" type="date" onchange="calcIdade()"></div>
@@ -781,6 +800,10 @@ button.export{background:var(--teal);color:white}
           <div class="field"><label>Responsável</label><input id="f-resp" type="text" placeholder="Nome do responsável"></div>
           <div class="field"><label>Parentesco</label><select id="f-par"><option value="">—</option><option>Mãe</option><option>Pai</option><option>Avó / Avô</option><option>Outro</option></select></div>
           <div class="field"><label>Data da consulta</label><input id="f-dtcons" type="date"></div>
+        </div>
+        <div class="meta-2" style="margin-top:10px">
+          <div class="field"><label>Telefone do responsável</label><input id="f-tel-resp" type="text" placeholder="(00) 90000-0000" maxlength="16" oninput="maskPhone(this)"></div>
+          <div class="field"><label>E-mail do responsável</label><input id="f-email-resp" type="email" placeholder="email@exemplo.com"></div>
         </div>
         <div class="meta-2" style="margin-top:10px">
           <div class="field"><label>Médico responsável</label><input id="f-med" type="text" placeholder="Nome do médico"></div>
@@ -1143,7 +1166,16 @@ button.export{background:var(--teal);color:white}
       <!-- EMISSÃO DE PDF -->
       <div class="panel" style="background:linear-gradient(135deg,#F4F7FC,#EEF2F8)">
         <div class="panel-head"><div><h2>📋 Emitir Documentos em PDF</h2></div><span class="chip chip-green">Impressão / Download</span></div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Selecione os documentos a gerar e clique em emitir. O modelo definitivo será configurado quando o template for fornecido.</p>
+
+        <!-- Lembrete do ID do paciente -->
+        <div id="pac-id-lembrete" style="background:#EAF2FF;border:1.5px solid #A3C0F7;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px">🔑</span>
+          <div>
+            <div style="font-size:12px;font-weight:900;color:var(--blue)">ID do Paciente (login da Área da Família)</div>
+            <div id="pac-id-final" style="font-size:20px;font-weight:900;color:var(--navy);font-family:'DM Mono',monospace;letter-spacing:.1em">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Senha inicial: primeiros 4 dígitos do ID + ano de nascimento</div>
+          </div>
+        </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button onclick="gerarPDF('prontuario')" style="background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;border:0;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px">
             📋 Prontuário completo
@@ -2077,6 +2109,65 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+// ══════════════════════════════════════════════════════
+// CAMADA DE DADOS — Firebase (primário) + localStorage (cache/fallback)
+// ══════════════════════════════════════════════════════
+const DB = {
+  // Salva no Firebase E no localStorage
+  async set(path, data) {
+    try {
+      await db.ref(path).set(data);
+    } catch(e) { console.warn('Firebase write error:', e); }
+    // Cache local sempre
+    try { localStorage.setItem('fb_' + path.replace(/\//g,'_'), JSON.stringify(data)); } catch(e) {}
+  },
+
+  // Push (lista) no Firebase E atualiza cache
+  async push(path, data) {
+    let key = null;
+    try {
+      const ref = await db.ref(path).push(data);
+      key = ref.key;
+    } catch(e) { console.warn('Firebase push error:', e); }
+    // Cache local: append ao array existente
+    try {
+      const arr = JSON.parse(localStorage.getItem('fb_' + path.replace(/\//g,'_')) || '[]');
+      arr.push({ _key: key, ...data });
+      localStorage.setItem('fb_' + path.replace(/\//g,'_'), JSON.stringify(arr));
+    } catch(e) {}
+    return key;
+  },
+
+  // Lê do Firebase; se falhar, usa cache local
+  async get(path) {
+    try {
+      const snap = await db.ref(path).once('value');
+      const val = snap.val();
+      if (val !== null) {
+        try { localStorage.setItem('fb_' + path.replace(/\//g,'_'), JSON.stringify(val)); } catch(e) {}
+        return val;
+      }
+    } catch(e) { console.warn('Firebase read error:', e); }
+    // Fallback: cache local
+    try { return JSON.parse(localStorage.getItem('fb_' + path.replace(/\//g,'_')) || 'null'); } catch(e) { return null; }
+  },
+
+  // Escuta em tempo real
+  listen(path, cb) {
+    try {
+      db.ref(path).on('value', snap => { cb(snap.val()); });
+    } catch(e) {
+      // Fallback: retorna cache local uma vez
+      try { cb(JSON.parse(localStorage.getItem('fb_' + path.replace(/\//g,'_')) || 'null')); } catch(e2) { cb(null); }
+    }
+  },
+
+  // Para de escutar
+  off(path) {
+    try { db.ref(path).off(); } catch(e) {}
+  }
+};
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -2096,15 +2187,16 @@ const MED_NAMES = {
 };
 
 // Pacientes cadastrados: { usuario: { senha, nomeExibido } }
+// ── LOGIN DO PACIENTE: agora por ID gerado no cadastro ──
+// PAC_USERS mantido para compatibilidade com logins antigos
 const PAC_USERS = {
   'gabrielcm':  { senha: '123capikids', nome: 'Gabriel Cruvinel Macor' },
   'julianocar': { senha: '123capikids', nome: 'Juliano César Alves Reis' },
-  // Padrão genérico: qualquer usuário com senha capikids123 também entra
 };
 const PAC_PASS_PADRAO = 'capikids123';
 
 // ══ ESTADO ══
-let loggedMed = false, medCRM = '', loggedPac = false, pacName = '';
+let loggedMed = false, medCRM = '', loggedPac = false, pacName = '', pacId = '';
 let currentStep = 0, currentMedSub = 0, currentPacSub = 0;
 let cidCount = 0, rxCount = 0;
 let growthChart = null, growthChartPac = null;
@@ -2326,21 +2418,38 @@ function _activateMedSession(u) {
   }
 }
 
-function doLoginPac() {
-  const u = document.getElementById('lpUser').value.trim();
-  const p = document.getElementById('lpPass').value;
+async function doLoginPac() {
+  const u   = document.getElementById('lpUser').value.trim().toUpperCase();
+  const p   = document.getElementById('lpPass').value.trim();
   const err = document.getElementById('loginPacErr');
-  const cadastrado = PAC_USERS[u];
-  const senhaValida = cadastrado ? cadastrado.senha === p : p === PAC_PASS_PADRAO;
-  if (u.length > 0 && senhaValida) {
-    loggedPac = true;
-    pacName = cadastrado ? cadastrado.nome : u;
+
+  // 1. Buscar por ID no Firebase
+  const pacFirebase = await DB.get('pacientes/' + u);
+  if (pacFirebase && pacFirebase.senha === p) {
+    loggedPac = true; pacName = pacFirebase.nome; pacId = u;
+    err.style.display = 'none';
+    document.getElementById('pac-logged-name').textContent = pacFirebase.nome;
+    showPage('pacientes', document.getElementById('tab-pac'));
+    loadPacData(); initGrowthChartPac();
+    toast('Bem-vindo, ' + pacFirebase.nome + '! 🦫', 'ok');
+    return;
+  }
+
+  // 2. Compatibilidade com logins legados
+  const uLeg = document.getElementById('lpUser').value.trim();
+  const legacy = PAC_USERS[uLeg];
+  const senhaLeg = legacy ? legacy.senha === p : p === PAC_PASS_PADRAO;
+  if (uLeg.length > 0 && senhaLeg) {
+    loggedPac = true; pacName = legacy ? legacy.nome : uLeg; pacId = '';
     err.style.display = 'none';
     document.getElementById('pac-logged-name').textContent = pacName;
     showPage('pacientes', document.getElementById('tab-pac'));
     loadPacData(); initGrowthChartPac();
     toast('Bem-vindo, ' + pacName + '!', 'ok');
-  } else { err.style.display = 'block'; }
+    return;
+  }
+
+  err.style.display = 'block';
 }
 
 function logout(role) {
@@ -3461,8 +3570,9 @@ const MED_PROFILES = {
   '239598': { nome: 'Dr. Juliano César Alves Reis', esp: 'Pediatria Geral', crm: 'CRM-SP 239598' },
 };
 
-function renderMedProfile(crm) {
+async function renderMedProfile(crm) {
   const p = MED_PROFILES[crm] || {};
+
   // Fixos (view)
   const setT = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=v||''; };
   setT('med-profile-name', p.nome);
@@ -3470,22 +3580,30 @@ function renderMedProfile(crm) {
   if (document.getElementById('med-profile-esp'))
     document.getElementById('med-profile-esp').innerHTML =
       `<span style="background:#E8F7EF;color:var(--green);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800">${p.esp||''}</span>`;
-  // Fixos (edit — somente leitura)
   setT('med-edit-name-label', p.nome);
   setT('med-edit-crm-label',  p.crm);
 
-  // Carregar dados salvos
-  const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+crm)||'{}');
+  // Carregar dados do Firebase (com fallback no localStorage)
+  let saved = await DB.get('medicos/' + crm);
+  if (!saved) {
+    // Tentar migrar dados existentes no localStorage para o Firebase
+    const local = JSON.parse(localStorage.getItem('capikids_med_profile_'+crm)||'{}');
+    if (Object.keys(local).length) {
+      saved = { crm, nome: p.nome, especialidade: p.esp, ...local };
+      await DB.set('medicos/' + crm, saved);
+    } else {
+      saved = {};
+    }
+  }
+
   const tel   = saved.tel   || '';
   const email = saved.email || '';
   const addr  = saved.addr  || '';
-  // Preencher campos de edição
+
   if (document.getElementById('med-tel'))   document.getElementById('med-tel').value   = tel;
   if (document.getElementById('med-email')) document.getElementById('med-email').value = email;
   if (document.getElementById('med-addr'))  document.getElementById('med-addr').value  = addr;
-  // Atualizar spans de visualização
   updateViewSpans(tel, email, addr);
-  // Foto
   if (saved.photo) applyPhoto(saved.photo);
 }
 
@@ -3508,43 +3626,61 @@ function toggleMedEdit(on) {
   document.getElementById('med-edit-mode').style.display = on ? 'block' : 'none';
 }
 
-function saveMedProfileAndClose() {
+async function saveMedProfileAndClose() {
   const tel   = (document.getElementById('med-tel')  ||{}).value||'';
   const email = (document.getElementById('med-email')||{}).value||'';
   const addr  = (document.getElementById('med-addr') ||{}).value||'';
-  const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
-  localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify({...saved, tel, email, addr}));
+
+  // Ler dados atuais do Firebase para não sobrescrever a foto
+  let atual = await DB.get('medicos/' + medCRM) || {};
+  const p = MED_PROFILES[medCRM] || {};
+
+  const atualizado = {
+    ...atual,
+    crm: medCRM,
+    nome: p.nome || atual.nome || '',
+    especialidade: p.esp || atual.especialidade || '',
+    tel, email, addr,
+    atualizadoEm: new Date().toISOString(),
+  };
+
+  await DB.set('medicos/' + medCRM, atualizado);
+  // Cache local
+  localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify(atualizado));
+
   updateViewSpans(tel, email, addr);
   toggleMedEdit(false);
-  toast('Perfil atualizado com sucesso! ✅', 'ok');
+  toast('Perfil atualizado e salvo na nuvem! ✅', 'ok');
 }
 
-// Mantida para compatibilidade com chamadas anteriores
+// Mantida para compatibilidade
 function saveMedProfile() { saveMedProfileAndClose(); }
 
 function applyPhoto(src) {
-  // modo view
   const emoji = document.getElementById('med-photo-emoji');
   const img   = document.getElementById('med-photo-img');
   if (emoji) emoji.style.display = 'none';
   if (img)   { img.src = src; img.style.display = 'block'; }
-  // modo edição
   const emojiE = document.getElementById('med-photo-emoji-edit');
   const imgE   = document.getElementById('med-photo-img-edit');
   if (emojiE) emojiE.style.display = 'none';
   if (imgE)   { imgE.src = src; imgE.style.display = 'block'; }
 }
 
-function loadMedPhoto(input) {
+async function loadMedPhoto(input) {
   const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = async e => {
     const src = e.target.result;
     applyPhoto(src);
-    const saved = JSON.parse(localStorage.getItem('capikids_med_profile_'+medCRM)||'{}');
-    saved.photo = src;
-    localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify(saved));
-    toast('Foto atualizada! ✅', 'ok');
+
+    // Salvar foto no Firebase
+    let atual = await DB.get('medicos/' + medCRM) || {};
+    const p = MED_PROFILES[medCRM] || {};
+    atual = { ...atual, crm: medCRM, nome: p.nome || '', photo: src, atualizadoEm: new Date().toISOString() };
+    await DB.set('medicos/' + medCRM, atual);
+    localStorage.setItem('capikids_med_profile_'+medCRM, JSON.stringify(atual));
+    toast('Foto salva na nuvem! ✅', 'ok');
   };
   reader.readAsDataURL(file);
 }
@@ -3617,6 +3753,103 @@ function updateGrav(){
   else if(v==='critico'){el.style.display='block';el.classList.add('grav-critico');el.innerHTML='🚨 <b>Quadro crítico</b> — UTI pediátrica / emergência imediata.';}
 }
 
+// ═══════════════════════════ ID DO PACIENTE ═══════════════════════════
+
+// Gera ID único: CPC + 6 dígitos aleatórios
+function gerarNovoID() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let id = 'CPC';
+  for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random()*chars.length)];
+  return id;
+}
+
+// Senha inicial: 4 primeiros chars do ID + ano de nascimento
+function senhaInicial(id, dnasc) {
+  const ano = dnasc ? new Date(dnasc).getFullYear() : new Date().getFullYear();
+  return id.slice(0,4) + ano;
+}
+
+// Normaliza nome para comparação (remove acentos, caixa baixa, espaços extras)
+function normNome(s) {
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+}
+
+// Busca paciente existente — Firebase primeiro, depois localStorage cache
+async function buscarPacienteCadastrado(nome, dnasc) {
+  // Tenta via Firebase
+  try {
+    const snap = await db.ref('pacientes').once('value');
+    const pacs = snap.val() || {};
+    for (const [id, p] of Object.entries(pacs)) {
+      if (normNome(p.nome) === normNome(nome) && (!dnasc || p.dnasc === dnasc))
+        return { id, ...p };
+      if (normNome(p.nome) === normNome(nome) && !dnasc)
+        return { id, ...p };
+    }
+  } catch(e) {}
+  // Fallback localStorage
+  const pacs = JSON.parse(localStorage.getItem('capikids_pacientes')||'{}');
+  for (const [id, p] of Object.entries(pacs)) {
+    if (normNome(p.nome) === normNome(nome) && (!dnasc || p.dnasc === dnasc))
+      return { id, ...p };
+  }
+  return null;
+}
+
+// Botão "Buscar / Gerar ID"
+async function gerarOuBuscarID() {
+  const nome  = fv('f-nome').trim();
+  const dnasc = fv('f-dnasc').trim();
+  const aviso = document.getElementById('pac-id-aviso');
+  const display = document.getElementById('pac-id-display');
+  const btnCopiar = document.getElementById('btn-copiar-id');
+
+  if (!nome) {
+    aviso.textContent = '⚠️ Preencha o nome do paciente antes de gerar o ID.';
+    aviso.style.background = '#FFF5DF'; aviso.style.color = '#C78A14';
+    aviso.style.display = 'block'; return;
+  }
+
+  // Verificar se já existe
+  const existente = buscarPacienteCadastrado(nome, dnasc);
+  if (existente) {
+    display.textContent = existente.id;
+    aviso.innerHTML = `✅ Paciente já cadastrado. ID: <b>${existente.id}</b> — dados carregados automaticamente.`;
+    aviso.style.background = '#E8F7EF'; aviso.style.color = '#178A4A';
+    aviso.style.display = 'block';
+    btnCopiar.style.display = 'block';
+    // Guardar ID na sessão atual
+    window._pacIdAtual = existente.id;
+    atualizarIDFinal();
+    toast('Paciente já cadastrado — ID: ' + existente.id, 'ok');
+    return;
+  }
+
+  // Gerar novo ID único
+  const pacs = JSON.parse(localStorage.getItem('capikids_pacientes')||'{}');
+  let novoId;
+  do { novoId = gerarNovoID(); } while (pacs[novoId]);
+
+  display.textContent = novoId;
+  aviso.innerHTML = `🆕 Novo paciente! ID gerado: <b>${novoId}</b>. Será cadastrado ao finalizar a consulta.`;
+  aviso.style.background = '#EAF2FF'; aviso.style.color = '#1F6FEB';
+  aviso.style.display = 'block';
+  btnCopiar.style.display = 'block';
+  window._pacIdAtual = novoId;
+  atualizarIDFinal();
+}
+
+function atualizarIDFinal() {
+  const el = document.getElementById('pac-id-final');
+  if (el) el.textContent = window._pacIdAtual || '—';
+}
+
+function copiarID() {
+  const id = window._pacIdAtual;
+  if (!id) return;
+  navigator.clipboard.writeText(id).then(()=>toast('ID '+id+' copiado!','ok')).catch(()=>{});
+}
+
 // ═══════════════════════════ COLETA E SAVE ═══════════════════════════
 function fv(id){return(document.getElementById(id)||{}).value||'';}
 
@@ -3632,10 +3865,12 @@ function coletarDados(){
   const alarms=[...document.querySelectorAll('.alarm:checked')].map(c=>c.value);
   const vac=(document.querySelector('input[name="vac"]:checked')||{}).value||'';
   return{
-    timestamp:new Date().toISOString(),medCRM,
-    nome:fv('f-nome'),dnasc:fv('f-dnasc'),idade:fv('f-idade'),sexo:fv('f-sexo'),
-    responsavel:fv('f-resp'),parentesco:fv('f-par'),dt_consulta:fv('f-dtcons'),
-    medico:fv('f-med'),convenio:fv('f-conv'),crm:fv('f-crm'),rqe:fv('f-rqe'),
+    timestamp:new Date().toISOString(), medCRM,
+    pacId: window._pacIdAtual||'',
+    nome:fv('f-nome'), dnasc:fv('f-dnasc'), idade:fv('f-idade'), sexo:fv('f-sexo'),
+    responsavel:fv('f-resp'), parentesco:fv('f-par'), dt_consulta:fv('f-dtcons'),
+    tel_resp:fv('f-tel-resp'), email_resp:fv('f-email-resp'),
+    medico:fv('f-med'), convenio:fv('f-conv'), crm:fv('f-crm'), rqe:fv('f-rqe'),
     qp:fv('f-qp'),hma:fv('f-hma'),antec_perinat:fv('f-peri'),dnpm:fv('f-dnpm'),
     doencas_prev:fv('f-dprev'),alergias:fv('f-alerg'),medicamentos:fv('f-meds'),
     vacinacao:vac,vac_obs:fv('f-vacobs'),aleitamento:fv('f-aleit'),alimentacao:fv('f-alim'),
@@ -3649,30 +3884,85 @@ function coletarDados(){
     prescricao:JSON.stringify(rxs),med_nfar:fv('f-nfar'),alarmes:JSON.stringify(alarms),
     orientacoes:fv('f-orient'),arquivo_desc:fv('f-arquivo'),retorno:fv('f-ret'),
     retorno_cond:fv('f-retcond'),encaminhamentos:fv('f-encam'),evolucao:fv('f-evol'),
+    finalizado: false, // será true ao salvar definitivamente
   };
 }
 
 async function salvarProntuario(){
-  const dados=coletarDados();
-  if(!dados.nome){toast('Informe o nome do paciente antes de salvar.','err');return;}
+  const dados = coletarDados();
+  if (!dados.nome) { toast('Informe o nome do paciente antes de salvar.','err'); return; }
+  if (!window._pacIdAtual) {
+    toast('⚠️ Gere o ID do paciente (Step 1) antes de finalizar.','err');
+    goStep(0); return;
+  }
+  dados.pacId = window._pacIdAtual;
+  dados.finalizado = true;
+  dados.timestamp_final = new Date().toISOString();
   document.getElementById('s-dot').className='dot saving';
   document.getElementById('s-text').textContent='Salvando…';
-  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
-  arr.push(dados);localStorage.setItem('capikids_consultas',JSON.stringify(arr));
-  if(SHEETS_URL&&SHEETS_URL!=='COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT'){
-    try{await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});}catch(e){}
+
+  // 1. Verificar/cadastrar paciente no Firebase
+  const pacPath = 'pacientes/' + dados.pacId;
+  let pacExistente = await DB.get(pacPath);
+  let senha = '';
+  if (!pacExistente) {
+    senha = senhaInicial(dados.pacId, dados.dnasc);
+    const novoPac = {
+      nome:dados.nome, dnasc:dados.dnasc, sexo:dados.sexo,
+      responsavel:dados.responsavel, parentesco:dados.parentesco,
+      tel_resp:dados.tel_resp, email_resp:dados.email_resp,
+      convenio:dados.convenio, senha, medCRM,
+      criadoEm:new Date().toISOString(),
+    };
+    await DB.set(pacPath, novoPac);
+    // cache local
+    const pl = JSON.parse(localStorage.getItem('capikids_pacientes')||'{}');
+    pl[dados.pacId] = novoPac;
+    localStorage.setItem('capikids_pacientes', JSON.stringify(pl));
+  } else {
+    senha = pacExistente.senha || senhaInicial(dados.pacId, dados.dnasc);
   }
+
+  // 2. Salvar consulta no Firebase + localStorage
+  await DB.push('consultas/' + dados.pacId, dados);
+  const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  arr.push(dados);
+  localStorage.setItem('capikids_consultas', JSON.stringify(arr));
+
+  // 3. Backup no Sheets
+  if (SHEETS_URL && SHEETS_URL !== 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT') {
+    try { await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)}); } catch(e){}
+  }
+
   setTimeout(()=>{
     document.getElementById('s-dot').className='dot saved';
     document.getElementById('s-text').textContent='Salvo em '+new Date().toLocaleTimeString('pt-BR');
-    toast('Consulta de '+dados.nome+' salva com sucesso! ✅','ok');
-    clearDraft(); // rascunho descartado após salvar com sucesso
-  },500);
+    clearDraft(); window._pacIdAtual = null;
+    const msgEl = document.createElement('div');
+    msgEl.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.2);padding:32px 36px;z-index:9999;text-align:center;max-width:380px;width:90vw';
+    msgEl.innerHTML=`
+      <div style="font-size:32px;margin-bottom:12px">✅</div>
+      <div style="font-size:17px;font-weight:900;color:var(--navy);margin-bottom:6px">Consulta finalizada!</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:20px">Dados salvos no Firebase e <b>não podem ser editados</b>.<br>Para correções, realize uma nova consulta.</div>
+      <div style="background:#EAF2FF;border-radius:12px;padding:14px 18px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:6px">🔑 Acesso da Família</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Login (ID):</div>
+        <div style="font-size:24px;font-weight:900;font-family:'DM Mono',monospace;color:var(--navy);letter-spacing:.1em">${dados.pacId}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;margin-bottom:3px">Senha inicial:</div>
+        <div style="font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:var(--navy)">${senha}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">Entregar ao responsável</div>
+      </div>
+      <button onclick="this.parentNode.remove();novaConsulta()" style="background:linear-gradient(135deg,var(--blue),#1455C0);color:white;border:none;border-radius:10px;padding:10px 24px;font-size:13px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%">
+        Nova Consulta
+      </button>`;
+    document.body.appendChild(msgEl);
+  }, 600);
 }
 
 function novaConsulta(){
   if(!confirm('Iniciar nova consulta? Dados não salvos serão perdidos.'))return;
   clearDraft();
+  window._pacIdAtual = null;
   document.querySelectorAll('#medicos input:not([readonly]),#medicos textarea,#medicos select').forEach(el=>el.value='');
   document.querySelectorAll('.alarm').forEach(c=>c.checked=false);
   document.querySelectorAll('input[name="vac"]').forEach(r=>r.checked=false);
@@ -3685,28 +3975,63 @@ function novaConsulta(){
   document.getElementById('f-dtcons').value=new Date().toISOString().slice(0,10);
   document.getElementById('f-crm').value=medCRM;
   document.getElementById('growth-sexo').value='M';
+  // Resetar bloco de ID
+  const display=document.getElementById('pac-id-display');
+  const aviso=document.getElementById('pac-id-aviso');
+  const btnCop=document.getElementById('btn-copiar-id');
+  const idFinal=document.getElementById('pac-id-final');
+  if(display) display.textContent='—';
+  if(aviso)   aviso.style.display='none';
+  if(btnCop)  btnCop.style.display='none';
+  if(idFinal) idFinal.textContent='—';
   updatePatCard();updateVitals();
   goStep(0);toast('Nova consulta iniciada.','info');
 }
 
 // ═══════════════════════════ HISTÓRICO ═══════════════════════════
-function renderHistorico(){
-  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]').slice().reverse();
+async function renderHistorico(){
   const el=document.getElementById('hist-list');
-  if(!arr.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">Nenhuma consulta registrada ainda.</div>';return;}
+  el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:16px 0;text-align:center">⏳ Carregando…</div>';
+
+  // Buscar todas as consultas do Firebase
+  let todas = [];
+  try {
+    const snap = await db.ref('consultas').once('value');
+    const val = snap.val() || {};
+    // val = { pacId: { pushKey: consulta, ... }, ... }
+    Object.values(val).forEach(pacConsultas => {
+      Object.values(pacConsultas).forEach(c => todas.push(c));
+    });
+  } catch(e) {
+    // Fallback localStorage
+    todas = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+  }
+
+  // Filtrar pelo médico logado
+  const arr = todas.filter(c => !c.medCRM || c.medCRM === medCRM)
+                   .sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+
+  if(!arr.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">Nenhuma consulta registrada ainda.</div>';
+    return;
+  }
   el.innerHTML=arr.map((c,i)=>{
     const cids=tryParse(c.cids,[]);
     const diag=cids.map(x=>x.cod+' '+x.desc).join(', ')||'—';
-    return `<div class="hist-item" onclick="openPront(${arr.length-1-i})">
+    const idTag = c.pacId ? `<span style="font-family:'DM Mono',monospace;font-size:10px;background:#EAF2FF;color:var(--blue);border-radius:4px;padding:1px 6px;margin-left:6px">${c.pacId}</span>` : '';
+    return `<div class="hist-item" onclick="openPront(${i},'fb')" data-idx="${i}">
       <div class="hist-date">${fmtDate(c.dt_consulta||c.timestamp)}</div>
-      <div class="hist-name">${c.nome||'—'} <span style="font-size:11px;font-weight:400;color:var(--muted)">${c.idade||''} · ${c.sexo||''}</span></div>
+      <div class="hist-name">${c.nome||'—'}${idTag} <span style="font-size:11px;font-weight:400;color:var(--muted)">${c.idade||''} · ${c.sexo||''}</span></div>
       <div class="hist-diag">${diag}</div>
     </div>`;
   }).join('');
+
+  // Guardar array em memória para openPront
+  window._historicoArr = arr;
 }
 
-function openPront(idx){
-  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+function openPront(idx, source){
+  const arr = window._historicoArr || JSON.parse(localStorage.getItem('capikids_consultas')||'[]').slice().reverse();
   const c=arr[idx];if(!c)return;
   const cids=tryParse(c.cids,[]);
   const rxs=tryParse(c.prescricao,[]);
@@ -3818,13 +4143,29 @@ function removeArquivo(i){
 }
 
 // ═══════════════════════════ DADOS PACIENTE ═══════════════════════════
-function loadPacData(){
-  const arr=JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
-  const term=pacName.toLowerCase().replace(/[A-Z]/g,'').trim();
-  const mine=arr.filter(c=>c.nome&&c.nome.toLowerCase().includes(term));
-  // Ordenar por data para pegar a mais recente
+async function loadPacData(){
+  let mine = [];
+
+  // 1. Se tem pacId (login novo), buscar diretamente no Firebase
+  if (pacId) {
+    const fbData = await DB.get('consultas/' + pacId);
+    if (fbData) {
+      mine = Object.values(fbData);
+    }
+  }
+
+  // 2. Fallback: busca por nome no localStorage (logins legados)
+  if (!mine.length) {
+    const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
+    const term = pacName.toLowerCase().trim();
+    mine = arr.filter(c => c.nome && (
+      c.nome.toLowerCase().includes(term) ||
+      (pacId && c.pacId === pacId)
+    ));
+  }
+
   mine.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
-  const last=mine[0];
+  const last = mine[0];
 
   // ── PREENCHER CABEÇALHO DO PACIENTE ──
   const setSpan = (id, val, fallback='—') => {
