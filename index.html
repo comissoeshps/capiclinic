@@ -736,7 +736,7 @@ button.export{background:var(--teal);color:white}
   <div id="msub-panel-0">
     <div style="background:rgba(23,138,74,.07);border:1px solid rgba(23,138,74,.2);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:800;color:var(--green)">🔍 Paciente com histórico?</span>
-      <input id="busca-paciente" type="text" placeholder="Nome ou ID do paciente…" style="flex:1;min-width:180px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white" oninput="buscaPaciente(this.value)">
+      <input id="busca-paciente" type="text" placeholder="Digite o nome para buscar…" style="flex:1;min-width:180px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white" oninput="buscaPaciente(this.value)">
       <button class="secondary" style="padding:8px 14px;font-size:12px;color:var(--green);border-color:rgba(23,138,74,.3)" onclick="novaConsulta()">+ Nova</button>
       <div id="busca-resultado" style="width:100%;display:none"></div>
     </div>
@@ -1394,27 +1394,96 @@ button.export{background:var(--teal);color:white}
 
   <!-- ─── SUB TELE-ATENDIMENTO ─── -->
   <div id="msub-panel-tele" style="display:none">
-    <div class="panel">
+
+    <!-- ── PAINEL PRINCIPAL ── -->
+    <div class="panel" style="margin-bottom:16px">
       <div class="panel-head">
         <div>
           <h2>📹 Tele-atendimento</h2>
-          <p class="sub">Plataforma de consultas online — em breve</p>
+          <p class="sub">Consultas online via Google Meet — crie ou entre em uma sala</p>
         </div>
-        <span class="chip chip-purple">Em configuração</span>
+        <span class="chip chip-green" id="tele-status-chip">Pronto</span>
       </div>
-      <div style="text-align:center;padding:48px 20px">
-        <div style="font-size:64px;margin-bottom:16px">📹</div>
-        <div style="font-size:18px;font-weight:900;color:var(--navy);margin-bottom:10px">Tele-atendimento CapiClinic</div>
-        <p style="font-size:13.5px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.7">
-          A plataforma de videoatendimento online será integrada aqui em breve. Consultas, discussões de casos e retornos à distância — tudo dentro do CapiClinic.
-        </p>
-        <div style="background:var(--soft);border:1.5px dashed var(--line);border-radius:14px;padding:20px;max-width:400px;margin:0 auto">
-          <div style="font-size:12.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plataforma a definir</div>
-          <div style="font-size:13px;color:var(--ink);line-height:1.6">A URL ou integração da ferramenta de vídeo será configurada pelo administrador. Possíveis opções: <b>Whereby, Google Meet, Jitsi Meet, Daily.co</b>.</div>
+
+      <!-- Grid: criar sala | entrar em sala | salas agendadas -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+
+        <!-- CRIAR NOVA SALA -->
+        <div style="background:linear-gradient(135deg,#EAF2FF,#F0F6FF);border:1.5px solid #C5DCFF;border-radius:16px;padding:20px">
+          <div style="font-size:13px;font-weight:900;color:var(--blue);margin-bottom:4px">🆕 Nova teleconsulta</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Gere um link do Google Meet e compartilhe com o responsável do paciente.</div>
+          <div class="field" style="margin-bottom:10px">
+            <label>Nome do paciente</label>
+            <input id="tele-nome-pac" type="text" placeholder="Ex: Maria Silva" oninput="teleAtualizarLink()">
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label>Data e hora agendada</label>
+            <input id="tele-datetime" type="datetime-local" oninput="teleAtualizarLink()">
+          </div>
+          <button onclick="teleCriarSala()"
+            style="width:100%;background:linear-gradient(135deg,#1F6FEB,#1455C0);color:white;border:none;border-radius:12px;padding:12px;font-weight:800;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
+            <img src="https://www.gstatic.com/meet/google_meet_horizontal_wordmark_2023_q3_darktheme_1x_icon_124_40_2373e9b3fc34b563b8e73008eb3b5c78.png" style="height:16px;filter:brightness(10)"> Criar sala no Google Meet
+          </button>
         </div>
-        <div style="margin-top:20px;font-size:12px;color:var(--muted)">Para configurar, informe a plataforma escolhida ao administrador da CapiKids.</div>
+
+        <!-- ENTRAR EM SALA EXISTENTE -->
+        <div style="background:linear-gradient(135deg,#E8F7EF,#F0FBF4);border:1.5px solid #A9E0BE;border-radius:16px;padding:20px">
+          <div style="font-size:13px;font-weight:900;color:var(--green);margin-bottom:4px">🔗 Entrar em sala existente</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Cole o link ou código de uma reunião já criada para entrar diretamente.</div>
+          <div class="field" style="margin-bottom:14px">
+            <label>Link ou código do Meet</label>
+            <input id="tele-link-externo" type="text" placeholder="meet.google.com/xxx-xxxx-xxx ou código">
+          </div>
+          <button onclick="teleEntrarSala()"
+            style="width:100%;background:linear-gradient(135deg,#178A4A,#0F6B38);color:white;border:none;border-radius:12px;padding:12px;font-weight:800;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
+            📹 Entrar na teleconsulta
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULTADO: link gerado -->
+      <div id="tele-link-gerado-wrap" style="display:none;background:rgba(23,138,74,.07);border:1.5px solid rgba(23,138,74,.25);border-radius:14px;padding:16px 20px;margin-bottom:16px">
+        <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--green);margin-bottom:8px">✅ Sala criada — compartilhe com o responsável</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <input id="tele-link-gerado" readonly type="text"
+            style="flex:1;min-width:200px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Mono',monospace;background:white;color:var(--navy)">
+          <button onclick="teleCopiarLink()"
+            style="background:white;border:1.5px solid rgba(23,138,74,.4);color:var(--green);border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
+            📋 Copiar link
+          </button>
+          <button onclick="teleAbrirSala()"
+            style="background:linear-gradient(135deg,#1F6FEB,#1455C0);color:white;border:none;border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
+            📹 Entrar agora
+          </button>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="teleEnviarWhatsApp()"
+            style="background:#25D366;color:white;border:none;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+            📱 Enviar por WhatsApp
+          </button>
+          <button onclick="teleEnviarEmail()"
+            style="background:#EA4335;color:white;border:none;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+            ✉️ Enviar por e-mail
+          </button>
+          <button onclick="teleRegistrarAgenda()"
+            style="background:var(--purple);color:white;border:none;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+            📅 Salvar na agenda
+          </button>
+        </div>
       </div>
     </div>
+
+    <!-- ── TELECONSULTAS SALVAS ── -->
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>📅 Teleconsultas agendadas</h2><p class="sub">Histórico e próximas sessões</p></div>
+        <button onclick="teleCarregarAgenda()" style="background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;color:var(--navy);cursor:pointer;font-family:'DM Sans',sans-serif">🔄 Atualizar</button>
+      </div>
+      <div id="tele-agenda-lista">
+        <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Nenhuma teleconsulta registrada ainda.</div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ─── SUB MEUS PACIENTES ─── -->
@@ -1976,6 +2045,176 @@ function chatKey(crmA, crmB) {
   return [crmA, crmB].sort().join('_');
 }
 
+function chatKey(crmA, crmB) {
+  return [crmA, crmB].sort().join('_');
+}
+
+// ═══════════════════════════ TELE-ATENDIMENTO ═══════════════════════════
+
+// Gera um código aleatório no formato do Google Meet (xxx-xxxx-xxx)
+function teleGerarCodigo() {
+  const chars = 'abcdefghijkmnpqrstuvwxyz';
+  const rand = n => Array.from({length:n}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  return `${rand(3)}-${rand(4)}-${rand(3)}`;
+}
+
+function teleAtualizarLink() {
+  // Apenas mantém o estado; o link é gerado ao clicar em criar
+}
+
+function teleCriarSala() {
+  const nomePac  = document.getElementById('tele-nome-pac').value.trim();
+  const dtRaw    = document.getElementById('tele-datetime').value;
+  if (!nomePac)  { toast('Informe o nome do paciente.', 'err'); return; }
+  if (!dtRaw)    { toast('Informe a data e hora da teleconsulta.', 'err'); return; }
+
+  const codigo  = teleGerarCodigo();
+  const linkMeet = `https://meet.google.com/${codigo}`;
+
+  // Salvar dados da sessão
+  window._teleSessao = { nomePac, dtRaw, codigo, link: linkMeet };
+
+  // Mostrar link gerado
+  document.getElementById('tele-link-gerado').value = linkMeet;
+  document.getElementById('tele-link-gerado-wrap').style.display = 'block';
+  document.getElementById('tele-status-chip').className = 'chip chip-green';
+  document.getElementById('tele-status-chip').textContent = '✅ Sala criada';
+
+  toast('Link criado! Compartilhe com o responsável do paciente.', 'ok');
+}
+
+function teleEntrarSala() {
+  let link = document.getElementById('tele-link-externo').value.trim();
+  if (!link) { toast('Cole o link ou código do Google Meet.', 'err'); return; }
+  // Aceitar código curto (xxx-xxxx-xxx) ou URL completa
+  if (!link.startsWith('http')) {
+    link = `https://meet.google.com/${link.replace(/^meet\.google\.com\//,'')}`;
+  }
+  window.open(link, '_blank');
+}
+
+function teleCopiarLink() {
+  const link = document.getElementById('tele-link-gerado').value;
+  navigator.clipboard.writeText(link).then(()=>toast('Link copiado!','ok')).catch(()=>{
+    document.getElementById('tele-link-gerado').select();
+    document.execCommand('copy');
+    toast('Link copiado!','ok');
+  });
+}
+
+function teleAbrirSala() {
+  const link = document.getElementById('tele-link-gerado').value;
+  if (link) window.open(link, '_blank');
+}
+
+function teleEnviarWhatsApp() {
+  const link  = document.getElementById('tele-link-gerado').value;
+  const s     = window._teleSessao || {};
+  const dt    = s.dtRaw ? new Date(s.dtRaw).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : '';
+  const medNome = (MED_NAMES[medCRM]||'Médico').split('(')[0].trim();
+  const msg   = encodeURIComponent(
+    `Olá! Sua teleconsulta com ${medNome} está agendada para ${dt}.\n\n🔗 Acesse pelo link: ${link}\n\nPedimos que entre alguns minutos antes do horário. CapiClinic 🦫`
+  );
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+}
+
+function teleEnviarEmail() {
+  const link  = document.getElementById('tele-link-gerado').value;
+  const s     = window._teleSessao || {};
+  const dt    = s.dtRaw ? new Date(s.dtRaw).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : '';
+  const medNome = (MED_NAMES[medCRM]||'Médico').split('(')[0].trim();
+  const assunto = encodeURIComponent(`Teleconsulta CapiClinic — ${dt}`);
+  const corpo   = encodeURIComponent(
+    `Olá,\n\nSua teleconsulta com ${medNome} está agendada para ${dt}.\n\nAcesse pelo link: ${link}\n\nPedimos que entre alguns minutos antes do horário.\n\nAtenciosamente,\nCapiClinic`
+  );
+  window.open(`mailto:?subject=${assunto}&body=${corpo}`, '_blank');
+}
+
+function teleRegistrarAgenda() {
+  const s = window._teleSessao;
+  if (!s) { toast('Crie uma sala primeiro.', 'err'); return; }
+
+  const medNome = (MED_NAMES[medCRM]||'Médico').split('(')[0].trim();
+  const registro = {
+    paciente:  s.nomePac,
+    medico:    medNome,
+    medCRM:    medCRM,
+    link:      s.link,
+    codigo:    s.codigo,
+    datetime:  s.dtRaw,
+    criado:    new Date().toISOString(),
+  };
+
+  // Salvar no Firebase
+  db.ref(`teleconsultas/${medCRM}`).push(registro)
+    .then(() => { toast('Teleconsulta salva na agenda!', 'ok'); teleCarregarAgenda(); })
+    .catch(() => {
+      // Fallback localStorage
+      const local = JSON.parse(localStorage.getItem('capikids_tele')||'[]');
+      local.push(registro);
+      localStorage.setItem('capikids_tele', JSON.stringify(local));
+      toast('Salvo localmente.', 'ok');
+      teleCarregarAgenda();
+    });
+}
+
+async function teleCarregarAgenda() {
+  const el = document.getElementById('tele-agenda-lista');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:16px">Carregando…</div>';
+
+  let sessoes = [];
+
+  // Firebase
+  try {
+    const snap = await db.ref(`teleconsultas/${medCRM}`).orderByChild('datetime').once('value');
+    if (snap.val()) sessoes = Object.entries(snap.val()).map(([k,v])=>({...v,_key:k}));
+  } catch(e) {}
+
+  // Fallback localStorage
+  if (!sessoes.length) {
+    const local = JSON.parse(localStorage.getItem('capikids_tele')||'[]');
+    sessoes = local.filter(s => s.medCRM === medCRM);
+  }
+
+  if (!sessoes.length) {
+    el.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Nenhuma teleconsulta registrada ainda.</div>';
+    return;
+  }
+
+  // Ordenar mais recentes primeiro
+  sessoes.sort((a,b) => new Date(b.datetime) - new Date(a.datetime));
+
+  const agora = new Date();
+  el.innerHTML = sessoes.map(s => {
+    const dt      = s.datetime ? new Date(s.datetime) : null;
+    const dtFmt   = dt ? dt.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : '—';
+    const futura  = dt && dt > agora;
+    const badge   = futura
+      ? `<span class="chip chip-green" style="font-size:10px;padding:2px 8px">🟢 Futura</span>`
+      : `<span class="chip chip-blue"  style="font-size:10px;padding:2px 8px">✔️ Realizada</span>`;
+    return `
+      <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">
+        <div style="width:44px;height:44px;border-radius:12px;background:#EAF2FF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📹</div>
+        <div style="flex:1;min-width:160px">
+          <div style="font-size:13.5px;font-weight:800;color:var(--navy)">${s.paciente||'—'}</div>
+          <div style="font-size:12px;color:var(--muted)">${dtFmt} ${badge}</div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px">${s.link||'—'}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button onclick="window.open('${s.link}','_blank')"
+            style="background:linear-gradient(135deg,#1F6FEB,#1455C0);color:white;border:none;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+            Entrar
+          </button>
+          <button onclick="navigator.clipboard.writeText('${s.link}').then(()=>toast('Copiado!','ok'))"
+            style="background:var(--soft);border:1px solid var(--line);color:var(--navy);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">
+            📋
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
 function toggleChat() {
   chatOpen = !chatOpen;
   const win = document.getElementById('chat-window');
@@ -2029,19 +2268,6 @@ function renderChatContatos() {
 function abrirConversa(crm) {
   chatDest = crm;
   const nomeShort = (MED_NAMES[crm]||crm).split('(')[0].trim();
-
-  // Marcar conversa como lida — sumir badge deste contato
-  const badgeContact = document.getElementById(`badge-${crm}`);
-  if (badgeContact) badgeContact.style.display = 'none';
-  // Se não há mais badges ativos, sumir badge global
-  const temPendente = Object.keys(MED_NAMES).filter(c=>c!==medCRM)
-    .some(c=>{ const b=document.getElementById(`badge-${c}`); return b&&b.style.display!=='none'; });
-  const badgeGlobal = document.getElementById('chat-badge');
-  if (badgeGlobal && !temPendente) badgeGlobal.style.display = 'none';
-  // Registrar timestamp de leitura no localStorage
-  const leituras = JSON.parse(localStorage.getItem('chat_leituras')||'{}');
-  leituras[chatKey(medCRM, crm)] = Date.now();
-  localStorage.setItem('chat_leituras', JSON.stringify(leituras));
 
   document.getElementById('chat-select-panel').style.display = 'none';
   const conv = document.getElementById('chat-conv-panel');
@@ -2122,7 +2348,6 @@ function sendChatMsg() {
     texto: txt,
     de: medCRM,
     ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
-    tsRaw: Date.now(),
   };
 
   db.ref(`chats/${key}`).push(msg)
@@ -2147,7 +2372,6 @@ function sendChatFile(input) {
       nomeArquivo: file.name,
       de: medCRM,
       ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
-      tsRaw: Date.now(),
     };
     db.ref(`chats/${key}`).push(msg)
       .catch(e => toast('Erro ao enviar arquivo: ' + e.message, 'err'));
@@ -2170,25 +2394,11 @@ function activateChat() {
     const key = chatKey(medCRM, crm);
     db.ref(`chats/${key}`).limitToLast(1).on('child_added', snap => {
       const m = snap.val();
-      if (!m || m.de === medCRM) return;
-      // Verificar se foi lida comparando timestamp da mensagem com timestamp de leitura
-      const leituras = JSON.parse(localStorage.getItem('chat_leituras')||'{}');
-      const leitaEm = leituras[key] || 0;
-      const msgTs = m.tsRaw || 0; // timestamp numérico da mensagem
-      // Se a conversa está aberta agora, não mostrar badge
-      if (chatOpen && chatDest === crm) {
-        // Atualizar leitura
-        leituras[key] = Date.now();
-        localStorage.setItem('chat_leituras', JSON.stringify(leituras));
-        return;
+      if (m && m.de !== medCRM && !chatOpen) {
+        const badge = document.getElementById('chat-badge');
+        if (badge) { badge.style.display = 'flex'; }
+        toast(`💬 Nova mensagem de ${(MED_NAMES[m.de]||m.de).split('(')[0].trim()}`, 'info');
       }
-      // Só mostrar badge se a mensagem é mais nova que a última leitura
-      if (msgTs <= leitaEm) return;
-      const badge = document.getElementById('chat-badge');
-      if (badge) badge.style.display = 'flex';
-      const badgeContact = document.getElementById(`badge-${crm}`);
-      if (badgeContact) badgeContact.style.display = 'flex';
-      if (!chatOpen) toast(`💬 Nova mensagem de ${(MED_NAMES[m.de]||m.de).split('(')[0].trim()}`, 'info');
     });
   });
 }
@@ -2594,6 +2804,13 @@ function showMedSub(n) {
   if (n===2)       renderMedCal();
   if (n===3)       renderArquivosMed();
   if (n==='pacs')  renderMeusPacientes('');
+  if (n==='tele')  {
+    // Pré-preencher data/hora com agora + 1h
+    const dt = new Date(); dt.setHours(dt.getHours()+1, 0, 0, 0);
+    const dtInput = document.getElementById('tele-datetime');
+    if (dtInput && !dtInput.value) dtInput.value = dt.toISOString().slice(0,16);
+    teleCarregarAgenda();
+  }
   if (n==='admin') { renderAdminPacientes(''); renderAdminMedicos(); }
 }
 
@@ -3950,51 +4167,17 @@ async function loadMedPhoto(input) {
 }
 
 // ═══════════════════════════ BUSCA PACIENTE ═══════════════════════════
-async function buscaPaciente(q) {
+function buscaPaciente(q) {
   const res = document.getElementById('busca-resultado');
   if (!q || q.length < 2) { res.style.display='none'; return; }
-
-  const qLow = q.toLowerCase().trim();
   const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
-
-  // 1. Por nome no histórico local
-  const porNome = [...new Set(
-    arr.filter(c => c.nome && c.nome.toLowerCase().includes(qLow)).map(c => c.nome)
-  )].slice(0, 6);
-
-  // 2. Por pacId no histórico local
-  const porId = [...new Set(
-    arr.filter(c => c.pacId && c.pacId.toLowerCase().includes(qLow)).map(c => c.nome)
-  )].filter(n => !porNome.includes(n)).slice(0, 3);
-
-  // 3. Por nome ou ID no Firebase
-  let porFirebase = [];
-  try {
-    const snap = await db.ref('pacientes').once('value');
-    const pacs = snap.val() || {};
-    for (const [id, p] of Object.entries(pacs)) {
-      const matchId   = id.toLowerCase().includes(qLow);
-      const matchNome = p.nome && p.nome.toLowerCase().includes(qLow);
-      if ((matchId || matchNome) && !porNome.includes(p.nome) && !porId.includes(p.nome)) {
-        porFirebase.push({ nome: p.nome || id, id, matchId });
-      }
-    }
-    porFirebase = porFirebase.slice(0, 4);
-  } catch(e) {}
-
-  const todos = [
-    ...porNome.map(n => ({ label: n, nome: n })),
-    ...porId.map(n  => ({ label: n, nome: n })),
-    ...porFirebase.map(p => ({ label: p.matchId ? `${p.nome} · ${p.id}` : p.nome, nome: p.nome })),
-  ];
-
-  if (!todos.length) { res.style.display='none'; return; }
-
-  res.style.display = 'block';
-  res.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">' +
-    todos.map(p => `<button onclick="preencherPacienteExistente('${p.nome.replace(/'/g,"\\'")}');document.getElementById('busca-resultado').style.display='none';document.getElementById('busca-paciente').value=''"
+  const nomes = [...new Set(arr.filter(c=>c.nome&&c.nome.toLowerCase().includes(q.toLowerCase())).map(c=>c.nome))].slice(0,6);
+  if (!nomes.length) { res.style.display='none'; return; }
+  res.style.display='block';
+  res.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">'+
+    nomes.map(n=>`<button onclick="preencherPacienteExistente('${n.replace(/'/g,"\\'")}');document.getElementById('busca-resultado').style.display='none';document.getElementById('busca-paciente').value=''"
       style="background:#E8F7EF;border:1px solid rgba(23,138,74,.3);color:var(--green);border-radius:20px;padding:5px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
-      👦 ${p.label}</button>`).join('') + '</div>';
+      👦 ${n}</button>`).join('')+'</div>';
 }
 
 function preencherPacienteExistente(nome) {
