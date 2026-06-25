@@ -736,7 +736,7 @@ button.export{background:var(--teal);color:white}
   <div id="msub-panel-0">
     <div style="background:rgba(23,138,74,.07);border:1px solid rgba(23,138,74,.2);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:800;color:var(--green)">🔍 Paciente com histórico?</span>
-      <input id="busca-paciente" type="text" placeholder="Digite o nome para buscar…" style="flex:1;min-width:180px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white" oninput="buscaPaciente(this.value)">
+      <input id="busca-paciente" type="text" placeholder="Nome ou ID do paciente…" style="flex:1;min-width:180px;border:1px solid rgba(23,138,74,.3);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white" oninput="buscaPaciente(this.value)">
       <button class="secondary" style="padding:8px 14px;font-size:12px;color:var(--green);border-color:rgba(23,138,74,.3)" onclick="novaConsulta()">+ Nova</button>
       <div id="busca-resultado" style="width:100%;display:none"></div>
     </div>
@@ -2030,6 +2030,19 @@ function abrirConversa(crm) {
   chatDest = crm;
   const nomeShort = (MED_NAMES[crm]||crm).split('(')[0].trim();
 
+  // Marcar conversa como lida — sumir badge deste contato
+  const badgeContact = document.getElementById(`badge-${crm}`);
+  if (badgeContact) badgeContact.style.display = 'none';
+  // Se não há mais badges ativos, sumir badge global
+  const temPendente = Object.keys(MED_NAMES).filter(c=>c!==medCRM)
+    .some(c=>{ const b=document.getElementById(`badge-${c}`); return b&&b.style.display!=='none'; });
+  const badgeGlobal = document.getElementById('chat-badge');
+  if (badgeGlobal && !temPendente) badgeGlobal.style.display = 'none';
+  // Registrar timestamp de leitura no localStorage
+  const leituras = JSON.parse(localStorage.getItem('chat_leituras')||'{}');
+  leituras[chatKey(medCRM, crm)] = Date.now();
+  localStorage.setItem('chat_leituras', JSON.stringify(leituras));
+
   document.getElementById('chat-select-panel').style.display = 'none';
   const conv = document.getElementById('chat-conv-panel');
   conv.style.display = 'flex';
@@ -2109,6 +2122,7 @@ function sendChatMsg() {
     texto: txt,
     de: medCRM,
     ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
+    tsRaw: Date.now(),
   };
 
   db.ref(`chats/${key}`).push(msg)
@@ -2133,6 +2147,7 @@ function sendChatFile(input) {
       nomeArquivo: file.name,
       de: medCRM,
       ts: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
+      tsRaw: Date.now(),
     };
     db.ref(`chats/${key}`).push(msg)
       .catch(e => toast('Erro ao enviar arquivo: ' + e.message, 'err'));
@@ -2155,11 +2170,25 @@ function activateChat() {
     const key = chatKey(medCRM, crm);
     db.ref(`chats/${key}`).limitToLast(1).on('child_added', snap => {
       const m = snap.val();
-      if (m && m.de !== medCRM && !chatOpen) {
-        const badge = document.getElementById('chat-badge');
-        if (badge) { badge.style.display = 'flex'; }
-        toast(`💬 Nova mensagem de ${(MED_NAMES[m.de]||m.de).split('(')[0].trim()}`, 'info');
+      if (!m || m.de === medCRM) return;
+      // Verificar se foi lida comparando timestamp da mensagem com timestamp de leitura
+      const leituras = JSON.parse(localStorage.getItem('chat_leituras')||'{}');
+      const leitaEm = leituras[key] || 0;
+      const msgTs = m.tsRaw || 0; // timestamp numérico da mensagem
+      // Se a conversa está aberta agora, não mostrar badge
+      if (chatOpen && chatDest === crm) {
+        // Atualizar leitura
+        leituras[key] = Date.now();
+        localStorage.setItem('chat_leituras', JSON.stringify(leituras));
+        return;
       }
+      // Só mostrar badge se a mensagem é mais nova que a última leitura
+      if (msgTs <= leitaEm) return;
+      const badge = document.getElementById('chat-badge');
+      if (badge) badge.style.display = 'flex';
+      const badgeContact = document.getElementById(`badge-${crm}`);
+      if (badgeContact) badgeContact.style.display = 'flex';
+      if (!chatOpen) toast(`💬 Nova mensagem de ${(MED_NAMES[m.de]||m.de).split('(')[0].trim()}`, 'info');
     });
   });
 }
@@ -3921,17 +3950,51 @@ async function loadMedPhoto(input) {
 }
 
 // ═══════════════════════════ BUSCA PACIENTE ═══════════════════════════
-function buscaPaciente(q) {
+async function buscaPaciente(q) {
   const res = document.getElementById('busca-resultado');
   if (!q || q.length < 2) { res.style.display='none'; return; }
+
+  const qLow = q.toLowerCase().trim();
   const arr = JSON.parse(localStorage.getItem('capikids_consultas')||'[]');
-  const nomes = [...new Set(arr.filter(c=>c.nome&&c.nome.toLowerCase().includes(q.toLowerCase())).map(c=>c.nome))].slice(0,6);
-  if (!nomes.length) { res.style.display='none'; return; }
-  res.style.display='block';
-  res.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">'+
-    nomes.map(n=>`<button onclick="preencherPacienteExistente('${n.replace(/'/g,"\\'")}');document.getElementById('busca-resultado').style.display='none';document.getElementById('busca-paciente').value=''"
+
+  // 1. Por nome no histórico local
+  const porNome = [...new Set(
+    arr.filter(c => c.nome && c.nome.toLowerCase().includes(qLow)).map(c => c.nome)
+  )].slice(0, 6);
+
+  // 2. Por pacId no histórico local
+  const porId = [...new Set(
+    arr.filter(c => c.pacId && c.pacId.toLowerCase().includes(qLow)).map(c => c.nome)
+  )].filter(n => !porNome.includes(n)).slice(0, 3);
+
+  // 3. Por nome ou ID no Firebase
+  let porFirebase = [];
+  try {
+    const snap = await db.ref('pacientes').once('value');
+    const pacs = snap.val() || {};
+    for (const [id, p] of Object.entries(pacs)) {
+      const matchId   = id.toLowerCase().includes(qLow);
+      const matchNome = p.nome && p.nome.toLowerCase().includes(qLow);
+      if ((matchId || matchNome) && !porNome.includes(p.nome) && !porId.includes(p.nome)) {
+        porFirebase.push({ nome: p.nome || id, id, matchId });
+      }
+    }
+    porFirebase = porFirebase.slice(0, 4);
+  } catch(e) {}
+
+  const todos = [
+    ...porNome.map(n => ({ label: n, nome: n })),
+    ...porId.map(n  => ({ label: n, nome: n })),
+    ...porFirebase.map(p => ({ label: p.matchId ? `${p.nome} · ${p.id}` : p.nome, nome: p.nome })),
+  ];
+
+  if (!todos.length) { res.style.display='none'; return; }
+
+  res.style.display = 'block';
+  res.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">' +
+    todos.map(p => `<button onclick="preencherPacienteExistente('${p.nome.replace(/'/g,"\\'")}');document.getElementById('busca-resultado').style.display='none';document.getElementById('busca-paciente').value=''"
       style="background:#E8F7EF;border:1px solid rgba(23,138,74,.3);color:var(--green);border-radius:20px;padding:5px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
-      👦 ${n}</button>`).join('')+'</div>';
+      👦 ${p.label}</button>`).join('') + '</div>';
 }
 
 function preencherPacienteExistente(nome) {
